@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Indian Economics</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+
+<!-- Le styles -->
+<link href="css/jquery.contextMenu.css" rel="stylesheet">
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/n2styles.css" rel="stylesheet">
+<link href="css/jquery-ui.css" rel="stylesheet">
+<link href="css/font-awesome.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/uploadfile.css" rel="stylesheet">
+<link href="css/toastr.css" rel="stylesheet">
+<link rel="stylesheet" href="css/owl.carousel.css">
+<link rel="stylesheet" href="css/owl.theme.default.css">
+
+
+<link rel="icon" href="img/indian.png" type="image/png" />
+<script src="js/jquery.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<script src="js/jquery-ui.js"></script>
+<!-- [if lte IE 8]><script src="js/flot/excanvas.min.js"></script><![endif]-->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/toastr.js"></script>
+<script src="js/jquery.contextMenu.js"></script>
+<script src="js/jquery.ui.position.js"></script>
+<script src="js/loadFunctions.js"></script>
+
+<script src="js/owl.carousel.js"></script>
+
+</head>
+<body>
+	<div class="container-fluid">
+
+		<div class="span5"></div>
+		<div class="span8" id="documentation_container">
+			<div class="hero-unit">
+				<h1 class="text-center">Documentation</h1>
+			</div>
+			
+			<hr>
+			<p class="lead">Made Using</p>
+			<code>Bootstrap v2.3.2</code>
+			<br>
+			<code>FontAwesome v4.7</code>
+			<br>
+			<code>JQuery v1.9.1</code>
+			<br>
+			<code>Owl Carousel v2.2.1</code>
+			<br>
+			<hr>
+			<p class="lead">Server Version</p>
+			<code>Apache Tomcat v8.0.9 Windows x64</code>
+			<hr>
+			<p class="lead">Files</p>
+		</div>
+		<div class="span2"></div>
+	</div>
+
+</body>
+</html>

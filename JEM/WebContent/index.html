@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Indian Economics</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+
+<!-- Le styles -->
+<link href="css/jquery.contextMenu.css" rel="stylesheet">
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/n2styles.css" rel="stylesheet">
+<link href="css/jquery-ui.css" rel="stylesheet">
+<link href="css/font-awesome.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/uploadfile.css" rel="stylesheet">
+<link href="css/toastr.css" rel="stylesheet">
+<link rel="stylesheet" href="css/owl.carousel.css">
+<link rel="stylesheet" href="css/owl.theme.default.css">
+
+
+<link rel="icon" href="img/indian.png" type="image/png" />
+<script src="js/jquery.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<script src="js/jquery-ui.js"></script>
+<!-- [if lte IE 8]><script src="js/flot/excanvas.min.js"></script><![endif]-->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/toastr.js"></script>
+<script src="js/jquery.contextMenu.js"></script>
+<script src="js/jquery.ui.position.js"></script>
+<script src="js/loadFunctions.js"></script>
+
+<script src="js/owl.carousel.js"></script>
+
+</head>
+
+<body onload='loadAndHookFunctions();'>
+
+	<!-- Do not remove DIV - this is used for dynamic alerts -->
+	<div id="alert-placeholder"></div>
+
+	<div id="side_menu_bar_container">
+		<ul id="side_bar_menu" class="nav nav-pills nav-stacked">
+			<li><h3 style="color: grey; text-align: center">Menu</h3></li>
+
+			<li style="font-weight: bold" class="active"><a
+				id="goto_overview" href="#"><i class="fa fa-line-chart fa-2x"></i>&nbsp;&nbsp;Overview</a></li>
+			<li style="font-weight: bold"><a id="goto_history" href="#"><i
+					class="fa fa-history fa-2x"></i>&nbsp;&nbsp;History</a></li>
+			<li style="font-weight: bold"><a id="goto_policy" href="#"><i
+					class="fa fa-book fa-2x"></i>&nbsp;&nbsp;Policy</a></li>
+			<li style="font-weight: bold"><a id="goto_culture" href="#"><i
+					class="fa fa-group fa-2x"></i>&nbsp;&nbsp;Culture</a></li>
+			<li style="font-weight: bold"><a id="goto_success" href="#"><i
+					class="fa fa-globe fa-2x"></i>&nbsp;&nbsp;Solutions</a></li>
+		</ul>
+		<i id="sidebar_expander" class="fa fa-angle-double-right fa-2x"
+			style="position: fixed; top: 50%"></i>
+	</div>
+
+	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+
+				<a class="btn btn-navbar" data-toggle="collapse"
+					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span>
+				</a> <img id='imageLogo' class='brand'
+					style='margin-top: 2px; margin-left: 5px; margin-bottom: 2px; height: 50px; width: 50px'
+					src='img/indian.png' />
+
+				<div class='brand'
+					style='margin-top: 10px; margin-left: 0px; margin-bottom: 2px;'>
+					<h4 id='current_view_info'></h4>
+				</div>
+
+				<div class='navbar-text pull-right' id='container-session-info'
+					style='font-size: x-small; text-align: right; line-height: 1.70; margin-top: 10px; margin-bottom: 0px; overflow: hidden'>
+					<table style='border: 0;' id='table-session-info'></table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+
+	<div class="container-fluid"
+		style="padding-top: 1em; padding-left: 0px; padding-right: 0px;">
+		<div class="row-fluid">
+			<div class="span12" id="content_tab">
+				<div id="overview_tab">
+					<div class="hero-unit" style="overflow-x:scroll;">
+						<h1>Economic Desenfranchisement</h1>
+						<p>The single most devastating issue in Native American
+							communities</p>
+						<p>
+							<a class="btn btn-primary btn-large" id="hero_scroll_overview"> Learn more </a>
+						</p>
+					</div>
+					<div class="span4">
+
+						<div class="media" id="caption_side">
+							<a style="display:inline;"class="pull-left" href="#"> <i class="fa fa-commenting fa-2x"></i>
+							</a>
+							<div class="media-body">
+								<h3 class="media-heading">The issue at hand</h3>
+								<p>
+								Once the majority owners of nearly every natural resource in North America, 
+								Native Americans are now the poorest and lowest earning as a whole. 
+								Extensive research has proven the existence of modern and historic political and cultural reasons for why Native Americans now find themselves estranged from our modern economic landscape.
+								</p>
+
+								<!-- Nested media object -->
+								<div class="media"></div>
+							</div>
+						</div>
+						<div class="media">
+							<a class="pull-left" href="#"> <i class="fa fa-commenting fa-2x"></i>
+							</a>
+							<div class="media-body">
+								<h3 class="media-heading">How bad is it?</h3>
+								<p>
+								Statistically, there is a 20 to 80 percent unemployment rate in Native American communities
+								as well as the lowest per capita business ownership across any ethnic or racial group.
+								Nearly one third of Native Americans in the U.S live in poverty.
+								</p>
+
+								<!-- Nested media object -->
+								<div class="media"></div>
+							</div>
+						</div>
+						<div class="media">
+							<a class="pull-left" href="#"> <i class="fa fa-commenting fa-2x"></i>
+							</a>
+							<div class="media-body">
+								<h3 class="media-heading">What is the cause?</h3>
+								<p>
+								Conflict between Western economy and Native American policy and culture makes it difficult
+								for Native Americans to be active in the modern economy. 
+								</p>
+
+								<!-- Nested media object -->
+								<div class="media"></div>
+							</div>
+						</div>
+
+
+					</div>
+					<div id="hero_carousel" class="owl-carousel owl-theme span4">
+						<div class="item" id="first_hero_element">
+							<img width="400px" src="img/jobsneeded.png">
+						</div>
+						<div class="item">
+							<img width="400px" src="img/employmentdif.png">
+						</div>
+						<div class="item">
+							<img width="400px" src="img/rategap.png">
+						</div>
+					</div>
+					<div class="span3">
+					<ul class="thumbnails well">
+							<li class="span12">
+								<div class="thumbnail">
+									<img src="img/indian-res.jpg" alt="">
+									
+								</div>
+							</li>
+						</ul>
+						<ul class="thumbnails well">
+							<li class="span12">
+								<div class="thumbnail">
+									<img src="img/appalachia_0.jpg" alt="">
+									
+								</div>
+							</li>
+						</ul>
+					</div>
+					
+
+
+
+				</div>
+				<div id="history_tab">
+					<div class="hero-unit"  style="overflow-x:scroll;">
+						<h1>A History of conflict</h1>
+						<p>
+						How the greatest civilizations became the lowest earning and least economically succesful of all demographics in the U.S
+						</p>
+						<p>
+							<a class="btn btn-primary btn-large" id="hero_scroll_history"> Learn more </a>
+						</p>
+					</div>
+					<div class="span3" style="margin:0;">
+
+						<ul class="thumbnails">
+							<li class="span12">
+								<div class="thumbnail">
+									<img src="img/bigres.jpg" alt="">
+									<h3>The To'hajiilee Reservation</h3>
+								</div>
+							</li>
+						</ul>
+
+					</div>
+					<div id="history_container" class="span6 well" style="text-align: center;">
+
+
+						<div class="page-header">
+							<h1>How It Started</h1>
+							<h1>
+								<small>Historically, Native Americans were extremely
+									content and even wealthy in a sense...</small>
+							</h1>
+						</div>
+						<br> <br>
+						<p class="lead">
+							<strong>The Early Days</strong>
+						</p>
+						<p style="text-align: left;">After the arrival of Christopher
+							Columbus in the New World in 1492, Native Americans would find
+							their rights and resources slowly stripped from their possession.
+							Forced cultural apporopriation and marginalization would continue
+							to displace and ostracize Native American communities from the
+							rest of Western society as history progressed.</p>
+						<hr>
+						<p class="lead">
+							<strong>The Dawes Act (1887)</strong>
+						</p>
+
+						<p style="text-align: left;">The objectives of the Dawes Act
+							were to lift the Native Americans out of poverty, to stimulate
+							assimilation of them into mainstream American society, and to
+							transfer lands under Indian control to white settlers. The act
+							would grant plots of land to Indian families in an attempt to
+							make Native Americans good Jeffersonian yeoman farmers.</p>
+						<p style="text-align: left;">While the Dawes Act may have
+							served to benefit Native Americans superficially, its primary
+							goal was actually to severely reduce the amount of land that
+							tribes held.</p>
+						<hr>
+						<p class="lead">
+							<strong>Moving Forward</strong>
+						</p>
+						<p style="text-align: left;">Unfortunately the robbery of
+							Native American lands and resources is only half of the story. As
+							white settlement continued to expand into Indian territories
+							through the 1800s, individuals and government systems began
+							developing means by which the great values of Americanism might
+							be instilled upon the Native peoples in an attempt to minimize
+							settler-Indian conflict</p>
+						<p style="text-align: left;">The disenfranchisement of Native
+							Americans as a whole was expidited by the rapid Western expansion
+							of the late 1800s and 1900s. Native American communities are now
+							extremely scattered and becoming less and less visible in the
+							eyes of modern Western culture.</p>
+
+					</div>
+					<div class="span3" >
+					<ul class="thumbnails">
+							<li class="span12">
+								<div class="thumbnail">
+									<img src="img/pine-ridge-indian-reservation.png" alt="">
+									<h3>The Pine Ridge Indian Reserve</h3>
+									
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div id="policy_tab">
+					<div class="hero-unit"  style="overflow-x:scroll;">
+						<h1>Discontinuities of Policy</h1>
+						<p>The soverignty of Native American tribes causes issues
+							regarding the governement of business and other economic
+							practices</p>
+						<p>
+							<a class="btn btn-primary btn-large" id="hero_scroll_policy">
+								Learn more </a>
+						</p>
+					</div>
+					<div class="row">
+						<div class="span1"></div>
+						<div class="span6 well" >
+							<img src="img/nations.jpeg">
+						</div>
+						<div class="span4" id="policy_tab_container">
+							<div class="media" id="caption_side">
+								<a class="pull-left" href="#"> <i
+									class="fa fa-question-circle fa-2x"></i>
+								</a>
+								<div class="media-body">
+									<h3 class="media-heading">What is Tribal Sovereignty</h3>
+									<p>Tribal Sovereignty is the inherent authority of
+										indigenous tribes to govern themselves within the borders of
+										the United States of America. Essentially this means tribes
+										are independent nations within the United States.</p>
+
+									<!-- Nested media object -->
+									<div class="media"></div>
+								</div>
+							</div>
+							<div class="media" id="caption_side">
+								<a class="pull-left" href="#"> <i
+									class="fa fa-question-circle fa-2x"></i>
+								</a>
+								<div class="media-body">
+									<h3 class="media-heading">What This Means For Tribes</h3>
+									<p>As individual governments, tribes must create their own tax
+										structures, pass laws, provide public safety, regulate
+										business and industry, and perform other functions identical
+										to those typically provided by a combination of the state,
+										county, city, and town.</p>
+									
+								</div>
+							</div>
+							<div class="media" id="caption_side">
+								<a class="pull-left" href="#"> <i
+									class="fa fa-question-circle fa-2x"></i>
+								</a>
+								<div class="media-body">
+									<h3 class="media-heading">Why Sovereignty Does Not Work</h3>
+									<p>These tasks fit a large bill of responsibility to be
+										satisfied by often under-developed tribal governments. Tribal
+										governments are not forced to observe various laws and codes
+										due to their soverignty. One such example is the observance of
+										the Uniform Commercial Code (UCC). The UCC is the legislative
+										rulebook of finance and economy which many tribes have not
+										adopted, hindering their economic development</p>
+
+									<!-- Nested media object -->
+									<div class="media"></div>
+									
+								</div>
+								
+							</div>
+							
+						</div>
+
+					</div>
+					<div class="row">
+						<div class="span4">
+
+						</div>
+						<div class="span4"></div>
+						<div class="span4"></div>
+					</div>
+				</div>
+				<div id="culture_tab">
+					<div class="hero-unit"  style="overflow-x:scroll;">
+						<h1>Cultural Conflict</h1>
+						<p>
+							“It is said that economic development should be compatible with
+							that community’s traditional culture and values” <br> <small>-Samuel
+								Rose </small>
+						</p>
+						<p>
+							<a class="btn btn-primary btn-large" id="hero_scroll_culture">
+								Learn more </a>
+						</p>
+					</div>
+					<div class="row">
+					<div class="span12 text-center" id="culture_header"><h1 style="margin-left:1em;">Culture vs Capitalism</h1></div>
+					</div>
+					<div class="row">
+						<div class="span6" style="margin:0;">
+							<ul style="margin-left:2em;"class="thumbnails">
+								<li class="span12">
+									<div class="thumbnail">
+										<img src="img/culture.jpg" alt="">
+										<h3>Native American Protest</h3>
+										<p>Natural resources and the environement are considered
+											sacred in the eyes of Natives. The destruciton of such
+											resources is looked down upon by Native American culture.</p>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="span6">
+							<ul class="thumbnails">
+								<li class="span12">
+									<div class="thumbnail">
+										<img src="img/destruction.jpg" alt=""> <br> <br>
+										<br> <br>
+
+										<h3>Western Capitalism</h3>
+										<p>Greedy businessmen and corporations often exlpoit
+											environmental resources without regard for the integrity of
+											our planet.</p>
+											<br>
+									</div>
+								</li>
+							</ul>
+
+						</div>
+					</div>
+					<div class="row">
+						<div class="span3" style="margin: none;"></div>
+						<div class="span6 well">
+							<div class="page-header">
+								<h1>The Conflict Between Culture and Capitalism</h1>
+								<h1 class="text-center">
+									<small>There exists a large disconnect between deeply
+										ingrained social and cultural Native Americans values and
+										modern Western economies.</small>
+								</h1>
+							</div>
+							
+							<p>Native American economics and law expert Robert J. Miller
+							argues that "Indian tribes were historically not oriented toward
+							business and property ownership and that the capitalistic
+							principles of industry and commercial enterprise is arguable
+							incongruous with Native American culture"</p>
+
+							<p>The clash between Native American culture and modern
+								economics has been the limiting factor of tribal economic
+								development. The question for you Native American entrepreneurs
+								is not “whether they should start their own business or not” but
+								rather, “is starting and owning your own business, a violation
+								of Indian cultural mores?”</p>
+						</div>
+
+						
+
+						<div class="span3"></div>
+					</div>
+				</div>
+				<div id="success_tab">
+					<div class="hero-unit"  style="overflow-x:scroll;">
+						<h1>Solving The Problem</h1>
+						<p>Creating effective solutions to the wisepread economic issues within Native American societies.</p>
+						<p>
+							<a class="btn btn-primary btn-large" id="hero_scroll_solutions"> Learn more </a>
+						</p>
+					</div>
+					<div class="row" ></div>
+					<div class="span1"></div>
+					<div class="span5 well" id="solutions_tab_container">
+						<div class="page-header">
+							<h1 class="text-center">Cultural Changes</h1>
+
+						</div>
+
+						<ul>
+
+							<li><p>Increase the number of Native American entrepeneurs by showing that business ownership is virtuous and beneficial.</p></li>
+							<li><p>Decrease the rate of behaviors not beneficial to economic growth (alcoholism, crime, suicide)</p></li>
+							<li><p>Develop business habits that cooporate with rather than oppose traditional Native American cultural values. </p></li>
+							
+						</ul>
+					</div>
+					<div class="span5 well">
+						<div class="page-header">
+							<h1 class="text-center">Policy Prescriptions</h1>
+
+						</div>
+
+						<ul>
+
+							<li><p>Develop more policies that benefit Native Americans. eg.
+									In 2011 president Barack Obama released the American Jobs Act.
+									The provisions of this act offer significant benefits to Native
+									Americans through both general provisions (payroll tax holiday
+									and extended unemployment benefits) and provisions that are
+									specific to tribal nations.</p></li>
+							<li><p>Adoption of the UCC and other commercial
+									regulatory laws.</p></li>
+							<li><p>Increase the number of, and strengthen, Native
+									American community financial institutions.</p></li>
+							<li><p>Increase access to capital, credit, and other
+									financial services through improved government.</p></li>
+
+
+						</ul>
+					</div>
+					<div class="span1"></div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	<div class="footer" style="position: absolute; bottom: 0; width:100%; left:0; height:10px;">
+					
+					<div class="text-center"><small style="color:grey;">Created by Robert Usey · <a href="/IO/docs.html">Documentation</a></small></div>
+					
+				</div>
+	
+</body>
+
+
+
+
+</html>
