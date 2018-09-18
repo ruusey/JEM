@@ -2,8 +2,6 @@ package com.lawnbuzz.util;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import com.google.maps.DistanceMatrixApi;
 import com.google.maps.GeoApiContext;

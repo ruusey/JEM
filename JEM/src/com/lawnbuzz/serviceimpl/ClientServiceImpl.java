@@ -7,36 +7,49 @@ import org.springframework.stereotype.Service;
 
 import com.lawnbuzz.mappers.ClientMapper;
 import com.lawnbuzz.models.Client;
+import com.lawnbuzz.models.GeoLocation;
 import com.lawnbuzz.models.JobRequest;
 import com.lawnbuzz.service.ClientService;
 
 @Service("clientService")
-public class ClientServiceImpl implements ClientService{
-	
-	@Autowired
-	private ClientMapper mapper;
-	
-	@Override
-	public List<Client> getClients() {
-		return mapper.getClients();
-	}
+public class ClientServiceImpl implements ClientService {
 
-	@Override
-	public Client getClientById(int id) {
-		return mapper.getClientById(id);
-	}
+    @Autowired
+    private ClientMapper mapper;
 
-	@Override
-	public void registerClient(Client client) {
-		mapper.registerClient(client);
-		mapper.finalizeClientRegistrations(client.getId());
-		for(JobRequest job: client.getJobs()){
-			mapper.registerClientJob(client.getId(), job);
-		}
-		mapper.registerClientGeoLoc(client.getId(), client.getLoc());
-		
+    @Override
+    public List<Client> getClients() {
+	return mapper.getClients();
+    }
+
+    @Override
+    public Client getClientById(int id) {
+	return mapper.getClientById(id);
+    }
+
+    @Override
+    public void registerClient(Client client) {
+	mapper.registerClient(client);
+	mapper.finalizeClientRegistrations(client.getId());
+	for (JobRequest job : client.getJobs()) {
+	    mapper.registerClientJob(client.getId(), job);
 	}
-	public List<JobRequest> getClientJobsById(int clientId){
-		return mapper.getClientJobsById(clientId);
-	}
+	mapper.registerClientGeoLoc(client.getId(), client.getLoc());
+
+    }
+
+    @Override
+    public List<JobRequest> getClientJobsById(int clientId) {
+	return mapper.getClientJobsById(clientId);
+    }
+
+    @Override
+    public GeoLocation getGeoLocClientJob(int geoLocId) {
+	return mapper.getGeoLocClientJob(geoLocId);
+    }
+
+    @Override
+    public GeoLocation getGeoLocClient(int geoLocId) {
+	return mapper.getGeoLocClient(geoLocId);
+    }
 }

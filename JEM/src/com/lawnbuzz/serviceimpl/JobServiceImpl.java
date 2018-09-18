@@ -32,8 +32,8 @@ public class JobServiceImpl implements JobService{
 	@Override
 	public void addJob(JobRequest jr) {
 		mapper.addJob(jr);
-		mapper.finalizeJobRegistration(jr.getId());
-		mapper.registerJobGeoLocation(jr.getId(), jr.getLoc());
+		this.finalizeJobRegistration(jr.getId());
+		this.registerJobGeoLocation(jr.getId(), jr.getLoc());
 		LOGGER.info("Succesfully added job "+jr.getId());
 		
 	}
@@ -44,6 +44,25 @@ public class JobServiceImpl implements JobService{
 	@Override
 	public List<JobRequest> getJobsByService(com.lawnbuzz.models.Service s) {
 		return mapper.getJobsByService(s);
+	}
+	@Override
+	public void completeJob(int id) {
+	   mapper.completeJob(id);
+	    
+	}
+	@Override
+	public GeoLocation getGeoLocJob(int geoLocId) {
+	   return mapper.getGeoLocJob(geoLocId);
+	}
+	@Override
+	public void finalizeJobRegistration(int id) {
+	    mapper.finalizeJobRegistration(id);
+	    
+	}
+	@Override
+	public void registerJobGeoLocation(int id, GeoLocation loc) {
+	    mapper.registerJobGeoLocation(id, loc);
+	    
 	}
 
 }

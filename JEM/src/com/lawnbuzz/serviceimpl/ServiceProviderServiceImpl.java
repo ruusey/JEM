@@ -31,9 +31,7 @@ public class ServiceProviderServiceImpl implements ServiceProviderService{
 		for(com.lawnbuzz.models.Service s:sp.getServices()){
 			registerServiceProviderService(sp.getId(),s);
 		}
-		
-		registerServiceProviderGeoLoc(sp.getId(),sp.getLoc());
-		
+		registerServiceProviderGeoLoc(sp.getId(),sp.getLoc());	
 	}
 	
 	@Override
@@ -72,6 +70,10 @@ public class ServiceProviderServiceImpl implements ServiceProviderService{
 			mapper.updateServiceProviderRating(sp.getId(), sp.getRating());
 		}
 		
+	}
+	@Override
+	public List<com.lawnbuzz.models.Service> getServices(int serviceId) {
+	    return mapper.getServices(serviceId);
 	}
 
 }

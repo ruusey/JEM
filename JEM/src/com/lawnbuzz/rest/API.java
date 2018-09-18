@@ -13,25 +13,29 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lawnbuzz.dao.LawnBuzzDao;
+import com.lawnbuzz.models.APIStatus;
 import com.lawnbuzz.models.Client;
 import com.lawnbuzz.models.GeoLocation;
 import com.lawnbuzz.models.JobRequest;
 import com.lawnbuzz.models.Pong;
 import com.lawnbuzz.models.ServiceProvider;
+import com.lawnbuzz.util.APIUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@Service("api")
+
 @Api(value = "/v1")
 @Path("/")
 public class API {
@@ -52,7 +56,17 @@ public class API {
     ////////////////
     //CLIENT METHODS
     ////////////////
-    
+    @ApiOperation(
+	      value = "Returns all registered Clients",
+	      notes = "Returns the Member associated with the ID passed.",
+	      response = List.class)
+	  @ApiResponses({
+	    @ApiResponse(code = 200, message = "Clients retrieved succesfully.", response = Client.class),
+	    @ApiResponse(
+	        code = 400,
+	        message = "No clients registered.",
+	        response = WebApplicationException.class)
+	  })
     @GET
     @Path("/client-all")
     @Produces("application/json")
@@ -60,19 +74,61 @@ public class API {
 	List<Client> clients = LawnBuzzDao.clientService.getClients();
 	 return Response.ok(clients).build();
     }
+    @ApiOperation(
+	      value = "Returns the Client by ID",
+	      notes = "Returns the Client associated with the ID passed.",
+	      response = List.class)
+	  @ApiResponses({
+	    @ApiResponse(code = 200, message = "Client retrieved succesfully.", response = Client.class),
+	    @ApiResponse(
+	        code = 400,
+	        message = "Client not found.",
+	        response = WebApplicationException.class)
+	  })
     @GET
     @Path("/client/{client_id}")
     @Produces("application/json")
-    public Client getClientById(@Context HttpServletRequest request,
-	    @PathParam("client_id") int clientId) {
-	return LawnBuzzDao.clientService.getClientById(clientId);
+    public Response getClientById(@Context HttpServletRequest request,
+	    			@PathParam("client_id") int clientId) 
+	    			throws WebApplicationException {
+	Client c = LawnBuzzDao.clientService.getClientById(clientId);
+	if(c!=null) {
+	    return APIUtils.buildSuccess("Succesfully retrieved Client", c);
+	}else {
+	    throw APIUtils.buildWebApplicationException(
+		          Status.BAD_REQUEST,
+		          APIStatus.ERROR,
+		          "Client not found",
+		          "The Client ID supplied does not match any existing Clients.");  
+	}
+	
     }
+    @ApiOperation(
+	      value = "Returns the Client's available Jobs by ID",
+	      notes = "Returns the Client available jobs",
+	      response = List.class)
+	  @ApiResponses({
+	    @ApiResponse(code = 200, message = "Client Jobs retrieved succesfully.", response = List.class),
+	    @ApiResponse(
+	        code = 400,
+	        message = "No Jobs found for Client",
+	        response = WebApplicationException.class)
+	  })
     @GET
     @Path("/client-jobs/{client_id}")
     @Produces("application/json")
-    public List<JobRequest> getClientJobsById(@Context HttpServletRequest request,
-	    @PathParam("client_id") int clientId) {
-	return LawnBuzzDao.clientService.getClientJobsById(clientId);
+    public Response getClientJobsById(@Context HttpServletRequest request,
+	    @PathParam("client_id") int clientId) throws WebApplicationException {
+	List<JobRequest> jobs = LawnBuzzDao.clientService.getClientJobsById(clientId);
+	if(jobs!=null) {
+	    return APIUtils.buildSuccess("Succesfully retrieved Client", jobs);
+	}else {
+	    throw APIUtils.buildWebApplicationException(
+		          Status.BAD_REQUEST,
+		          APIStatus.ERROR,
+		          "No jobs available",
+		          "The Client ID supplied does not match any existing Clients.");  
+	}
     }
     @POST
     @Path("/client-register")
@@ -133,6 +189,19 @@ public class API {
     //////////////////////////
     //SERVICE PROVIDER METHODS
     //////////////////////////
+    
+    @ApiOperation(
+	      value = "Returns all registered ServiceProviders",
+	      notes = "SP",
+	      response = List.class)
+	  @ApiResponses({
+	    @ApiResponse(code = 200, message = "ServiceProviders retrieved succesfully.", response = List.class),
+	    @ApiResponse(
+	        code = 400,
+	        message = "No ServiceProviders registered.",
+	        response = WebApplicationException.class)
+	  })
+    
     @GET
     @Path("/sp-all")
     @Produces("application/json")
@@ -142,13 +211,34 @@ public class API {
 	return Response.ok(sPs).build();
 
     }
+    
+    @ApiOperation(
+	      value = "Returns A ServiceProvider by ID",
+	      notes = "Returns the ServiceProvier associated with the given ID",
+	      response = List.class)
+	  @ApiResponses({
+	    @ApiResponse(code = 200, message = "ServiceProvider retrieved succesfully.", response = ServiceProvider.class),
+	    @ApiResponse(
+	        code = 400,
+	        message = "No ServiceProvider found with the given ID.",
+	        response = WebApplicationException.class)
+	  })
     @GET
     @Path("/sp/{sp_id}")
     @Produces("application/json")
     public Response getServiceProviderById(@Context HttpServletRequest request, @PathParam("sp_id") int spId) {
 	
 	ServiceProvider sp = LawnBuzzDao.serviceProviderService.getServiceProviderById(spId);
-	return Response.ok(sp).build();
+	if(sp!=null) {
+	    return APIUtils.buildSuccess("Succesfully retrieved ServiceProvider", sp);
+	}else {
+	    throw APIUtils.buildWebApplicationException(
+		          Status.BAD_REQUEST,
+		          APIStatus.ERROR,
+		          "ServiceProvider not found",
+		          "The ServiceProvider ID supplied does not match any existing Clients.");  
+	}
+	
 
     }
     @POST
