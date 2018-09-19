@@ -29,6 +29,7 @@ import com.lawnbuzz.models.JobRequest;
 import com.lawnbuzz.models.Pong;
 import com.lawnbuzz.models.ServiceProvider;
 import com.lawnbuzz.util.APIUtils;
+import com.lawnbuzz.util.ApiScanner;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -53,6 +54,17 @@ public class API {
 	    Pong p = new Pong(request.getRemoteAddr(), timeStamp, "pong");
 	    return Response.ok(p).build();
     }
+    @GET
+    @Path("/methods")
+    @Produces("application/json")
+    
+    @ApiOperation("Retrieve available endpoints from JEM API")
+    @ApiResponses({@ApiResponse(code = 200, message = "API methods retrieved succesfully", response = List.class)})
+    
+    public Response getApiMethods(@Context HttpServletRequest request) {
+	List<String> methods = ApiScanner.apiListing();
+	    return APIUtils.buildSuccess("API methods retrieved succesfully", methods);
+    }
     ////////////////
     //CLIENT METHODS
     ////////////////
@@ -70,9 +82,9 @@ public class API {
     @GET
     @Path("/client-all")
     @Produces("application/json")
-    public Response getClient(@Context HttpServletRequest request) {
+    public Response getClient(@Context HttpServletRequest request) throws WebApplicationException{
 	List<Client> clients = LawnBuzzDao.clientService.getClients();
-	 return Response.ok(clients).build();
+	 return APIUtils.buildSuccess("Succesfully retrieved all Clients", clients);
     }
     @ApiOperation(
 	      value = "Returns the Client by ID",

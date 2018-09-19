@@ -11,7 +11,6 @@ import com.lawnbuzz.dao.LawnBuzzDao;
 import com.lawnbuzz.mappers.JobMapper;
 import com.lawnbuzz.models.GeoLocation;
 import com.lawnbuzz.models.JobRequest;
-import com.lawnbuzz.rest.Test;
 import com.lawnbuzz.service.JobService;
 
 @Service("jobService")
