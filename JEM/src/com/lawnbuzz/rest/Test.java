@@ -18,6 +18,7 @@ import com.lawnbuzz.models.GeoLocation;
 import com.lawnbuzz.models.JobRequest;
 import com.lawnbuzz.models.Service;
 import com.lawnbuzz.models.ServiceProvider;
+import com.lawnbuzz.serviceimpl.ClientServiceImpl;
 import com.lawnbuzz.serviceimpl.ServiceProviderServiceImpl;
 import com.owlike.genson.Genson;
 import com.lawnbuzz.util.Util;
@@ -27,29 +28,31 @@ public class Test {
 
 	public static void main(String[] args) {
 	    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	    testSPRegister();
+	    return;
 //		Client me = LawnBuzzDao.clientService.getClientById(1);
 //		List<JobRequest> clientJobs = LawnBuzzDao.clientService.getClientJobsById(me.getId());
 //		System.out.println(gson.toJson(clientJobs));
 //		
-		ServiceProvider me = LawnBuzzDao.serviceProviderService
-				.getServiceProviderById(1);
-		int radius = 50;
-		GeocodingResult res = LawnBuzzDao.geoService
-				.reverseGeocode(me.getLoc());
-		long start = System.currentTimeMillis();
-		ArrayList<JobRequest> myJobs = new ArrayList<JobRequest>(
-				LawnBuzzDao.jobService.getJobsByService(Service.PRESSURE_WASHING));
-
-		LOGGER.info("Found " + myJobs.size() + " jobs within " + radius
-				+ "miles of " + res.formattedAddress + " in "
-				+ Util.getTimeSince(start));
-		for (JobRequest job : myJobs) {
-			System.out.println(gson.toJson(job));
-		}
+//		ServiceProvider me = LawnBuzzDao.serviceProviderService
+//				.getServiceProviderById(1);
+//		int radius = 50;
+//		GeocodingResult res = LawnBuzzDao.geoService
+//				.reverseGeocode(me.getLoc());
+//		long start = System.currentTimeMillis();
+//		ArrayList<JobRequest> myJobs = new ArrayList<JobRequest>(
+//				LawnBuzzDao.jobService.getJobsByService(Service.PRESSURE_WASHING));
+//
+//		LOGGER.info("Found " + myJobs.size() + " jobs within " + radius
+//				+ "miles of " + res.formattedAddress + " in "
+//				+ Util.getTimeSince(start));
+//		for (JobRequest job : myJobs) {
+//			System.out.println(gson.toJson(job));
+//		}
 
 	}
 
-	public void testSPRegister() {
+	public static void testSPRegister() {
 		ApplicationContext cxt = new ClassPathXmlApplicationContext(
 				"classpath:springConfig.xml");
 		// SELECT THE DEFINED USER SERVICE FROM SERVICEIMPL
@@ -60,15 +63,15 @@ public class Test {
 				.getBean("serviceProviderService");
 
 		ServiceProvider sp = new ServiceProvider();
-		sp.setEmail("ruusey@gmail.com");
-		sp.setUserName("ruusey");
-		sp.setFirstName("Robert");
-		sp.setLastName("Usey");
+		sp.setEmail("nmello7337@gmail.com");
+		sp.setUserName("nmello");
+		sp.setFirstName("Natalie");
+		sp.setLastName("Mello");
 		List<com.lawnbuzz.models.Service> sList = new ArrayList<com.lawnbuzz.models.Service>();
-		sList.add(com.lawnbuzz.models.Service.LAWN_CARE);
-		sList.add(com.lawnbuzz.models.Service.HOME_CARE);
-		GeoLocation geo = new GeoLocation(33.7490, 84.3880,
-				com.lawnbuzz.util.Util.getCurrentDateTime());
+		sList.add(com.lawnbuzz.models.Service.BABYSITTING);
+		sList.add(com.lawnbuzz.models.Service.CLEANING);
+		GeoLocation geo = new GeoLocation(35.2271, 80.8431,
+			com.lawnbuzz.util.Util.getCurrentDateTime());
 
 		sp.setServices(sList);
 		sp.setLoc(geo);
@@ -78,6 +81,34 @@ public class Test {
 
 		List<ServiceProvider> test = service.getServiceProviders();
 		System.out.println(test.hashCode());
+	}
+	public static void testCliRegister() {
+		ApplicationContext cxt = new ClassPathXmlApplicationContext(
+				"classpath:springConfig.xml");
+		// SELECT THE DEFINED USER SERVICE FROM SERVICEIMPL
+		// UserServiceImpl service =
+		// (UserServiceImpl)cxt.getBean("userService");
+
+		ClientServiceImpl service = (ClientServiceImpl) cxt
+				.getBean("clientService");
+
+		Client sp = new Client();
+		sp.setEmail("nmello7337@gmail.com");
+		sp.setUserName("nmello");
+		sp.setFirstName("Natalie");
+		sp.setLastName("Mello");
+		
+		List<com.lawnbuzz.models.Service> sList = new ArrayList<com.lawnbuzz.models.Service>();
+		sList.add(com.lawnbuzz.models.Service.BABYSITTING);
+		sList.add(com.lawnbuzz.models.Service.CLEANING);
+		GeoLocation geo = new GeoLocation(35.2271, 80.8431,
+				com.lawnbuzz.util.Util.getCurrentDateTime());
+
+		sp.setLoc(geo);
+		sp.setRating(0);
+
+		service.registerClient(sp);
+
 	}
 
 	public static void testJobAdd(int numberOfJobs,int ownerId) {

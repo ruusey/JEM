@@ -1,15 +1,21 @@
 'use-strict';
 
 $(function () {
+
     var client = Backbone.Model.extend({
         idAttribute: "id",
         urlRoot: 'v1/client'
+    });
+    var sp = Backbone.Model.extend({
+        idAttribute: "id",
+        urlRoot: 'v1/sp'
     });
     var frame = Backbone.View.extend({
         el: $("#client-data"),
         tagName: 'span',
         className: "d-block p-2 bg-primary text-white",
-        my_template: _.template("<strong><%= email %></strong> (<%= firstName %>) (<%= lastName %>)"),
+        my_template: _.template("<span class='d-block p-2 bg-primary text-white'>Username: <%= userName %><br>" +
+            " First Name(<%= firstName %>)<br> Last Name(<%= lastName %>)<br> Email(<%= email %>)<br> </span>"),
 
         initialize: function () {
             this.render();
@@ -20,10 +26,17 @@ $(function () {
             return this;
         }
     });
-    var c1 = new client({ id: 1 });
-    c1.fetch().done(function () {
-        var appView = new frame({ model: c1 });
+
+    $("#fetch-data-submit").click(function () {
+        var id = $("#exampleDropdownFormEmail1").val();
+        var sp1 = new sp({ id: id });
+        sp1.fetch().done(function () {
+            console.log(JSON.stringify(sp1));
+            var appView = new frame({ model: sp1 });
+        });
     });
+    var c1 = new client({ id: 1 });
+
 });
 
 
