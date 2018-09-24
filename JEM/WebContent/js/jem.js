@@ -1,7 +1,11 @@
 'use-strict';
 
 $(function () {
-
+ $('.dropdown-submenu a.test').on("click", function(e){
+    $(this).next('ul').toggle();
+    e.stopPropagation();
+    e.preventDefault();
+  });
     var client = Backbone.Model.extend({
         idAttribute: "id",
         urlRoot: 'v1/client'
@@ -14,8 +18,7 @@ $(function () {
         el: $("#client-data"),
         tagName: 'span',
         className: "d-block p-2 bg-primary text-white",
-        my_template: _.template("<span class='d-block p-2 bg-primary text-white'>Username: <%= userName %><br>" +
-            " First Name(<%= firstName %>)<br> Last Name(<%= lastName %>)<br> Email(<%= email %>)<br> </span>"),
+        my_template: _.template($("#sptemplate").html()),
 
         initialize: function () {
             this.render();
