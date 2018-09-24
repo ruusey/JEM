@@ -34,6 +34,30 @@ public interface ServiceProviderMapper {
 			@Result(property = "services", javaType = List.class, column = "service_id", many = @Many(select = "getServices")),
 			@Result(property = "loc", javaType = GeoLocation.class, column = "geoloc_id", many = @Many(select = "getGeoLoc")) })
 	public ServiceProvider getServiceProviderById(@Param("id") int id);
+	
+	@Select("SELECT * FROM lb.service_provider WHERE email=#{email} ")
+	@Results(value = {
+			@Result(property = "id", column = "id"),
+			@Result(property = "email", column = "email"),
+			@Result(property = "userName", column = "username"),
+			@Result(property = "firstName", column = "firstname"),
+			@Result(property = "lastName", column = "lastname"),
+			@Result(property = "rating", column = "rating"),
+			@Result(property = "services", javaType = List.class, column = "service_id", many = @Many(select = "getServices")),
+			@Result(property = "loc", javaType = GeoLocation.class, column = "geoloc_id", many = @Many(select = "getGeoLoc")) })
+	public ServiceProvider getServiceProviderByEmail(@Param("email") String email);
+	
+	@Select("SELECT * FROM lb.service_provider WHERE username=#{id} ")
+	@Results(value = {
+			@Result(property = "id", column = "id"),
+			@Result(property = "email", column = "email"),
+			@Result(property = "userName", column = "username"),
+			@Result(property = "firstName", column = "firstname"),
+			@Result(property = "lastName", column = "lastname"),
+			@Result(property = "rating", column = "rating"),
+			@Result(property = "services", javaType = List.class, column = "service_id", many = @Many(select = "getServices")),
+			@Result(property = "loc", javaType = GeoLocation.class, column = "geoloc_id", many = @Many(select = "getGeoLoc")) })
+	public ServiceProvider getServiceProviderByUsername(@Param("username") String username);
 
 	@Select("SELECT service"
 			+ " FROM lb.service_provider_service WHERE service_id = #{service_id}")

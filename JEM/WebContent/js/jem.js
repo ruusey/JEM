@@ -1,18 +1,28 @@
 'use-strict';
 
 $(function () {
- $('.dropdown-submenu a.test').on("click", function(e){
-    $(this).next('ul').toggle();
-    e.stopPropagation();
-    e.preventDefault();
-  });
+    toastr.options = {
+        "positionClass": "toast-top-center"
+    }
+
     var client = Backbone.Model.extend({
         idAttribute: "id",
         urlRoot: 'v1/client'
     });
     var sp = Backbone.Model.extend({
         idAttribute: "id",
-        urlRoot: 'v1/sp'
+        urlRoot: 'v1/sp',
+        validate: function (attrs) {
+            if (!attrs.email) {
+                return 'Please fill email field.';
+            }
+            if (!attrs.feedback) {
+                return 'Please fill feedback field.';
+            }
+        }
+    });
+    var ping = Backbone.Model.extend({
+        urlRoot: 'v1/ping'
     });
     var frame = Backbone.View.extend({
         el: $("#client-data"),
@@ -29,16 +39,44 @@ $(function () {
             return this;
         }
     });
+    /////////////////////////////
+    //END ENDPOINT MODELS
+    /////////////////////////////
+    var ping = new ping();
+    ping.fetch().done(function () {
+        $("#server-time").html(ping.toJSON().timestamp);
+    });
 
     $("#fetch-data-submit").click(function () {
         var id = $("#exampleDropdownFormEmail1").val();
-        var sp1 = new sp({ id: id });
-        sp1.fetch().done(function () {
-            console.log(JSON.stringify(sp1));
-            var appView = new frame({ model: sp1 });
+        var sp1 = new sp({
+            id: id
         });
+        sp1.fetch({
+            success: function (model, response, options) {
+                $("#login-dropdown").removeClass("show");
+                showSuccess(options.xhr.getResponseHeader('response-text'));
+                var appView = new frame({
+                    model: model
+                });
+            }
+        });
+        // sp1.fetch().done(function () {
+
+        //     var appView = new frame({
+        //         model: sp1
+        //     });
+        // });
     });
-    var c1 = new client({ id: 1 });
+    $('.dropdown-submenu a.test').on("click", function (e) {
+        
+        e.stopPropagation();
+        e.preventDefault();
+        
+    });
+    var c1 = new client({
+        id: 1
+    });
 
 });
 

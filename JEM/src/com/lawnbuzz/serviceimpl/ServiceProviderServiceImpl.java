@@ -75,5 +75,13 @@ public class ServiceProviderServiceImpl implements ServiceProviderService{
 	public List<com.lawnbuzz.models.Service> getServices(int serviceId) {
 	    return mapper.getServices(serviceId);
 	}
+	@Override
+	public ServiceProvider getServiceProviderByEmail(String email) {
+	    return mapper.getServiceProviderByEmail(email);
+	}
+	@Override
+	public ServiceProvider getServiceProviderByUsername(String userName) {
+	    return mapper.getServiceProviderByUsername(userName);
+	}
 
 }

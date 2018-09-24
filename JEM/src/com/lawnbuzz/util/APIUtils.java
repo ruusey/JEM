@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-
+import javax.ws.rs.core.Response.StatusType;
 
 import org.glassfish.jersey.server.ContainerRequest;
 
@@ -27,9 +27,8 @@ public abstract class APIUtils {
             .build());
   }
   public static javax.ws.rs.core.Response buildSuccess(String msg, Object entity) {
-      return  javax.ws.rs.core.Response.ok(msg)
-	          .entity(entity)
-	          .build();
+      
+      return  javax.ws.rs.core.Response.ok(entity).header("response-text", msg).build();
   }
   public static Response buildResponse(APIStatus status, String message, String debugMessage) {
 

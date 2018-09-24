@@ -13,7 +13,8 @@
 	    crossorigin="anonymous">
 	<link href="css/n2styles.css" rel="stylesheet">
 	<link href="css/jquery-ui.css" rel="stylesheet">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+	    crossorigin="anonymous">
 	<link href="css/bootstrap-responsive.css" rel="stylesheet">
 	<link href="css/uploadfile.css" rel="stylesheet">
 	<link href="css/toastr.css" rel="stylesheet">
@@ -45,6 +46,7 @@
 
 <body>
 	<div class="container">
+		
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<i class="fas fa-gem fa-2x float-left"></i>
 			<a class="navbar-brand" href="#">&nbsp;GEM</a>
@@ -55,7 +57,7 @@
 			</button>
 
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
-				<ul class="navbar-nav mr-auto">
+				<ul class="navbar-nav mr-auto w-75">
 					<li class="nav-item active">
 						<a class="nav-link" href="#">Home
 							<span class="sr-only">(current)</span>
@@ -64,34 +66,31 @@
 					<li class="nav-item">
 						<a class="nav-link" href="docs">Docs</a>
 					</li>
-					<li class="nav-item dropdown">
+					<li class="nav-item dropdown w-50">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
 						    aria-expanded="false">
 							Login
 						</a>
-						<ul class="dropdown-menu">
-							<li class="dropdown-submenu">
-								<a class="test" tabindex="-1" href="#">Login
-									<span class="caret"></span>
-								</a>
-								<ul class="dropdown-menu">
-									<li>
-										<a tabindex="-1" href="#">
-											<form autocomplete="off" class="p-4">
-												<div class="form-group col-med">
-													<label for="exampleDropdownFormEmail1">Service Provider ID</label>
-													<input autocomplete="false" type="email" class="form-control" id="exampleDropdownFormEmail1" placeholder="ID">
-												</div>
-												<div class="form-group col-med">
-													<label for="exampleDropdownFormPassword1">Password</label>
-													<input autocomplete="false" type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Password">
-												</div>
+						<ul id="login-dropdown" class="dropdown-menu w-100" role="menu">
+							<li  class="dropdown-submenu">
+								<h6 class="dropdown-header">Service Provider Login</h6>
+								<li class="p-4">
+									
+										<form autocomplete="off" >
+											<div class="form-group col-med">
+												<label for="exampleDropdownFormEmail1">Email Or Username</label>
+												<input autocomplete="false" type="email" class="form-control" id="exampleDropdownFormEmail1" placeholder="email/username">
+											</div>
+											<div class="form-group col-med">
+												<label for="exampleDropdownFormPassword1">Password</label>
+												<input autocomplete="false" type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Password">
+											</div>
 
-												<button id="fetch-data-submit" type="button" class="btn btn-primary">Sign in</button>
-											</form>
-										</a>
-									</li>
-								</ul>
+											<button id="fetch-data-submit" type="button" class="btn btn-primary">Sign in</button>
+										</form>
+									
+								</li>
+
 							</li>
 						</ul>
 					</li>
@@ -100,6 +99,7 @@
 					</li>
 				</ul>
 			</div>
+			<span id = "server-time" class="badge badge-secondary float-right"></span>
 		</nav>
 
 

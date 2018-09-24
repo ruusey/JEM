@@ -18,6 +18,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -238,9 +239,15 @@ public class API {
     @GET
     @Path("/sp/{sp_id}")
     @Produces("application/json")
-    public Response getServiceProviderById(@Context HttpServletRequest request, @PathParam("sp_id") int spId) {
-	
-	ServiceProvider sp = LawnBuzzDao.serviceProviderService.getServiceProviderById(spId);
+    public Response getServiceProviderById(@Context HttpServletRequest request, @PathParam("sp_id") String spId) {
+	ServiceProvider sp= null;
+	if(StringUtils.isNumeric(spId)) {
+	    sp = LawnBuzzDao.serviceProviderService.getServiceProviderById(Integer.parseInt(spId));
+	}else if(spId.contains("@")) {
+	    sp = LawnBuzzDao.serviceProviderService.getServiceProviderByEmail(spId);
+	}else if(StringUtils.isAlpha(spId)){
+	    sp = LawnBuzzDao.serviceProviderService.getServiceProviderByUsername(spId);
+	}
 	if(sp!=null) {
 	    return APIUtils.buildSuccess("Succesfully retrieved ServiceProvider", sp);
 	}else {
@@ -253,6 +260,7 @@ public class API {
 	
 
     }
+    
     @POST
     @Path("/sp-register")
     @Produces("application/json")
