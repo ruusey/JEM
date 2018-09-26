@@ -6,10 +6,7 @@ $(function () {
         idAttribute: "id",
         urlRoot: 'v1/client'
     });
-    var clientUpdate = client.extend({
-        idAttribute: "id",
-        urlRoot: 'v1/client'
-    });
+    
     var sp = Backbone.Model.extend({
         idAttribute: "id",
         urlRoot: 'v1/sp',
@@ -21,6 +18,10 @@ $(function () {
                 return 'Please fill feedback field.';
             }
         }
+    });
+    var spUpdate = sp.extend({
+        idAttribute: "id",
+        urlRoot: 'v1/sp-update'
     });
     var ping = Backbone.Model.extend({
         urlRoot: 'v1/ping'

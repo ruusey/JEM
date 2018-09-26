@@ -133,9 +133,11 @@
 							<br> Lat: "
 							<%= loc.lat %>" Lng: "
 								<%= loc.lng %>"
+								<br> Rating: "
+								<%= rating %>"
 		</span>
 		<hr>
-		<h3 class='p-3 mb-2 text-info bg-default'>Your Services</h3>
+		<h3 class='p-2 mb-2 text-info bg-default'>Your Services</h3>
 		<% _.each(services, function(service) { %>
 			<span class='d-block p-2 bg-dark text-white'>
 				<%= service %>
