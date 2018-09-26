@@ -226,8 +226,8 @@ public class API {
     }
     
     @ApiOperation(
-	      value = "Returns A ServiceProvider by ID",
-	      notes = "Returns the ServiceProvier associated with the given ID",
+	      value = "Returns A ServiceProvider by ID, username, or email",
+	      notes = "Returns the ServiceProvier associated with the given input ID",
 	      response = List.class)
 	  @ApiResponses({
 	    @ApiResponse(code = 200, message = "ServiceProvider retrieved succesfully.", response = ServiceProvider.class),
@@ -241,6 +241,7 @@ public class API {
     @Produces("application/json")
     public Response getServiceProviderById(@Context HttpServletRequest request, @PathParam("sp_id") String spId) {
 	ServiceProvider sp= null;
+	spId.trim();
 	if(StringUtils.isNumeric(spId)) {
 	    sp = LawnBuzzDao.serviceProviderService.getServiceProviderById(Integer.parseInt(spId));
 	}else if(spId.contains("@")) {

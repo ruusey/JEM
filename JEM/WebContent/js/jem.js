@@ -1,11 +1,12 @@
 'use-strict';
 
 $(function () {
-    toastr.options = {
-        "positionClass": "toast-top-center"
-    }
-
+    
     var client = Backbone.Model.extend({
+        idAttribute: "id",
+        urlRoot: 'v1/client'
+    });
+    var clientUpdate = client.extend({
         idAttribute: "id",
         urlRoot: 'v1/client'
     });
@@ -26,16 +27,32 @@ $(function () {
     });
     var frame = Backbone.View.extend({
         el: $("#client-data"),
-        tagName: 'span',
-        className: "d-block p-2 bg-primary text-white",
-        my_template: _.template($("#sptemplate").html()),
+        template: _.template($("#sptemplate").html()),
 
         initialize: function () {
             this.render();
             this.model.on("change", this.render);
         },
         render: function () {
-            $("#client-data").html(this.my_template(this.model.toJSON()));
+            $("#client-data").html(this.template(this.model.toJSON()));
+            return this;
+        }
+    });
+     var server = Backbone.View.extend({
+        el: $("#server-time-container"),
+        tagName: 'span',
+        className: "d-block p-2 bg-primary text-white",
+        template: _.template($("#server-time-template").html()),
+
+        initialize: function () {
+            
+            this.render();
+            this.model.on("change", this.render);
+            
+        },
+        render: function () {
+            console.log(JSON.stringify(this.model));
+            $("#server-time-container").html(this.template(this.model.toJSON()));
             return this;
         }
     });
@@ -43,9 +60,25 @@ $(function () {
     //END ENDPOINT MODELS
     /////////////////////////////
     var ping = new ping();
-    ping.fetch().done(function () {
-        $("#server-time").html(ping.toJSON().timestamp);
-    });
+   // setInterval(function() {
+        ping.fetch({
+            success: function (model, response, options) {
+                var serverView = new server({
+                    model: ping
+                });
+               
+            }
+        });
+    ///}, 1000);
+    
+    // ping.fetch({
+    //         success: function (model, response, options) {
+    //             showSuccess(options.xhr.getResponseHeader('response-text'));
+    //             var serverView = new server({
+    //                 model: model
+    //             });
+    //         }
+    //     });
 
     $("#fetch-data-submit").click(function () {
         var id = $("#exampleDropdownFormEmail1").val();
@@ -80,7 +113,12 @@ $(function () {
 
 });
 
+function initialize(){
+    toastr.options = {
+        "positionClass": "toast-top-center"
+    };
 
+}
 
 
 // function pingServer() {

@@ -99,7 +99,19 @@
 					</li>
 				</ul>
 			</div>
-			<span id = "server-time" class="badge badge-secondary float-right"></span>
+			<div id="server-time-container" class="col-sm">
+
+
+			</div>
+			<script type="text/template" id="server-time-template">
+					<% if ( timestamp ){ %>
+						<span id = "server-time" class="badge badge-secondary float-right">
+							<%- timestamp %>
+						</span>
+					<% } %>
+				<i id=server-status" class="fas fa-circle float-right" style="color:green"></i>
+			</script>
+			
 		</nav>
 
 

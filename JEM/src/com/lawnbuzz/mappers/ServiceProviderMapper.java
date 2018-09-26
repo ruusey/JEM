@@ -47,7 +47,7 @@ public interface ServiceProviderMapper {
 			@Result(property = "loc", javaType = GeoLocation.class, column = "geoloc_id", many = @Many(select = "getGeoLoc")) })
 	public ServiceProvider getServiceProviderByEmail(@Param("email") String email);
 	
-	@Select("SELECT * FROM lb.service_provider WHERE username=#{id} ")
+	@Select("SELECT * FROM lb.service_provider WHERE username=#{username} ")
 	@Results(value = {
 			@Result(property = "id", column = "id"),
 			@Result(property = "email", column = "email"),
