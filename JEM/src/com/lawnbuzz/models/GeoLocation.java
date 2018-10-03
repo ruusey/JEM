@@ -1,5 +1,8 @@
 package com.lawnbuzz.models;
 
+import com.google.maps.model.GeocodingResult;
+import com.lawnbuzz.dao.LawnBuzzDao;
+
 public class GeoLocation {
 	private double lat;
 	private double lng;
@@ -31,6 +34,10 @@ public class GeoLocation {
 	}
 	public void setDateTime(String dateTime) {
 		this.dateTime = dateTime;
+	}
+	public String reverseGeocode() {
+	    GeocodingResult res = LawnBuzzDao.geoService.reverseGeocode(this);
+	    return res.formattedAddress;
 	}
 	
 	

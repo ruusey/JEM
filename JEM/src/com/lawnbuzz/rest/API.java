@@ -9,6 +9,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -22,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
 import com.lawnbuzz.dao.LawnBuzzDao;
 import com.lawnbuzz.models.APIStatus;
 import com.lawnbuzz.models.Client;
@@ -261,6 +263,26 @@ public class API {
 	
 
     }
+    @GET
+    @Path("/sp/geoloc/{sp_id}")
+    @Produces("application/json")
+    public Response getServiceProviderGeoloc(@Context HttpServletRequest request, @PathParam("sp_id") int spId) {
+	ServiceProvider sp= null;
+	
+	    sp = LawnBuzzDao.serviceProviderService.getServiceProviderById(spId);
+	
+	if(sp!=null) {
+	    return APIUtils.buildSuccess("Succesfully retrieved ServiceProvider Geolocation", sp.getLoc().reverseGeocode());
+	}else {
+	    throw APIUtils.buildWebApplicationException(
+		          Status.BAD_REQUEST,
+		          APIStatus.ERROR,
+		          "ServiceProvider not found",
+		          "The ServiceProvider ID supplied does not match any existing Clients.");  
+	}
+	
+
+    }
     
     @POST
     @Path("/sp-register")
@@ -287,10 +309,22 @@ public class API {
 	return Response.ok(loc).build();
     }
     @POST
-    @Path("/sp-update/{sp_id}")
+    @Path("/sp/{sp_id}")
     @Produces("application/json")
     @Consumes("application/json")
     public Response updateServiceProvider(@Context HttpServletRequest request,  @PathParam("sp_id") int spId,  ServiceProvider sp) {
+	Gson gson = new Gson();
+	System.out.println(gson.toJson(sp));
+	LawnBuzzDao.serviceProviderService.updateServiceProvider(sp);
+	return Response.ok(sp).build();
+    }
+    @PUT
+    @Path("/sp/{sp_id}")
+    @Produces("application/json")
+    @Consumes("application/json")
+    public Response updateServiceProvider2(@Context HttpServletRequest request,  @PathParam("sp_id") int spId,  ServiceProvider sp) {
+	Gson gson = new Gson();
+	System.out.println(gson.toJson(sp));
 	LawnBuzzDao.serviceProviderService.updateServiceProvider(sp);
 	return Response.ok(sp).build();
     }

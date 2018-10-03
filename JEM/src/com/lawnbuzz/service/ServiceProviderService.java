@@ -16,5 +16,6 @@ public interface ServiceProviderService {
 	public void registerServiceProviderGeoLoc(int id,GeoLocation loc);
 	public void updateServiceProvider(ServiceProvider sp);
 	public List<Service> getServices(int serviceId);
+	public String getGeoLocation(int id);
 	
 }

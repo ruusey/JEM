@@ -18,6 +18,7 @@ public class LawnBuzzDao {
 	public static GeoLocServices geoService;
 	public static ClientServiceImpl clientService;
 	static{
+	    org.apache.ibatis.logging.LogFactory.useStdOutLogging();
 		long startTime = System.currentTimeMillis();
 		ClassPathXmlApplicationContext cxt = new ClassPathXmlApplicationContext("classpath:springConfig.xml");
 		LOGGER.info("Initialized LawnBuzzDao class "+cxt.getApplicationName()+" in "+Util.getTimeSince(startTime));

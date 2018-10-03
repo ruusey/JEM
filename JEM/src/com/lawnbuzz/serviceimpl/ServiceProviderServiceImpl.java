@@ -5,8 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-
+import com.google.gson.Gson;
 import com.lawnbuzz.mappers.ServiceProviderMapper;
 import com.lawnbuzz.models.GeoLocation;
 import com.lawnbuzz.models.ServiceProvider;
@@ -51,22 +50,30 @@ public class ServiceProviderServiceImpl implements ServiceProviderService{
 	}
 	@Override
 	public void updateServiceProvider(ServiceProvider sp) {
+	    Gson gson = new Gson();
+	    System.out.println(gson.toJson(sp));
 		if(sp.getEmail()!=null){
 			mapper.updateServiceProviderEmail(sp.getId(), sp.getEmail());
-		}else if(sp.getUserName()!=null){
+		}
+		if(sp.getUserName()!=null){
 			mapper.updateServiceProviderUserName(sp.getId(), sp.getUserName());
-		}else if(sp.getFirstName()!=null){
+		}
+		if(sp.getFirstName()!=null){
 			mapper.updateServiceProviderFirstName(sp.getId(), sp.getFirstName());
-		}else if(sp.getLastName()!=null){
+		}
+		if(sp.getLastName()!=null){
 			mapper.updateServiceProviderLastName(sp.getId(), sp.getLastName());
-		}else if(sp.getServices()!=null){
+		}
+		if(sp.getServices()!=null){
 			mapper.deleteServiceProviderServices(sp.getId());
 			for(com.lawnbuzz.models.Service s : sp.getServices()){
 				mapper.registerServiceProviderService(sp.getId(), s);
 			}
-		}else if(sp.getLoc()!=null){
+		}
+		if(sp.getLoc()!=null){
 			mapper.updateServiceProviderGeoLoc(sp.getId(), sp.getLoc());
-		}else if(sp.getRating()!=-1){
+		}
+		if(sp.getRating()!=-1){
 			mapper.updateServiceProviderRating(sp.getId(), sp.getRating());
 		}
 		
@@ -82,6 +89,12 @@ public class ServiceProviderServiceImpl implements ServiceProviderService{
 	@Override
 	public ServiceProvider getServiceProviderByUsername(String userName) {
 	    return mapper.getServiceProviderByUsername(userName);
+	}
+	@Override
+	public String getGeoLocation(int id) {
+	    GeoLocation loc = mapper.getGeoLoc(id);
+	    return loc.reverseGeocode();
+	    
 	}
 
 }
