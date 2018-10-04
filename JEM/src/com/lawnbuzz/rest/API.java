@@ -16,6 +16,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -159,11 +160,11 @@ public class API {
     ////////////////
     @GET
     @Path("/job-all")
-    @Produces("application/json")
     public Response getJobs(@Context HttpServletRequest request) {
 	
 	List<JobRequest> jobs = LawnBuzzDao.jobService.getAllJobs();
-	return Response.ok(jobs).build();
+	GenericEntity<List<JobRequest>> entity  = new GenericEntity<List<JobRequest>>(jobs) {};
+	return APIUtils.buildSuccess("Succesfully retrieved Client", entity);
 
     }
     @GET

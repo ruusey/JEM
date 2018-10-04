@@ -1,4 +1,4 @@
-package com.lawnbuzz.rest;
+package com.lawnbuzz.dao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,12 +7,12 @@ import java.util.Random;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
-import com.lawnbuzz.dao.LawnBuzzDao;
 import com.lawnbuzz.models.Client;
 import com.lawnbuzz.models.GeoLocation;
 import com.lawnbuzz.models.JobRequest;
@@ -28,11 +28,9 @@ public class Test {
 
 	public static void main(String[] args) {
 	    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-	    testSPRegister();
-	    return;
-//		Client me = LawnBuzzDao.clientService.getClientById(1);
-//		List<JobRequest> clientJobs = LawnBuzzDao.clientService.getClientJobsById(me.getId());
-//		System.out.println(gson.toJson(clientJobs));
+	    testJobAdd(20,1);
+	    
+	    //LawnBuzzDao dao = new LawnBuzzDao();
 //		
 //		ServiceProvider me = LawnBuzzDao.serviceProviderService
 //				.getServiceProviderById(1);
@@ -112,8 +110,10 @@ public class Test {
 	}
 
 	public static void testJobAdd(int numberOfJobs,int ownerId) {
-		double atlLat = 33.7490;
-		double atlLng = -84.3880;
+	   
+	    ServiceProvider s = LawnBuzzDao.serviceProviderService.getServiceProviderById(3);
+		double atlLat = s.getLoc().getLat();
+		double atlLng = s.getLoc().getLng();
 		Random r = new Random();
 		for (int i = 0; i < numberOfJobs; i++) {
 			double randLat = atlLat + r.nextDouble();

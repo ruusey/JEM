@@ -99,11 +99,11 @@ public interface ServiceProviderMapper {
 	@Update("UPDATE lb.service_provider_geoloc SET lat=#{newLocation.lat},lng=#{newLocation.lng},datetime=#{newLocation.dateTime} WHERE geoloc_id=#{geoloc_id}")
 	public void updateServiceProviderGeoLoc(@Param("geoloc_id") int geoLocId, @Param("newLocation") GeoLocation newLocation);
 	
-	@Update("UPDATE lb.service_provider SET rating=#{newRating} id=#{id}")
-	public void updateServiceProviderRating(@Param("id") int id, @Param("newRating") Integer newRating);
+	@Update("UPDATE lb.service_provider SET rating=#{newRating} WHERE id=#{id}")
+	public void updateServiceProviderRating(@Param("id") int id, @Param("newRating") int newRating);
 	
 	@Delete("DELETE FROM lb.service_provider_service WHERE service_id=#{service_id}")
-	public void deleteServiceProviderServices(@Param("service_id") Integer serviceId);
+	public void deleteServiceProviderServices(@Param("service_id") int serviceId);
 		
 	
 	
