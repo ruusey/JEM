@@ -42,7 +42,7 @@ CREATE TABLE `client` (
 
 LOCK TABLES `client` WRITE;
 /*!40000 ALTER TABLE `client` DISABLE KEYS */;
-INSERT INTO `client` VALUES (1,'ruusey@gmail.com','ruusey','Robert','Usey',1,1,100),(2,NULL,'Ru\'s Soul',NULL,NULL,NULL,NULL,666);
+INSERT INTO `client` VALUES (1,'ruusey@gmail.com','exUser','Example','Client',1,1,100);
 /*!40000 ALTER TABLE `client` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -92,7 +92,7 @@ CREATE TABLE `job` (
   `job_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,7 +101,7 @@ CREATE TABLE `job` (
 
 LOCK TABLES `job` WRITE;
 /*!40000 ALTER TABLE `job` DISABLE KEYS */;
-INSERT INTO `job` VALUES (1,'MOVING_SERVICES','Mow my fucking lawn','Test Long Description',1,42,0,1),(2,'PRESSURE_WASHING','Mow my fucking lawn','Test Long Description',2,72,0,1),(3,'DOG_SITTING','Mow my fucking lawn','Test Long Description',3,52,0,1),(4,'PROJECT_ASSISTANCE','Mow my fucking lawn','Test Long Description',4,94,0,1),(5,'PROJECT_ASSISTANCE','Mow my fucking lawn','Test Long Description',5,95,0,1),(6,'PRESSURE_WASHING','Mow my fucking lawn','Test Long Description',6,49,0,1),(7,'PRESSURE_WASHING','Mow my fucking lawn','Test Long Description',7,50,0,1),(8,'BABYSITTING','Mow my fucking lawn','Test Long Description',8,76,0,1),(9,'BABYSITTING','Mow my fucking lawn','Test Long Description',9,82,0,1),(10,'MOVING_SERVICES','Mow my fucking lawn','Test Long Description',10,95,0,1);
+INSERT INTO `job` VALUES (1,'DOG_SITTING','Mow my fucking lawn','Test Long Description',1,75,0,1),(2,'PROJECT_ASSISTANCE','Mow my fucking lawn','Test Long Description',2,32,0,1),(3,'PROJECT_ASSISTANCE','Mow my fucking lawn','Test Long Description',3,98,0,1),(4,'CLEANING','Mow my fucking lawn','Test Long Description',4,84,0,1),(5,'HOME_CARE','Mow my fucking lawn','Test Long Description',5,93,0,1),(6,'DELIVERY_SERVICES','Mow my fucking lawn','Test Long Description',6,12,0,1),(7,'DELIVERY','Mow my fucking lawn','Test Long Description',7,58,0,1),(8,'DELIVERY_SERVICES','Mow my fucking lawn','Test Long Description',8,92,0,1),(9,'PROJECT_ASSISTANCE','Mow my fucking lawn','Test Long Description',9,94,0,1),(10,'CLEANING','Mow my fucking lawn','Test Long Description',10,27,0,1),(11,'DOG_SITTING','Mow my fucking lawn','Test Long Description',11,92,0,1),(12,'DELIVERY','Mow my fucking lawn','Test Long Description',12,50,0,1),(13,'HOME_CARE','Mow my fucking lawn','Test Long Description',13,92,0,1),(14,'HOME_CARE','Mow my fucking lawn','Test Long Description',14,6,0,1),(15,'DELIVERY_SERVICES','Mow my fucking lawn','Test Long Description',15,94,0,1),(16,'DELIVERY','Mow my fucking lawn','Test Long Description',16,2,0,1),(17,'GENERAL_HELP','Mow my fucking lawn','Test Long Description',17,6,0,1),(18,'CLEANING','Mow my fucking lawn','Test Long Description',18,58,0,1),(19,'MOVING_SERVICES','Mow my fucking lawn','Test Long Description',19,88,0,1),(20,'PROJECT_ASSISTANCE','Mow my fucking lawn','Test Long Description',20,39,0,1);
 /*!40000 ALTER TABLE `job` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,7 +120,7 @@ CREATE TABLE `job_geoloc` (
   `datetime` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -129,7 +129,7 @@ CREATE TABLE `job_geoloc` (
 
 LOCK TABLES `job_geoloc` WRITE;
 /*!40000 ALTER TABLE `job_geoloc` DISABLE KEYS */;
-INSERT INTO `job_geoloc` VALUES (1,1,34.45290746314021,-83.77042084062998,'2017-06-21:13:53:38'),(2,2,33.92612226810659,-83.84008311350831,'2017-06-21:13:53:38'),(3,3,34.45992847232513,-84.3506301414073,'2017-06-21:13:53:38'),(4,4,34.60386229970991,-84.08019546709026,'2017-06-21:13:53:38'),(5,5,34.394219685512276,-83.72984819337844,'2017-06-21:13:53:38'),(6,6,33.75183603175556,-83.94270949887932,'2017-06-21:13:53:38'),(7,7,34.602589812207874,-83.82266844708337,'2017-06-21:13:53:39'),(8,8,34.06181699049833,-84.21770240294776,'2017-06-21:13:53:39'),(9,9,34.159132904762075,-84.21193041396552,'2017-06-21:13:53:39'),(10,10,33.92549725670893,-83.47489105850063,'2017-06-21:13:53:39');
+INSERT INTO `job_geoloc` VALUES (11,1,34.11476303802274,-80.12752518323484,'2018-10-04:17:06:46'),(12,2,34.55588299439822,-80.53584943349959,'2018-10-04:17:06:46'),(13,3,34.547853557075356,-80.44090600871218,'2018-10-04:17:06:46'),(14,4,34.76920564961042,-80.72561856230924,'2018-10-04:17:06:46'),(15,5,34.85972707717184,-80.46751897876162,'2018-10-04:17:06:46'),(16,6,34.50999329038902,-80.48968031985409,'2018-10-04:17:06:46'),(17,7,34.64784823571869,-80.70897850653843,'2018-10-04:17:06:46'),(18,8,34.322862077280796,-80.195992946173,'2018-10-04:17:06:46'),(19,9,34.76095300312278,-81.00264971267417,'2018-10-04:17:06:46'),(20,10,33.989153825329865,-80.77253680877371,'2018-10-04:17:06:46'),(21,11,34.067077494147775,-80.96484693512302,'2018-10-04:17:06:46'),(22,12,34.40018992084909,-80.80360440566122,'2018-10-04:17:06:46'),(23,13,34.59067856379068,-80.33620722655849,'2018-10-04:17:06:46'),(24,14,34.87547941283903,-80.10526677399102,'2018-10-04:17:06:46'),(25,15,34.14741232347178,-80.09950754827695,'2018-10-04:17:06:46'),(26,16,34.023473733160756,-80.1944872587661,'2018-10-04:17:06:46'),(27,17,34.81050919110837,-80.92419503435671,'2018-10-04:17:06:46'),(28,18,34.68767120174067,-80.5830275794079,'2018-10-04:17:06:46'),(29,19,34.24652971133673,-80.74236993469299,'2018-10-04:17:06:46'),(30,20,34.85176414376841,-81.00369429449944,'2018-10-04:17:06:46');
 /*!40000 ALTER TABLE `job_geoloc` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -151,7 +151,7 @@ CREATE TABLE `service_provider` (
   `rating` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -160,7 +160,7 @@ CREATE TABLE `service_provider` (
 
 LOCK TABLES `service_provider` WRITE;
 /*!40000 ALTER TABLE `service_provider` DISABLE KEYS */;
-INSERT INTO `service_provider` VALUES (1,'ruusey@gmail.com','ruusey','Robert','Usey',1,1,0),(2,'nmello7337@gmail.com','nmello','Natalie','Mello',2,2,0);
+INSERT INTO `service_provider` VALUES (1,'ruusey@gmail.com','ruusey','Robert',' Usey',1,1,88),(2,'nmello7337@gmail.com','nmello','Natalie','Mello',2,2,22),(3,'melitotrevor@gmail.com','tmelito','Trevor',' Melito',3,3,69);
 /*!40000 ALTER TABLE `service_provider` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -179,7 +179,7 @@ CREATE TABLE `service_provider_geoloc` (
   `datetime` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -188,7 +188,7 @@ CREATE TABLE `service_provider_geoloc` (
 
 LOCK TABLES `service_provider_geoloc` WRITE;
 /*!40000 ALTER TABLE `service_provider_geoloc` DISABLE KEYS */;
-INSERT INTO `service_provider_geoloc` VALUES (1,1,33.8283913,-84.4014042,'2017-06-17:15:57:26'),(2,2,35.2271,80.8431,'2018-09-23:18:09:59');
+INSERT INTO `service_provider_geoloc` VALUES (1,1,33.994952306143105,-81.03156269836427,'2018-10-04:16:18:01'),(2,2,33.982,-81.037,'2018-10-03:19:30:29'),(3,3,33.97497775781825,-81.0201654157471,'2018-10-04:18:47:56');
 /*!40000 ALTER TABLE `service_provider_geoloc` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -205,7 +205,7 @@ CREATE TABLE `service_provider_service` (
   `service` enum('LAWN_CARE','HOME_CARE','DELIVERY','MOVING_SERVICES','BABYSITTING','GENERAL_HELP','DELIVERY_SERVICES','CLEANING','PRESSURE_WASHING','DOG_SITTING','PROJECT_ASSISTANCE') DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=519 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -214,7 +214,7 @@ CREATE TABLE `service_provider_service` (
 
 LOCK TABLES `service_provider_service` WRITE;
 /*!40000 ALTER TABLE `service_provider_service` DISABLE KEYS */;
-INSERT INTO `service_provider_service` VALUES (1,1,'LAWN_CARE'),(2,1,'HOME_CARE'),(3,2,'BABYSITTING'),(4,2,'CLEANING');
+INSERT INTO `service_provider_service` VALUES (439,2,'CLEANING'),(440,2,'CLEANING'),(441,2,'BABYSITTING'),(442,2,'CLEANING'),(513,1,'LAWN_CARE'),(514,1,'LAWN_CARE'),(515,1,'LAWN_CARE'),(516,1,'HOME_CARE'),(517,1,'HOME_CARE'),(518,1,'HOME_CARE');
 /*!40000 ALTER TABLE `service_provider_service` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -227,4 +227,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-09-28  5:03:00
+-- Dump completed on 2018-10-04 18:51:02
