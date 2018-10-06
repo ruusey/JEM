@@ -12,7 +12,8 @@
  var spView = new ServiceProviderView({
      model: spModel
  });
- 
+ var jobCollection = new JobCollection();
+
  setInterval(function () {
      pingModel.fetch({
          success: function (pingModel) {
@@ -24,9 +25,12 @@
  }, 1000);
  $("#log-out-sp").on("click", function () {
      if (spModel) {
+         var temp = _clone(spModel);
          spModel.clear();
+         spCollection.reset();
          $.removeCookie("sp");
-         location.reload();
+         setLoggedOut();
+
      }
 
  });
@@ -46,12 +50,14 @@
              }
 
          }
-     }).done(function(){
-        initMap();
+     }).done(function () {
+         setLoggedIn();
+         initMap();
      });
 
      //});
  } else {
+     setLoggedOut();
      $("#fetch-data-submit").on("click", function () {
 
          var id = $("#exampleDropdownFormEmail1").val();
@@ -68,39 +74,13 @@
                  }
 
              }
-         }).done(function(){
-            initMap();
+         }).done(function () {
+             initMap();
          });
      });
  }
 
- $("#sync-service").on("click", function (e) {
 
-     var sp = spCollection.at(0);
-     sp.create({
-         success: spSaveSuccess,
-         error: spSaveFailure
-     });
- });
-
- function spSaveSuccess(model, response, options) {
-     write(model);
-     write(response);
-     write(options);
- }
-
- function spSaveFailure(model, response, options) {
-     write(model);
-     write(response);
-     write(options);
- }
-
- //  $(".dropdown-submenu a.test").on("click", function (e) {
-
- //      e.stopPropagation();
- //      e.preventDefault();
-
- //  });
  $("#geoloc").on("click", function (e) {
      navigator.geolocation.getCurrentPosition(geoFetchSuccess);
 
@@ -111,7 +91,7 @@
          var sp = spCollection.at(0);
 
          var lastPing = pingCollection.at(0);
-        write(pingCollection);
+         write(pingCollection);
          var currLoc = {};
 
          currLoc.lat = crd.latitude;
@@ -119,107 +99,134 @@
          currLoc.dateTime = lastPing.get("timestamp");
          write(currLoc);
          sp.set("loc", currLoc)
-            sp.save().done(function(){
-                initMap();
-            });
+         sp.save().done(function () {
+             initMap();
+         });
 
      };
 
 
  });
- // $("#sync-service").on("click", function (e) {
 
- //     ServiceProviderView.save();
-
-
-
- // });
  function initMap() {
-   
-   
-   
-     
-     var sp = spCollection.at(0);
-     
-     var infoWindow = new google.maps.InfoWindow;
+
+     var sp = getCurrentSP();
+     var myLocation = constructLatLng(sp);
+     var myLocationInfo = new google.maps.InfoWindow;
      var map = new google.maps.Map(document.getElementById('map'), {
-         center: {
-             lat: sp.get("loc").lat,
-             lng: sp.get("loc").lng
-         },
+         center: myLocation,
          zoom: 10
      });
-     var marker = new google.maps.Marker({
-         position: map.center,
+     var myPos = new google.maps.Marker({
          map: map,
-         draggable: true
+         position: myLocation,
+         draggable: true,
+         label: "My Position"
      });
-     google.maps.event.addListener(marker, 'dragend', function (evt) {
+     myLocationInfo.setPosition(myLocation);
+     google.maps.event.addListener(myPos, 'dragend', function (evt) {
          var newLat = evt.latLng.lat();
          var newLng = evt.latLng.lng();
-         var lastPing = pingCollection.at(0);
-
          var currLoc = _.clone(sp.get("loc"));
 
          currLoc.lat = newLat;
          currLoc.lng = newLng;
-         currLoc.dateTime = lastPing.get("timestamp");
+         currLoc.dateTime = getCurrentTimestamp();
          $('#loc-modal').modal('show');
          $('#loc-modal-confirm').on('click', function (e) {
              $('#loc-modal').modal('hide');
              sp.set("loc", currLoc);
-             sp.save().done(function () {
+             sp.save({
+                 wait: true
+             }).done(function () {
                  updateMap().done(function (value) {
+                     myPos.setPosition(constructLatLng(sp));
+                     myPos.setMap(map);
+                     myLocationInfo.setPosition(constructLatLng(sp));
+                     myLocationInfo.setContent($("<span>").text(value).append($("<br>")).append($("<h5>").text(value)).html());
 
-                     infoWindow.setContent(value);
+                     myLocationInfo.open(map, myPos);
                  });
              });
          });
 
 
-         updateMap().done(function (value) {
+         //  updateMap().done(function (value) {
+         //     marker.label=(value);
+         //      //infoWindow.setContent(value);
+         //  });
 
-             infoWindow.setContent(value);
+     });
+
+
+
+     fetchJobs().done(function (jobs) {
+
+         jobCollection.each(function (job) {
+             //write(job);
+             var jobPos = constructLatLng(job);
+             var jobInfoWindow = new google.maps.InfoWindow;
+             var mi = new google.maps.Marker({
+                 map: map,
+                 position: jobPos,
+                 label: job.get("service")
+
+             });
+             jobInfoWindow.setPosition(jobPos);
+             var content;
+             fetchJobGeoloc(job).done(function (value) {
+                 content = '<div id="iw-container">' +
+                     '<div class="iw-title">' + mi.getLabel() + '</div>' +
+                     '<div class="iw-content">' +
+                     '<div class="iw-subTitle">Location</div>' +
+                     '<span>' + value + '</span>' +
+                     '<div class="iw-subTitle">Description</div>' +
+                     '<span>' + job.get("shortDescription") + '</span>' +
+                     '<div class="iw-subTitle">Info</div>' +
+                     '<i class="fa fa-money">pay: ' + '&#36;' + job.get("pay") + '</i>' +
+                     '</div>' +
+                     '<div class="iw-bottom-gradient"></div>' +
+                     '</div>';
+                 jobInfoWindow.setContent(content);
+                 mi.setMap(map);
+                 jobInfoWindow.open(map, mi);
+
+             });
+
+
+
+
          });
 
+
+
      });
-
-    
-
-      fetchJobs().done(function (jobs) {
-
-                  //write(jobs);
-
-                  for (var i = 0; i < jobs.length; i++) {
-                      var job = jobs.at(i);
-                        write(job);
-                      var mi = new google.maps.Marker({
-
-                          position: new google.maps.LatLng(job.get("loc").lat, job.get("loc").lng),
-                          map: map,
-                          title: job.get("service")
-                      });
-                      infoWindow.open(map, mi);
-                  }
-            
-        
-    });
      updateMap().done(function (value) {
+         myPos.setPosition(constructLatLng(sp));
+         myLocationInfo.setPosition(constructLatLng(sp));
+         myLocationInfo.setContent($("<span>").text(value).append($("<br>")).append($("<h5>").text("My Location")).html());
 
-         infoWindow.setContent(value);
+         myLocationInfo.open(map, myPos);
      });
-     infoWindow.setPosition(map.center);
-     infoWindow.open(map, marker);
+     //  infoWindow.setPosition(map.center);
+     //  infoWindow.open(map, myPos);
      // Try HTML5 geolocation.
 
  }
 
-function updateMap() {
+ function constructLatLng(obj) {
+     return {
+         lat: obj.get("loc").lat,
+         lng: obj.get("loc").lng
+     }
+ }
+
+ function updateMap() {
      var deferred = $.Deferred();
      var sp = spCollection.at(0);
-      //write(sp);
+     //write(sp);
      var loc = new SPGeoLocModel();
-     
+
      loc.set("id", sp.get("id"));
      loc.fetch({
          dataType: "text",
@@ -229,18 +236,29 @@ function updateMap() {
      });
      return deferred.promise();
  }
- function fetchJobs(){
-    var deferred = $.Deferred();
-    var jobCollection = new JobCollection();
-    jobCollection.fetch({
-             success: function (res, xhr, response) {
-                
-                deferred.resolve(res);
-             }
+
+ function fetchJobs() {
+     var deferred = $.Deferred();
+     jobCollection.fetch({
+         success: function (res, xhr, response) {
+
+             deferred.resolve(res);
+         }
      });
      return deferred.promise();
  }
 
- 
+ function fetchJobGeoloc(job) {
+     var deferred = $.Deferred();
 
- 
+     var loc = new JobGeoLocModel();
+
+     loc.set("id", job.get("id"));
+     loc.fetch({
+         dataType: "text",
+         success: function (res, xhr, response) {
+             deferred.resolve(response.xhr.responseText);
+         }
+     });
+     return deferred.promise();
+ }

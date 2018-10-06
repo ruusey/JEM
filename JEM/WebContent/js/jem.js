@@ -1,5 +1,8 @@
 "use-strict";
-
+var JobGeoLocModel = Backbone.Model.extend({
+    idAttribute: "id",
+    urlRoot: "v1/job/geoloc"
+});
 var SPGeoLocModel = Backbone.Model.extend({
     idAttribute: "id",
     urlRoot: "v1/sp/geoloc"

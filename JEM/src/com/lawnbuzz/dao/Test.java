@@ -1,6 +1,7 @@
 package com.lawnbuzz.dao;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Random;
 
@@ -25,8 +26,19 @@ import com.lawnbuzz.util.Util;
 
 public class Test {
 	static Logger LOGGER = Logger.getLogger(Test.class.getName());
-
+	public static Hashtable<Service,String> labels = new Hashtable<Service,String>();
 	public static void main(String[] args) {
+	    labels.put(Service.BABYSITTING, "Child needs babysitting");
+	    labels.put(Service.LAWN_CARE, "Lawn mowed and hedges trimmed");
+	    labels.put(Service.HOME_CARE, "Need house-sitting for our vacation");
+	    labels.put(Service.DELIVERY, "Requesting TacoBell delivery");
+	    labels.put(Service.MOVING_SERVICES, "Need help moving houses");
+	    labels.put(Service.GENERAL_HELP, "Need assistance constructing tree house");
+	    labels.put(Service.CLEANING, "House floor needs to be mopped");
+	    labels.put(Service.PRESSURE_WASHING, "Need back porch and driveway pressure-washed");
+	    labels.put(Service.DELIVERY_SERVICES, "Take my wife to the airport");
+	    labels.put(Service.DOG_SITTING, "Feed and walk our dog while we are on vacation");
+	    labels.put(Service.PROJECT_ASSISTANCE, "Tutor me in CSCE146");
 	    Gson gson = new GsonBuilder().setPrettyPrinting().create();
 	    testJobAdd(20,1);
 	    
@@ -59,7 +71,7 @@ public class Test {
 
 		ServiceProviderServiceImpl service = (ServiceProviderServiceImpl) cxt
 				.getBean("serviceProviderService");
-
+		
 		ServiceProvider sp = new ServiceProvider();
 		sp.setEmail("nmello7337@gmail.com");
 		sp.setUserName("nmello");
@@ -81,6 +93,29 @@ public class Test {
 		System.out.println(test.hashCode());
 	}
 	public static void testCliRegister() {
+		ApplicationContext cxt = new ClassPathXmlApplicationContext(
+				"classpath:springConfig.xml");
+		// SELECT THE DEFINED USER SERVICE FROM SERVICEIMPL
+		// UserServiceImpl service =
+		// (UserServiceImpl)cxt.getBean("userService");
+
+
+		ServiceProviderServiceImpl service = (ServiceProviderServiceImpl) cxt
+				.getBean("serviceProviderService");
+		ServiceProvider sp = service.getServiceProviderById(1);
+		
+		List<com.lawnbuzz.models.Service> sList = new ArrayList<com.lawnbuzz.models.Service>();
+		sList.add(com.lawnbuzz.models.Service.PRESSURE_WASHING);
+		sList.add(com.lawnbuzz.models.Service.MOVING_SERVICES);
+		sList.add(com.lawnbuzz.models.Service.LAWN_CARE);
+		
+
+		sp.setServices(sList);
+		
+		service.updateServiceProvider(sp);
+
+	}
+	public static void testSpAddService() {
 		ApplicationContext cxt = new ClassPathXmlApplicationContext(
 				"classpath:springConfig.xml");
 		// SELECT THE DEFINED USER SERVICE FROM SERVICEIMPL
@@ -111,23 +146,30 @@ public class Test {
 
 	public static void testJobAdd(int numberOfJobs,int ownerId) {
 	   
-	    ServiceProvider s = LawnBuzzDao.serviceProviderService.getServiceProviderById(3);
+	    ServiceProvider s = LawnBuzzDao.serviceProviderService.getServiceProviderById(1);
 		double atlLat = s.getLoc().getLat();
 		double atlLng = s.getLoc().getLng();
 		Random r = new Random();
 		for (int i = 0; i < numberOfJobs; i++) {
-			double randLat = atlLat + r.nextDouble();
-			double randLng = atlLng + r.nextDouble();
-
+			double randLat = atlLat;
+			double randLng =atlLng;
+			if(i%2==0) {
+			    randLat= atlLat - r.nextDouble();
+			    randLng= atlLng - r.nextDouble();
+			}else {
+			    randLat= atlLat + r.nextDouble();
+			    randLng= atlLng + r.nextDouble();
+			}
 			GeoLocation geo = new GeoLocation(randLat, randLng,
 					com.lawnbuzz.util.Util.getCurrentDateTime());
+			Service sr = Service.values()[r.nextInt(Service.values().length)];
 			JobRequest jr = new JobRequest();
 			jr.setJobId(ownerId);
 			jr.setComplete(false);
 			jr.setLoc(geo);
-			jr.setService(Service.values()[r.nextInt(Service.values().length)]);
-			jr.setLongDescrption("Test Long Description");
-			jr.setShortDescription("Mow my fucking lawn");
+			jr.setService(sr);
+			jr.setLongDescrption(labels.get(sr));
+			jr.setShortDescription(labels.get(sr));
 			jr.setPay(r.nextInt(100));
 			LawnBuzzDao.jobService.addJob(jr);
 		}

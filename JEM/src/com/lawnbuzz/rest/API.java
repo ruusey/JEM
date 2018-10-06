@@ -202,6 +202,26 @@ public class API {
 	LawnBuzzDao.jobService.addJob(job);
 	return Response.ok(job).build();
     }
+    @GET
+    @Path("/job/geoloc/{job_id}")
+    @Produces("application/json")
+    public Response getJobGeoloc(@Context HttpServletRequest request, @PathParam("job_id") int jobId) {
+	GeoLocation loc= null;
+	
+	    loc = LawnBuzzDao.jobService.getGeoLocJob(jobId);
+	
+	if(loc!=null) {
+	    return APIUtils.buildSuccess("Succesfully retrieved Job Geolocation", loc.reverseGeocode());
+	}else {
+	    throw APIUtils.buildWebApplicationException(
+		          Status.BAD_REQUEST,
+		          APIStatus.ERROR,
+		          "ServiceProvider not found",
+		          "The ServiceProvider ID supplied does not match any existing Clients.");  
+	}
+	
+
+    }
     //////////////////////////
     //SERVICE PROVIDER METHODS
     //////////////////////////
