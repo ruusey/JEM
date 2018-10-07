@@ -1,5 +1,7 @@
 package com.lawnbuzz.dao;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -40,7 +42,7 @@ public class Test {
 	    labels.put(Service.DOG_SITTING, "Feed and walk our dog while we are on vacation");
 	    labels.put(Service.PROJECT_ASSISTANCE, "Tutor me in CSCE146");
 	    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-	    testJobAdd(20,1);
+	    testLogin("ruboy123");
 	    
 	    //LawnBuzzDao dao = new LawnBuzzDao();
 //		
@@ -143,7 +145,40 @@ public class Test {
 		service.registerClient(sp);
 
 	}
-
+	public static void testAuth(String password) {
+	    ServiceProvider s = LawnBuzzDao.serviceProviderService.getServiceProviderById(1);
+	    if(LawnBuzzDao.userService.isRegistered(s.getId())) {
+		System.out.println(LawnBuzzDao.userService.getUserToken(s.getId()));
+	    }else {
+		LawnBuzzDao.userService.createUserAuth(s.getId(), s.getUserName());
+		try {
+		    String token = SHAHash.generateStorngPasswordHash(password);
+		    System.out.println(token.length());
+		    LawnBuzzDao.userService.registerUserAuth(s.getId(), token, Util.getCurrentDateTime2());
+		} catch (NoSuchAlgorithmException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
+	    }
+	}
+	public static void testLogin(String password) {
+	    ServiceProvider sp = LawnBuzzDao.serviceProviderService.getServiceProviderById(1);
+	    String token =	LawnBuzzDao.userService.getUserToken(sp.getId());
+    	try {
+	    if(SHAValidate.validatePassword(password, token)) {
+	        System.out.println("valid "+token);
+	    }
+	} catch (NoSuchAlgorithmException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} catch (InvalidKeySpecException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	}
 	public static void testJobAdd(int numberOfJobs,int ownerId) {
 	   
 	    ServiceProvider s = LawnBuzzDao.serviceProviderService.getServiceProviderById(1);

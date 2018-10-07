@@ -25,21 +25,29 @@
  }, 1000);
  $("#log-out-sp").on("click", function () {
      if (spModel) {
-         var temp = _clone(spModel);
+         var temp = _.clone(spModel);
          spModel.clear();
          spCollection.reset();
          $.removeCookie("sp");
+         
          setLoggedOut();
+         location.reload();
 
      }
 
  });
  if ($.cookie("sp")) {
-     //$("#login-link").on("click",function () {
+   
      var id = $.cookie("sp");
      spModel.set("id", id);
-
+     
+    authenticateSp(id).done(function(token){
+        write(token);
+        sessionToken=token;
+    });
+    
      spModel.fetch({
+         beforeSend: sendAuthentication,
          success: function (spModel) {
              spCollection.add(spModel, {
                  merge: true
@@ -61,9 +69,15 @@
      $("#fetch-data-submit").on("click", function () {
 
          var id = $("#exampleDropdownFormEmail1").val();
+         var pass = $("#exampleDropdownFormPassword1").val();
+         authenticate().done(function(token){
+            sessionToken=token;
+        });
+         write(sessionToken);
          spModel.set("id", id);
-
+       // spModel.set("username", id);
          spModel.fetch({
+             beforeSend: sendAuthentication,
              success: function (spModel) {
                  spCollection.add(spModel, {
                      merge: true
@@ -150,7 +164,7 @@
              });
          });
 
-
+         write(sessionToken);
          //  updateMap().done(function (value) {
          //     marker.label=(value);
          //      //infoWindow.setContent(value);

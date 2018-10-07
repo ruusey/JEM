@@ -29,7 +29,13 @@ public class Util {
 		return d;
 	}
 	public static String getCurrentDateTime(){
+	    ;
 		return new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss").format(Calendar.getInstance().getTime());
+	}
+	public static String getCurrentDateTime2(){
+	    Calendar current = Calendar.getInstance();
+	    current.set(2019, 1, 1);
+		return new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss").format(current.getTime());
 	}
 	public static String getTimeSince(long start){
 		return (System.currentTimeMillis()-start)+"ms";

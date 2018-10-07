@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import com.lawnbuzz.serviceimpl.ClientServiceImpl;
 import com.lawnbuzz.serviceimpl.JobServiceImpl;
 import com.lawnbuzz.serviceimpl.ServiceProviderServiceImpl;
+import com.lawnbuzz.serviceimpl.UserServiceImpl;
 import com.lawnbuzz.util.GeoLocServices;
 import com.lawnbuzz.util.Util;
 
@@ -17,6 +18,7 @@ public class LawnBuzzDao {
 	public static JobServiceImpl jobService;
 	public static GeoLocServices geoService;
 	public static ClientServiceImpl clientService;
+	public static UserServiceImpl userService;
 	static{
 	    org.apache.ibatis.logging.LogFactory.useStdOutLogging();
 		long startTime = System.currentTimeMillis();
@@ -51,6 +53,13 @@ public class LawnBuzzDao {
 		startTime = System.currentTimeMillis();
 		clientService = (ClientServiceImpl)cxt.getBean("clientService");
 		LOGGER.info("Successfully registered clientService in "+Util.getTimeSince(startTime));
+		
+		//*********************************
+		//REGISTER USER AUTH SERVICE
+		//*********************************
+		startTime = System.currentTimeMillis();
+		userService = (UserServiceImpl)cxt.getBean("userService");
+		LOGGER.info("Successfully registered userService in "+Util.getTimeSince(startTime));
 		
 		LOGGER.info("Successfully Created LawnBuzz DAO");
 		cxt.close();

@@ -1,5 +1,7 @@
 package com.lawnbuzz.rest;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -17,6 +20,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -26,14 +30,18 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.lawnbuzz.dao.LawnBuzzDao;
+import com.lawnbuzz.dao.SHAHash;
+import com.lawnbuzz.dao.SHAValidate;
 import com.lawnbuzz.models.APIStatus;
 import com.lawnbuzz.models.Client;
+import com.lawnbuzz.models.Credentials;
 import com.lawnbuzz.models.GeoLocation;
 import com.lawnbuzz.models.JobRequest;
 import com.lawnbuzz.models.Pong;
 import com.lawnbuzz.models.ServiceProvider;
 import com.lawnbuzz.util.APIUtils;
 import com.lawnbuzz.util.ApiScanner;
+import com.lawnbuzz.util.Util;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,7 +52,48 @@ import io.swagger.annotations.ApiResponses;
 @Api(value = "/v1")
 @Path("/")
 public class API {
-
+    @POST
+    @Path("/auth")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response authenticateUser(Credentials credentials) {
+	System.out.println(credentials.getPassword()+ " "+credentials.getUsername());
+        String username = credentials.getUsername();
+        String password = credentials.getPassword();
+        ServiceProvider sp = LawnBuzzDao.serviceProviderService.getServiceProviderByUsername(username);
+        
+            
+        if(password.length()==0) {
+            password  = LawnBuzzDao.userService.getUserPass(username);
+        }
+       
+       
+       
+        System.out.println(sp);
+        try {
+            if(LawnBuzzDao.userService.isRegistered(sp.getId())) {
+        	String token =	LawnBuzzDao.userService.getUserToken(sp.getId());
+        	if(SHAValidate.validatePassword(password, token)) {
+        	    return APIUtils.buildSuccess("Token succesfully created", token);
+        	}
+            }else {
+        	String token = SHAHash.generateStorngPasswordHash(password);
+        	LawnBuzzDao.userService.createUserAuth(sp.getId(), username);
+        	LawnBuzzDao.userService.registerUserAuth(sp.getId(), token, Util.getCurrentDateTime2());
+        	return APIUtils.buildSuccess("Token succesfully created", token);
+            }
+	    
+	} catch (NoSuchAlgorithmException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} catch (InvalidKeySpecException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+        return APIUtils.buildSuccess("Token succesfully created", null);
+         
+        // Authenticate the user, issue a token and return a response
+    }
     @GET
     @Path("/ping")
     @Produces("application/json")
@@ -260,6 +309,7 @@ public class API {
 	        response = WebApplicationException.class)
 	  })
     @GET
+    @Secured
     @Path("/sp/{sp_id}")
     @Produces("application/json")
     public Response getServiceProviderById(@Context HttpServletRequest request, @PathParam("sp_id") String spId) {

@@ -101,7 +101,7 @@ public interface ServiceProviderMapper {
 	
 	@Update("UPDATE lb.service_provider SET rating=#{newRating} WHERE id=#{id}")
 	public void updateServiceProviderRating(@Param("id") int id, @Param("newRating") int newRating);
-	
+	//DELETE t1 FROM lb.service_provider_service t1 INNER JOIN lb.service_provider_service t2 WHERE t1.id > t2.id AND t1.service = t2.service;
 	@Delete("DELETE FROM lb.service_provider_service WHERE service_id=#{service_id}")
 	public void deleteServiceProviderServices(@Param("service_id") int serviceId);
 		

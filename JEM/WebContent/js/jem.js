@@ -10,6 +10,7 @@ var SPGeoLocModel = Backbone.Model.extend({
 var PingModel = Backbone.Model.extend({
     urlRoot: "v1/ping"
 });
+
 var ServiceProviderModel = Backbone.Model.extend({
     idAttribute: "id",
     urlRoot: "v1/sp"
@@ -57,13 +58,13 @@ var ServiceProviderView = Backbone.View.extend({
         var firstName = newName[0];
         var lastName = newName[1];
         var email = $("#new-email").val();
-        var rating = $("#new-rating").val();
+        var newRating = $("#new-rating").val();
         var newParams = {};
         newParams.userName = username;
         newParams.firstName=firstName;
         newParams.lastName=lastName;
         newParams.email=email;
-        newParams.rating=parseInt(rating);
+        newParams.rating=parseInt(newRating);
         
         this.model.set(newParams);
         write(this.model);
