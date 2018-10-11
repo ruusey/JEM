@@ -1,5 +1,5 @@
 var sessionToken;
-
+var serviceList = [];
 function write(data) {
     console.log(JSON.stringify(data, null, 4));
 }
@@ -65,7 +65,7 @@ function authenticateSp(uId) {
         dataType: 'text',
         async: false,
         success: function (msg) {
-            write(msg)
+            //write(msg)
             deffered.resolve(msg);
 
         },
@@ -75,13 +75,21 @@ function authenticateSp(uId) {
     });
     return deffered.promise();
 }
+function fetchServices(){
+    var deffered = $.Deferred();
+     $.ajax({
+            url: 'v1/services',
+            type: 'GET',
+            contentType: 'application/json; charset=UTF-8',
+            dataType: 'json',
+            async: false,
 
-function getCurrentSP() {
-    return spCollection.at(0);
-}
 
-function getCurrentTimestamp() {
-    return pingCollection.at(0).get("timestamp");
+        }).done(function (msg) {
+            for (var i = 0, l = msg.length; i < l; i++) {
+              serviceList.push(msg[i]);
+            }
+         });    
 }
 
 function geoFetchSuccess(pos) {
@@ -99,8 +107,16 @@ function setLoggedIn() {
 }
 
 function initialize() {
+$(document).on('click', function (e) {
+    $('[data-toggle="popover"],[data-original-title]').each(function () {
+        //the 'is' for buttons that trigger popups
+        //the 'has' for icons within a button that triggers a popup
+        if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {                
+            (($(this).popover('hide').data('bs.popover')||{}).inState||{}).click = false  // fix for BS 3.3.6
+        }
 
-    $('[data-toggle="popover"]').popover();
+    });
+});
     toastr.options = {
         "positionClass": "toast-top-left"
     };

@@ -3,11 +3,13 @@ package com.lawnbuzz.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Hashtable;
+import java.util.List;
 
-
-
+import com.lawnbuzz.models.JobRequest;
 import com.lawnbuzz.models.Service;
 import com.lawnbuzz.rest.API;
 
@@ -52,5 +54,6 @@ public class Util {
 		}
 		return result+");";
 	}
+	
 	
 }

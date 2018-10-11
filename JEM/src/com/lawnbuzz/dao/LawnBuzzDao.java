@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
+import com.lawnbuzz.search.JobSearch;
 import com.lawnbuzz.serviceimpl.ClientServiceImpl;
 import com.lawnbuzz.serviceimpl.JobServiceImpl;
 import com.lawnbuzz.serviceimpl.ServiceProviderServiceImpl;
@@ -19,6 +20,7 @@ public class LawnBuzzDao {
 	public static GeoLocServices geoService;
 	public static ClientServiceImpl clientService;
 	public static UserServiceImpl userService;
+	public static JobSearch jobSearch;
 	static{
 	    org.apache.ibatis.logging.LogFactory.useStdOutLogging();
 		long startTime = System.currentTimeMillis();
@@ -61,6 +63,9 @@ public class LawnBuzzDao {
 		userService = (UserServiceImpl)cxt.getBean("userService");
 		LOGGER.info("Successfully registered userService in "+Util.getTimeSince(startTime));
 		
+		jobSearch=new JobSearch();
+		jobSearch.start();
+		LOGGER.info("Successfully registered jobSearch ");
 		LOGGER.info("Successfully Created LawnBuzz DAO");
 		cxt.close();
 		

@@ -104,7 +104,8 @@ public interface ServiceProviderMapper {
 	//DELETE t1 FROM lb.service_provider_service t1 INNER JOIN lb.service_provider_service t2 WHERE t1.id > t2.id AND t1.service = t2.service;
 	@Delete("DELETE FROM lb.service_provider_service WHERE service_id=#{service_id}")
 	public void deleteServiceProviderServices(@Param("service_id") int serviceId);
-		
+	@Delete("DELETE t1 FROM lb.service_provider_service t1 INNER JOIN lb.service_provider_service t2 WHERE t1.id > t2.id AND t1.service = t2.service")
+	public void deleteServiceProviderServiceDuplicates();
 	
 	
 	

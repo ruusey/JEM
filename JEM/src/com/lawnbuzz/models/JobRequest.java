@@ -97,5 +97,9 @@ public class JobRequest implements Serializable {
 	public void setComplete(boolean complete) {
 		this.complete = complete;
 	}
+	@Override
+	public String toString() {
+	    return(this.longDescription.toLowerCase()+this.shortDescription.toLowerCase()+this.service.toString().toLowerCase());
+	}
 
 }

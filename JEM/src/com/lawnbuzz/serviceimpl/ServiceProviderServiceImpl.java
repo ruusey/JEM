@@ -69,6 +69,7 @@ public class ServiceProviderServiceImpl implements ServiceProviderService{
 			for(com.lawnbuzz.models.Service s : sp.getServices()){
 				mapper.registerServiceProviderService(sp.getId(), s);
 			}
+			//mapper.deleteServiceProviderServiceDuplicates();
 		}
 		if(sp.getLoc()!=null){
 			mapper.updateServiceProviderGeoLoc(sp.getId(), sp.getLoc());

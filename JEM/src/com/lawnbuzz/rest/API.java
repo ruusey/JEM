@@ -3,7 +3,9 @@ package com.lawnbuzz.rest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,20 +58,28 @@ public class API {
     @Path("/auth")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response authenticateUser(Credentials credentials) {
+    public Response authenticateUser(Credentials credentials) throws WebApplicationException{
 	System.out.println(credentials.getPassword()+ " "+credentials.getUsername());
         String username = credentials.getUsername();
         String password = credentials.getPassword();
         ServiceProvider sp = LawnBuzzDao.serviceProviderService.getServiceProviderByUsername(username);
-        
+        if(sp==null) {
+            try {
+        	int id = Integer.parseInt(username);
+        	sp = LawnBuzzDao.serviceProviderService.getServiceProviderById(id);
+            }catch(Exception e) {
+        	throw APIUtils.buildWebApplicationException(
+		          Status.NOT_FOUND,
+		          APIStatus.ERROR,
+		          "Client not found",
+		          "The Client ID supplied does not match any existing Clients."); 
+            }
+        }
             
         if(password.length()==0) {
-            password  = LawnBuzzDao.userService.getUserPass(username);
+            password  = LawnBuzzDao.userService.getUserPass(sp.getId());
         }
        
-       
-       
-        System.out.println(sp);
         try {
             if(LawnBuzzDao.userService.isRegistered(sp.getId())) {
         	String token =	LawnBuzzDao.userService.getUserToken(sp.getId());
@@ -234,6 +244,30 @@ public class API {
 
     }
     @GET
+    @Path("/job-search/{query}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getJobsBySearch(@Context HttpServletRequest request, @PathParam("query") String query) {
+	
+	List<JobRequest> jobs = LawnBuzzDao.jobSearch.search(query, 5);
+	GenericEntity<List<JobRequest>> entity  = new GenericEntity<List<JobRequest>>(jobs) {};
+	if(jobs.size()>0) {
+	    return APIUtils.buildSuccess("Best jobs retrieved", entity);
+	}else {
+	    return APIUtils.buildSuccess("No search results", null);
+	}
+	    
+	
+	    
+	
+		
+	
+	
+	
+	
+
+    }
+    @GET
     @Path("/job-search/{radius}")
     @Produces("application/json")
     public Response getJobsInRadius(@Context HttpServletRequest request,
@@ -296,6 +330,16 @@ public class API {
 	return Response.ok(sPs).build();
 
     }
+    @GET
+    @Path("/services")
+    @Produces("application/json")
+    public Response getServices(@Context HttpServletRequest request) {
+	
+	com.lawnbuzz.models.Service[] services = com.lawnbuzz.models.Service.values();
+	
+	return APIUtils.buildSuccess("Retrieved all services", services);
+
+    }
     
     @ApiOperation(
 	      value = "Returns A ServiceProvider by ID, username, or email",
@@ -341,6 +385,26 @@ public class API {
 	ServiceProvider sp= null;
 	
 	    sp = LawnBuzzDao.serviceProviderService.getServiceProviderById(spId);
+	
+	if(sp!=null) {
+	    return APIUtils.buildSuccess("Succesfully retrieved ServiceProvider Geolocation", sp.getLoc().reverseGeocode());
+	}else {
+	    throw APIUtils.buildWebApplicationException(
+		          Status.BAD_REQUEST,
+		          APIStatus.ERROR,
+		          "ServiceProvider not found",
+		          "The ServiceProvider ID supplied does not match any existing Clients.");  
+	}
+	
+
+    }
+    @GET
+    @Path("/sp/geoloc/user/{username}")
+    @Produces("application/json")
+    public Response getServiceProviderGeolocUser(@Context HttpServletRequest request, @PathParam("username") String username) {
+	ServiceProvider sp= null;
+	
+	    sp = LawnBuzzDao.serviceProviderService.getServiceProviderByUsername(username);
 	
 	if(sp!=null) {
 	    return APIUtils.buildSuccess("Succesfully retrieved ServiceProvider Geolocation", sp.getLoc().reverseGeocode());
