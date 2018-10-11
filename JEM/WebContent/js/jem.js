@@ -133,7 +133,14 @@ var ServiceProviderView = Backbone.View.extend({
                     currServices.push(text);
                     write(currServices);
                     self.model.set("services", currServices);
-                    self.model.save({wait: true});
+                    self.model.save({wait: true,
+                            succes:function(model,response,options){
+                                
+                            },
+                            error: function(model,response,options){
+                                
+                            }
+                     });
                     
                 });
             });
@@ -170,10 +177,11 @@ var ServiceProviderView = Backbone.View.extend({
     render: function () {
         $("#client-data").html(this.template(this.model.toJSON()));
         
-        getAddress(this.model).done(function (value) {
-            $("#sp-location").text(value);
+        // getAddress(this.model).done(function (value) {
+        //     $("#sp-location").text(value);
+        //     this.model.set()
 
-        });
+        // });
 
         return this;
     },

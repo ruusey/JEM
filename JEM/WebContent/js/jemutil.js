@@ -42,6 +42,9 @@ function authenticate() {
             
             deffered.resolve(msg);
 
+        },
+         error: function(err,response){
+            showError(response.responeText);
         }
     });
     return deffered.promise();
@@ -67,8 +70,8 @@ function authenticateSp(uId) {
             deffered.resolve(msg);
 
         },
-        error: function(err){
-            write(err);
+        error: function(err,response){
+            showError(response.responeText);
         }
     });
     return deffered.promise();

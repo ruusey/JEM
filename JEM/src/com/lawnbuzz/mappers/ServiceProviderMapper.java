@@ -18,6 +18,7 @@ public interface ServiceProviderMapper {
 			@Result(property = "firstName", column = "firstname"),
 			@Result(property = "lastName", column = "lastname"),
 			@Result(property = "rating", column = "rating"),
+			@Result(property = "friendlyLocation", column = "friendly_geoloc"),
 			@Result(property = "services", javaType = List.class, column = "service_id", many = @Many(select = "getServices")),
 			@Result(property = "loc", javaType = GeoLocation.class, column = "geoloc_id", many = @Many(select = "getGeoLoc")) })
 	public List<ServiceProvider> getAllServiceProviders();
@@ -31,6 +32,7 @@ public interface ServiceProviderMapper {
 			@Result(property = "firstName", column = "firstname"),
 			@Result(property = "lastName", column = "lastname"),
 			@Result(property = "rating", column = "rating"),
+			@Result(property = "friendlyLocation", column = "friendly_geoloc"),
 			@Result(property = "services", javaType = List.class, column = "service_id", many = @Many(select = "getServices")),
 			@Result(property = "loc", javaType = GeoLocation.class, column = "geoloc_id", many = @Many(select = "getGeoLoc")) })
 	public ServiceProvider getServiceProviderById(@Param("id") int id);
@@ -43,6 +45,7 @@ public interface ServiceProviderMapper {
 			@Result(property = "firstName", column = "firstname"),
 			@Result(property = "lastName", column = "lastname"),
 			@Result(property = "rating", column = "rating"),
+			@Result(property = "friendlyLocation", column = "friendly_geoloc"),
 			@Result(property = "services", javaType = List.class, column = "service_id", many = @Many(select = "getServices")),
 			@Result(property = "loc", javaType = GeoLocation.class, column = "geoloc_id", many = @Many(select = "getGeoLoc")) })
 	public ServiceProvider getServiceProviderByEmail(@Param("email") String email);
@@ -55,6 +58,7 @@ public interface ServiceProviderMapper {
 			@Result(property = "firstName", column = "firstname"),
 			@Result(property = "lastName", column = "lastname"),
 			@Result(property = "rating", column = "rating"),
+			@Result(property = "friendlyLocation", column = "friendly_geoloc"),
 			@Result(property = "services", javaType = List.class, column = "service_id", many = @Many(select = "getServices")),
 			@Result(property = "loc", javaType = GeoLocation.class, column = "geoloc_id", many = @Many(select = "getGeoLoc")) })
 	public ServiceProvider getServiceProviderByUsername(@Param("username") String username);
@@ -66,9 +70,13 @@ public interface ServiceProviderMapper {
 	@Select("SELECT lng,lat,datetime"
 			+ " FROM lb.service_provider_geoloc WHERE geoloc_id = #{geoloc_id}")
 	public GeoLocation getGeoLoc(int geoLocId);
+	
+	@Select("SELECT friendly_geoloc"
+		+ " FROM lb.service_provider WHERE sp_id = #{sp_id}")
+	public String getGeoLocPretty(@Param("sp_id") int spId);
 
 	@Insert("INSERT INTO lb.service_provider (email, username, firstname, lastname,service_id, geoloc_id, rating) VALUES"
-			+ "(#{email},#{userName}, #{firstName}, #{lastName}, #{id}, #{id}, 0);")
+			+ "(#{email},#{userName}, #{firstName}, #{lastName}, #{id}, #{id}, #{rating);")
 	@Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
 	public void registerServiceProvider(ServiceProvider sp);
 	
@@ -101,7 +109,16 @@ public interface ServiceProviderMapper {
 	
 	@Update("UPDATE lb.service_provider SET rating=#{newRating} WHERE id=#{id}")
 	public void updateServiceProviderRating(@Param("id") int id, @Param("newRating") int newRating);
+	
+	@Update("UPDATE lb.service_provider SET friendly_geoloc=#{friendly_geoloc} WHERE id=#{id}")
+	public void updateServiceProviderGeolocPretty(@Param("id") int id, @Param("friendly_geoloc") String prettyLoc);
+	
+	
 	//DELETE t1 FROM lb.service_provider_service t1 INNER JOIN lb.service_provider_service t2 WHERE t1.id > t2.id AND t1.service = t2.service;
+	
+	
+	
+	
 	@Delete("DELETE FROM lb.service_provider_service WHERE service_id=#{service_id}")
 	public void deleteServiceProviderServices(@Param("service_id") int serviceId);
 	@Delete("DELETE t1 FROM lb.service_provider_service t1 INNER JOIN lb.service_provider_service t2 WHERE t1.id > t2.id AND t1.service = t2.service")

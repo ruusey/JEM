@@ -76,7 +76,8 @@
 			</div>
 		</div>
 	</div>
-	<div class="container">
+	
+	<div class="container-fluid">
 
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<i class="fas fa-gem fa-2x float-left"></i>
@@ -149,7 +150,7 @@
 	<hr>
 	<script id="entry-template" type="text/x-handlebars-template">
 
-	  <div class='bg-info p-3 text-white row justify-content-md-center col col-12'>
+	  <div class='bg-info p-3 text-white row justify-content-md-center row row-12'>
 		  <div class='col col-lg-4'><i id="edit-sp" class="fa fa-cog fa-2x" style="vertical-align: middle; color:white; float:right;">&nbsp;</i></div>
 	  		<div class="col col-lg-1 h5"><i class="fa fa-user-circle fa-2x" style=" vertical-align: middle;">&nbsp;</i>{{userName}}</div>
 			<div class="col col-lg-1 h5"><i class="fa fa-id-badge fa-2x" style=" vertical-align: middle;" aria-hidden="true">&nbsp;</i>{{firstName}}, {{lastName}}</div>
@@ -158,16 +159,16 @@
 				<div class='bg-success p-3 text-white row justify-content-md-center'>
 					<div class='col col-lg-2'></div>
 					<div class="col col-lg h5"><i class="fa fa-star" style=" vertical-align: middle;" aria-hidden="true">&nbsp;</i>Rating<br>{{rating}}</div>
-					<div id="sp-location" class="col col-lg h5">{{loc.lat}} {{loc.lng}}</div>
+					<div id="sp-location" class="col col-lg h5">{{friendlyLocation}}</div>
 					<div class='col col-lg-2'></div>
 				</div>
 			
 				
 		</div>
-		 <div class='bg-info p-3 text-white row justify-content-md-center col col-12'>
-		<div class='p-2 bg-light text-white text-centerjustify-content-md-center col col-6'>
+		 <div class='bg-info p-3 text-white row justify-content-md-center row row-12'>
+		
 			
-			<div class="container col col-5"><h3 class='p-2 mb-2 text-white bg-info'>Your Services</h3><i id="sp-add-service" class="fa fa-plus-square fa-2x text-info float-left" aria-hidden="true"></i>
+			<div class="p-2 bg-light text-white text-center justify-content-md-center col col-12"><h3 class='p-2 mb-2 text-white bg-info'>Your Services</h3><i id="sp-add-service" class="fa fa-plus-square fa-2x text-info float-left" aria-hidden="true"></i>
 			
 			<ul class='row justify-content-md-center list-group'>
 				{{#each services}}
@@ -176,10 +177,10 @@
 				{{~/each}}
 				</ul>
 			</div>	
-		</div>
 		
 		
-		<div class="p-2 bg-light text-white text-center justify-content-md-center col col-6">
+		
+		<div class="p-2 bg-light text-white text-center justify-content-md-center col col-12">
 			
 				<form class="card card-sm">
 					<div class="card-body row no-gutters align-items-center ml-1">
@@ -187,14 +188,18 @@
 							<i class="fa fa-search h4 text-dark"></i>
 						</div>
 						<!--end of col-->
-						<div class="col">
+						<div class="col-auto">
 							<input id="job-search-input" class="form-control form-control-lg form-control-borderless"  placeholder="Search jobs">
 							<i id="search-clear-icon" class="fa fa-times-circle fa-2x" aria-hidden="true"></i>
 						</div>
 						<!--end of col-->
 						<div class="col-auto">
-							<button id = "fetch-search"class="btn btn-lg btn-success" >Search</button>
+							<button id="fetch-search" class="btn btn-lg btn-success">Search</button>
+							
 						</div>
+						S
+						
+						
 						<!--end of col-->
 					</div>
 				</form>

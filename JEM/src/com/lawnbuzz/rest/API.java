@@ -59,7 +59,7 @@ public class API {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response authenticateUser(Credentials credentials) throws WebApplicationException{
-	System.out.println(credentials.getPassword()+ " "+credentials.getUsername());
+	
         String username = credentials.getUsername();
         String password = credentials.getPassword();
         ServiceProvider sp = LawnBuzzDao.serviceProviderService.getServiceProviderByUsername(username);
@@ -256,16 +256,29 @@ public class API {
 	}else {
 	    return APIUtils.buildSuccess("No search results", entity);
 	}
-	    
+    }
+    @GET
+    @Path("/job-search/{sp_id}/{query}/{radius}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getJobsByQueryRadius(@Context HttpServletRequest request,@PathParam("sp_id") int spId, @PathParam("query") String query, @PathParam("radius") int radius) {
+	ServiceProvider sp = LawnBuzzDao.serviceProviderService.getServiceProviderById(spId);
+	List<JobRequest> jobs = LawnBuzzDao.jobSearch.search(query, 5);
+	ArrayList<JobRequest> toRemove = new ArrayList<JobRequest>();
+	for(JobRequest job : jobs) {
+	    if(!LawnBuzzDao.geoService.isInRadius(sp.getLoc(), job.getLoc(), (int) LawnBuzzDao.geoService.metersToMiles((double)radius))) {
+		toRemove.add(job);
+	    }
+	}
+	jobs.removeAll(toRemove);
 	
-	    
 	
-		
-	
-	
-	
-	
-
+	GenericEntity<List<JobRequest>> entity  = new GenericEntity<List<JobRequest>>(jobs) {};
+	if(jobs.size()>0) {
+	    return APIUtils.buildSuccess("Best jobs retrieved", entity);
+	}else {
+	    return APIUtils.buildSuccess("No search results", entity);
+	}
     }
     @GET
     @Path("/job-search/{radius}")
@@ -451,8 +464,7 @@ public class API {
     @Produces("application/json")
     @Consumes("application/json")
     public Response updateServiceProvider(@Context HttpServletRequest request,  @PathParam("sp_id") int spId,  ServiceProvider sp) {
-	Gson gson = new Gson();
-	System.out.println(gson.toJson(sp));
+	
 	LawnBuzzDao.serviceProviderService.updateServiceProvider(sp);
 	return Response.ok(sp).build();
     }
@@ -461,8 +473,6 @@ public class API {
     @Produces("application/json")
     @Consumes("application/json")
     public Response updateServiceProvider2(@Context HttpServletRequest request,  @PathParam("sp_id") int spId,  ServiceProvider sp) {
-	Gson gson = new Gson();
-	System.out.println(gson.toJson(sp));
 	LawnBuzzDao.serviceProviderService.updateServiceProvider(sp);
 	return Response.ok(sp).build();
     }

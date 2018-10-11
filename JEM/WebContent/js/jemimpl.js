@@ -25,14 +25,14 @@
      }
 
  });
- //write($.cookie("sp"));
+ //($.cookie("sp"));
  if ($.cookie("sp")) {
 
      var id = $.cookie("sp");
      spModel.set("id", id);
 
      authenticateSp(id).done(function (token) {
-         //write(token);
+         //(token);
          sessionToken = token;
      });
 
@@ -47,7 +47,6 @@
                  $.cookie("sp", this.id);
              }
               initMap();
-              $("#login-link").removeClass("show");
               setLoggedIn();
          }
      });
@@ -63,7 +62,7 @@
              sessionToken = token;
          });
 
-         //write(sessionToken);
+         //(sessionToken);
          spModel.set("id", id);
          // spModel.set("username", id);
          spModel.fetch({
@@ -72,14 +71,14 @@
 
                  $("#login-dropdown").removeClass("show");
                  if (!$.cookie("sp")) {
-                     //write(spModel);
+                     //(spModel);
                      $.cookie("sp", spModel.get("id"));
                  }
 
              }
          }).done(function () {
-             setLoggedIn();
              initMap();
+             setLoggedIn();
          });
      });
  }
@@ -100,7 +99,7 @@
          currLoc.lat = crd.latitude;
          currLoc.lng = crd.longitude;
          currLoc.dateTime = lastPing.get("timestamp");
-         //write(currLoc);
+         //(currLoc);
          sp.set("loc", currLoc)
          sp.save().done(function () {
              initMap();
@@ -131,7 +130,8 @@
      google.maps.event.addListener(myPos, 'dragend', function (evt) {
          var newLat = evt.latLng.lat();
          var newLng = evt.latLng.lng();
-         var currLoc = _.clone(sp.get("loc"));
+        
+            var currLoc = _.clone(sp.get("loc"));
 
          currLoc.lat = newLat;
          currLoc.lng = newLng;
@@ -139,37 +139,48 @@
          $('#loc-modal').modal('show');
          $('#loc-modal-confirm').on('click', function (e) {
              $('#loc-modal').modal('hide');
-             sp.set("loc", currLoc);
-             sp.save({
-                 wait: true
-             }).done(function () {
-                 updateMap().done(function (value) {
-                     myPos.setPosition(constructLatLng(sp));
-                     myPos.setMap(map);
-                     myLocationInfo.setPosition(constructLatLng(sp));
-                     myLocationInfo.setContent($("<span>").text(value).append($("<br>")).append($("<h5>").text(value)).html());
-
-                     myLocationInfo.open(map, myPos);
+             
+             
+             getAddress(sp).done(function (value) {
+                 sp.set("loc", currLoc);
+                 myPos.setPosition(constructLatLng(sp));
+                 myPos.setMap(map);
+                 myLocationInfo.setPosition(constructLatLng(sp));
+                 sp.set({
+                     friendlyLocation: value
                  });
-             });
-         });
+                 sp.save({
+                     wait: true
+                 });
+                 google.maps.event.clearListeners(myPos, 'dragend');
+                 myLocationInfo.setContent($("<span>").text(value).append($("<br>")).append($("<h5>").text("My Location")).html());
 
-         //write(sessionToken);
+                 myLocationInfo.open(map, myPos);
+             });
+
+         });
+         
+         
+         
+
+         //(sessionToken);
          //  updateMap().done(function (value) {
          //     marker.label=(value);
          //      //infoWindow.setContent(value);
          //  });
-
+         
      });
      
       $("#search-clear-icon").click(function (){
         jobMarkers= deleteMarkers(jobMarkers);
         jobInfoWindows=deleteWindows(jobInfoWindows);
+        $("#job-search-input").val("");
+        google.maps.event.clearListeners(myPos, 'dragend');
       });
      $("#fetch-search").click(function (e) {
-        // e.preventDefault();
-         var query = $("#job-search-input").val();
-         write(query);
+         e.preventDefault();
+         var query = $("#job-search-input").val().toLowerCase();
+       
          if (query.length > 1) {
             jobMarkers= deleteMarkers(jobMarkers);
              jobInfoWindows=deleteWindows(jobInfoWindows);
@@ -187,7 +198,7 @@
                         showError(options.xhr.getResponseHeader('response-text'));
                     }
                      jobCollection.each(function (job) {
-                         write(job);
+                         
                          var jobPos = constructGLatLng(job);
                          var jobInfoWindow = new google.maps.InfoWindow;
                          var miLabel = newMarkerLabelJob(job)
@@ -233,7 +244,7 @@
              fetchJobs().done(function (jobs) {
 
                  jobCollection.each(function (job) {
-                     write(job);
+                     (job);
                      var jobPos = constructGLatLng(job);
                      var jobInfoWindow = new google.maps.InfoWindow;
                     var miLabel = newMarkerLabelJob(job)
@@ -286,7 +297,7 @@
              fetchJobs().done(function (jobs) {
 
                  jobCollection.each(function (job) {
-                     //write(job);
+                     //(job);
                      var jobPos = constructGLatLng(job);
                      var jobInfoWindow = new google.maps.InfoWindow;
                     var miLabel = newMarkerLabelJob(job)
@@ -312,10 +323,10 @@
                              '</div>';
                          jobInfoWindow.setContent(content);
                          mi.setMap(map);
-                         mi.addListener('mouseover', function () {
+                         mi.addListener.on('mouseover', function () {
                              jobInfoWindow.open(map, mi);
                          });
-                         mi.addListener('mouseout', function () {
+                         mi.addListener.on('mouseout', function () {
                              jobInfoWindow.close();
                          });
                          jobInfoWindows.push(jobInfoWindow);
@@ -392,8 +403,10 @@ function deleteMarkers(markers) {
  function updateMap() {
      var deferred = $.Deferred();
      var sp = spView.model;
-     //write(sp);
-     var loc = new SPGeoLocModel();
+     if(sp.get("friendlyLocation")){
+        deferred.resolve(sp.get("friendlyLocation"));
+     }else{
+        var loc = new SPGeoLocModel();
 
      loc.set("id", sp.get("id"));
      loc.fetch({
@@ -402,6 +415,8 @@ function deleteMarkers(markers) {
              deferred.resolve(response.xhr.responseText);
          }
      });
+     }
+     
      return deferred.promise();
  }
 

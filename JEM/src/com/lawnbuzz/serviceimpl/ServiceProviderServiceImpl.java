@@ -51,7 +51,6 @@ public class ServiceProviderServiceImpl implements ServiceProviderService{
 	@Override
 	public void updateServiceProvider(ServiceProvider sp) {
 	    Gson gson = new Gson();
-	    System.out.println(gson.toJson(sp));
 		if(sp.getEmail()!=null){
 			mapper.updateServiceProviderEmail(sp.getId(), sp.getEmail());
 		}
@@ -77,6 +76,10 @@ public class ServiceProviderServiceImpl implements ServiceProviderService{
 		if(sp.getRating()!=-1){
 			mapper.updateServiceProviderRating(sp.getId(), sp.getRating());
 		}
+		if(sp.getFriendlyLocation()!=null){
+		    
+			mapper.updateServiceProviderGeolocPretty(sp.getId(),sp.getFriendlyLocation());
+		}
 		
 	}
 	@Override
@@ -93,8 +96,8 @@ public class ServiceProviderServiceImpl implements ServiceProviderService{
 	}
 	@Override
 	public String getGeoLocation(int id) {
-	    GeoLocation loc = mapper.getGeoLoc(id);
-	    return loc.reverseGeocode();
+	    String loc = mapper.getGeoLocPretty(id);
+	    return loc;
 	    
 	}
 
