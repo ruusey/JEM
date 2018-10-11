@@ -381,11 +381,14 @@ public class API {
     @GET
     @Path("/sp/geoloc/{sp_id}")
     @Produces("application/json")
-    public Response getServiceProviderGeoloc(@Context HttpServletRequest request, @PathParam("sp_id") int spId) {
+    public Response getServiceProviderGeoloc(@Context HttpServletRequest request, @PathParam("sp_id") String spId) {
 	ServiceProvider sp= null;
-	
-	    sp = LawnBuzzDao.serviceProviderService.getServiceProviderById(spId);
-	
+	try {
+	    sp = LawnBuzzDao.serviceProviderService.getServiceProviderById(Integer.parseInt(spId)); 
+	}catch(Exception e) {
+	    sp = LawnBuzzDao.serviceProviderService.getServiceProviderByUsername(spId); 
+	}
+	   
 	if(sp!=null) {
 	    return APIUtils.buildSuccess("Succesfully retrieved ServiceProvider Geolocation", sp.getLoc().reverseGeocode());
 	}else {

@@ -120,14 +120,17 @@ var ServiceProviderView = Backbone.View.extend({
             $.each($(".list-group-item.service"), function (idx, value) {
                 
                 $(value).one("click", function (e1) {
-                    e1.stopPropagation();
+                    //e1.stopPropagation();
                     $(this).addClass("active");
+                    var text = $.trim($(this).text().replace(/[\t\n]+/g, ''));
                     var currServices = _.clone(self.model.get("services"));
 
-                    currServices.push($(this).text());
+                    
                     currServices = jQuery.grep(currServices, function (value) {
-                        return value != $(this).text();
+                        
+                        return value != text;
                     });
+                    currServices.push(text);
                     write(currServices);
                     self.model.set("services", currServices);
                     self.model.save({wait: true});
@@ -166,6 +169,7 @@ var ServiceProviderView = Backbone.View.extend({
     },
     render: function () {
         $("#client-data").html(this.template(this.model.toJSON()));
+        
         getAddress(this.model).done(function (value) {
             $("#sp-location").text(value);
 
