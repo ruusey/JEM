@@ -15,9 +15,9 @@ public interface UserMapper{
 	@Select("SELECT auth_id FROM lb.user_creds WHERE  user_id=#{uId} AND username=#{username}")
 	public Integer getUserAuth(@Param("user_id") int uId, @Param("username") String username);
 	
-	@Insert("INSERT INTO lb.user_creds(user_id, username, auth_id) VALUES"
+	@Insert("INSERT INTO lb.user_creds(user_id, username, password) VALUES"
 	          + "(#{user_id},#{username}, #{user_id})")
-	public void createUserAuth(@Param("user_id") int uId, @Param("username") String username);
+	public void createUserAuth(@Param("user_id") int uId, @Param("username") String username, @Param("password") String password);
 	
 	@Insert("INSERT INTO lb.user_auth(user_id, user_token, expires) VALUES"
 	          + "(#{user_id},#{user_token}, #{expires})")

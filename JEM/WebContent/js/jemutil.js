@@ -1,3 +1,4 @@
+
 var sessionToken;
 var serviceList = [];
 function write(data) {
@@ -22,11 +23,8 @@ function showError(info) {
 }
 
 function getGeoLocation() {
-
     navigator.geolocation.getCurrentPosition(geoFetchSuccess);
-
 }
-
 function authenticate() {
     var deffered = $.Deferred();
     var arr = {
@@ -102,8 +100,9 @@ function setLoggedOut() {
 }
 
 function setLoggedIn() {
-    $("#login-link").hide();
     $("#logout-list-item").show();
+    $("#login-link").hide();
+    
 }
 
 function initialize() {
@@ -118,7 +117,7 @@ $(document).on('click', function (e) {
     });
 });
     toastr.options = {
-        "positionClass": "toast-top-left"
+        "positionClass": "toast-top-center"
     };
 
 }

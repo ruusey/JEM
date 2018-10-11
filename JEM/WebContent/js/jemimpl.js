@@ -19,10 +19,9 @@
          spModel.clear();
 
          $.removeCookie("sp");
-
+         showSuccess("Logout successful");
          setLoggedOut();
-         location.reload();
-
+         _.delay(function(){location.reload()},2000);
      }
 
  });
@@ -40,16 +39,17 @@
      spModel.fetch({
          beforeSend: sendAuthentication,
          success: function () {
+              
+        
              spView.render;
              $("#login-dropdown").removeClass("show");
              if (!$.cookie("sp")) {
                  $.cookie("sp", this.id);
              }
+              initMap();
+              $("#login-link").removeClass("show");
+              setLoggedIn();
          }
-     }).done(function () {
-
-         setLoggedIn();
-         initMap();
      });
 
      //});
@@ -78,6 +78,7 @@
 
              }
          }).done(function () {
+             setLoggedIn();
              initMap();
          });
      });
@@ -118,7 +119,7 @@
      var myLocationInfo = new google.maps.InfoWindow;
      var map = new google.maps.Map(document.getElementById('map'), {
          center: myLocation,
-         zoom: 10
+         zoom: 9
      });
      var myPos = new google.maps.Marker({
          map: map,
@@ -134,7 +135,7 @@
 
          currLoc.lat = newLat;
          currLoc.lng = newLng;
-         currLoc.dateTime = getCurrentTimestamp();
+         currLoc.dateTime = pingView.model.get("timestamp");
          $('#loc-modal').modal('show');
          $('#loc-modal-confirm').on('click', function (e) {
              $('#loc-modal').modal('hide');
@@ -166,7 +167,7 @@
         jobInfoWindows=deleteWindows(jobInfoWindows);
       });
      $("#fetch-search").click(function (e) {
-         e.preventDefault();
+        // e.preventDefault();
          var query = $("#job-search-input").val();
          write(query);
          if (query.length > 1) {
@@ -176,12 +177,15 @@
                  id: query
              });
              jobSearch.fetch({
-                 success: function (jobs, response) {
+                 success: function (jobs, response,options) {
                      jobCollection.reset(null);
-
                      jobCollection.set(jobCollection.parse(response));
 
-                     write(jobCollection);
+                    if(jobCollection.length>0){
+                        showSuccess(options.xhr.getResponseHeader('response-text'));
+                    }else{
+                        showError(options.xhr.getResponseHeader('response-text'));
+                    }
                      jobCollection.each(function (job) {
                          write(job);
                          var jobPos = constructGLatLng(job);
@@ -223,16 +227,13 @@
                  }
              });
 
-
-
-
          } else {
             jobMarkers= deleteMarkers(jobMarkers);
              jobInfoWindows=deleteWindows(jobInfoWindows);
              fetchJobs().done(function (jobs) {
-                
+
                  jobCollection.each(function (job) {
-                     //write(job);
+                     write(job);
                      var jobPos = constructGLatLng(job);
                      var jobInfoWindow = new google.maps.InfoWindow;
                     var miLabel = newMarkerLabelJob(job)
@@ -344,7 +345,7 @@
  function newMarkerLabelJob(obj){
      var service = obj.get("service");
      var mapLabel = new MapLabel({
-          text: service.replace("_",""),
+          text: service.replace("_","\n"),
           position: constructLatLng(obj),
           fontSize: 20,
           align: 'center'

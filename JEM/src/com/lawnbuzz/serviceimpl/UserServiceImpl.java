@@ -22,8 +22,8 @@ public class UserServiceImpl implements UserService {
     private UserMapper mapper;
 
     @Override
-    public void createUserAuth(int uId, String username) {
-	mapper.createUserAuth(uId, username);
+    public void createUserAuth(int uId, String username,String password) {
+	mapper.createUserAuth(uId, username,password);
 
     }
 

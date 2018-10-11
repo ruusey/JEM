@@ -1,4 +1,5 @@
 "use-strict";
+
 var JobGeoLocModel = Backbone.Model.extend({
     idAttribute: "id",
     urlRoot: "v1/job/geoloc"
@@ -103,42 +104,36 @@ var ServiceProviderView = Backbone.View.extend({
          
         var self = this;
        
-        loc.popover({
+        $(e.target).popover({
             placement: 'left',
-            container: 'body',
+            container: '#sp-add-service',
             title: "Available Services",
             html: true,
             content: this.attributes.popoverContent,
+            selector: '#sp-add-service',
             trigger: 'manual'
         });
        
-            loc.popover("show");
+            $(e.target).popover("toggle");
             write("togggle");
-        
-    
-       
+ 
             $.each($(".list-group-item.service"), function (idx, value) {
                 
-                $(value).one("click", function () {
+                $(value).one("click", function (e1) {
+                    e1.stopPropagation();
                     $(this).addClass("active");
                     var currServices = _.clone(self.model.get("services"));
 
                     currServices.push($(this).text());
                     currServices = jQuery.grep(currServices, function (value) {
-                        return value != $(e.target).text();
+                        return value != $(this).text();
                     });
                     write(currServices);
                     self.model.set("services", currServices);
                     self.model.save({wait: true});
-
+                    
                 });
             });
-       
-        
-
-
-
-
     },
     closePopover: function (e) {
         $(e.target).popover("dispose");

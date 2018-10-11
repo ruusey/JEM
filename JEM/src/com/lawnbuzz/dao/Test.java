@@ -42,7 +42,7 @@ public class Test {
 	    labels.put(Service.DOG_SITTING, "Feed and walk our dog while we are on vacation");
 	    labels.put(Service.PROJECT_ASSISTANCE, "Tutor me in CSCE146");
 	    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-	    testLogin("ruboy123");
+	    testSPRegister();
 	    
 	    //LawnBuzzDao dao = new LawnBuzzDao();
 //		
@@ -74,20 +74,21 @@ public class Test {
 		ServiceProviderServiceImpl service = (ServiceProviderServiceImpl) cxt
 				.getBean("serviceProviderService");
 		
+		GeoLocation loc = service.getServiceProviderById(1).getLoc();
+		
 		ServiceProvider sp = new ServiceProvider();
-		sp.setEmail("nmello7337@gmail.com");
-		sp.setUserName("nmello");
-		sp.setFirstName("Natalie");
-		sp.setLastName("Mello");
+		sp.setEmail("guest@gmail.com");
+		sp.setUserName("guest");
+		sp.setFirstName("Guest");
+		sp.setLastName("Visitor");
 		List<com.lawnbuzz.models.Service> sList = new ArrayList<com.lawnbuzz.models.Service>();
 		sList.add(com.lawnbuzz.models.Service.BABYSITTING);
 		sList.add(com.lawnbuzz.models.Service.CLEANING);
-		GeoLocation geo = new GeoLocation(35.2271, 80.8431,
-			com.lawnbuzz.util.Util.getCurrentDateTime());
+		
 
 		sp.setServices(sList);
-		sp.setLoc(geo);
-		sp.setRating(0);
+		sp.setLoc(loc);
+		sp.setRating(99);
 
 		service.registerServiceProvider(sp);
 
@@ -150,7 +151,7 @@ public class Test {
 	    if(LawnBuzzDao.userService.isRegistered(s.getId())) {
 		System.out.println(LawnBuzzDao.userService.getUserToken(s.getId()));
 	    }else {
-		LawnBuzzDao.userService.createUserAuth(s.getId(), s.getUserName());
+		//LawnBuzzDao.userService.createUserAuth(s.getId(), s.getUserName());
 		try {
 		    String token = SHAHash.generateStorngPasswordHash(password);
 		    System.out.println(token.length());

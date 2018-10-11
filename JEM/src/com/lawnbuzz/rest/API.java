@@ -88,7 +88,7 @@ public class API {
         	}
             }else {
         	String token = SHAHash.generateStorngPasswordHash(password);
-        	LawnBuzzDao.userService.createUserAuth(sp.getId(), username);
+        	LawnBuzzDao.userService.createUserAuth(sp.getId(), username,password);
         	LawnBuzzDao.userService.registerUserAuth(sp.getId(), token, Util.getCurrentDateTime2());
         	return APIUtils.buildSuccess("Token succesfully created", token);
             }
@@ -254,7 +254,7 @@ public class API {
 	if(jobs.size()>0) {
 	    return APIUtils.buildSuccess("Best jobs retrieved", entity);
 	}else {
-	    return APIUtils.buildSuccess("No search results", null);
+	    return APIUtils.buildSuccess("No search results", entity);
 	}
 	    
 	
