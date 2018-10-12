@@ -137,13 +137,13 @@
          var newLat = evt.latLng.lat();
          var newLng = evt.latLng.lng();
 
-         var currLoc = _.clone(sp.get("loc"));
+         var currLoc = constructLatLng(sp);
 
          currLoc.lat = newLat;
          currLoc.lng = newLng;
          currLoc.dateTime = pingView.model.get("timestamp");
          sp.set({loc:currLoc});
-
+        sp.save({wait:true});
          $('#loc-modal').modal('show');
          $('#loc-modal-confirm').on('click', function (e) {
              $('#loc-modal').modal('hide');
@@ -151,17 +151,17 @@
 
              getAddress(sp).done(function (value) {
                  
-                
+                    
                  write(value);
                  sp.set({
                      friendlyLocation: value
                  });
-
                  sp.save({wait:true});
+                 
                  myLocationInfo.setPosition(constructLatLng(sp));
                     myPos.setPosition(constructLatLng(sp));
                  myPos.setMap(map);
-                 myLocationInfo.setContent($("<span>").text(sp.get("friendlyLocation")).append($("<br>")).append($("<h5>").text("My Location")).html());
+                 myLocationInfo.setContent($("<span>").text(value).append($("<br>")).append($("<h5>").text("My Location")).html());
 
                  myLocationInfo.open(map, myPos);
                  

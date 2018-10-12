@@ -1,0 +1,7 @@
+customPatterns=true
+customValidation=true
+eclipse.preferences.version=1
+enabledBuilders=org.eclipse.wst.jsdt.internal.core.builder.JavaBuilder,
+enabledValidators=org.eclipse.wst.jsdt.internal.core.validation.JavaScriptValidator,org.eclipse.wst.jsdt.web.core.internal.validation.JsValidator,
+patternsAdded=*.jav,*.java,
+patternsRemoved=*.asp,*.aspx,*.babelrc,*.bowerrc,*.ejs,*.es6,*.eslintrc,*.htm,*.html,*.js,*.jscsrc,*.jshintrc,*.jshtm,*.json,*.mdoc,*.mjs,*.pac,*.rhtml,*.shtml,*.volt,*.webmanifest,

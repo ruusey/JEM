@@ -11,6 +11,13 @@
       "request": "launch",
       "program": "${workspaceFolder}/WebContent/js/jem.js",
       "cwd": "${workspaceFolder}/WebContent/js"
+    },
+    {
+      "name": "Attach to Chrome JEM",
+      "type": "chrome",
+      "request": "launch",
+      "webRoot": "${workspaceFolder}",
+      "url": "https://uscworks.com/JEM"
     }
   ]
 }

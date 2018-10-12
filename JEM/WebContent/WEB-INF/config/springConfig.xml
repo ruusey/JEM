@@ -9,7 +9,7 @@
 
 	<mvc:annotation-driven />
 
-	<context:component-scan base-package="com.lawnbuzz" />
+	<context:component-scan base-package="com.jem" />
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="configLocation" value="classpath:myBatis.xml" />
@@ -34,7 +34,7 @@
 	</bean>
 	
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-  		<property name="basePackage" value="com.lawnbuzz.mappers" />
+  		<property name="basePackage" value="com.jem.mappers" />
 	</bean>
 	
 
