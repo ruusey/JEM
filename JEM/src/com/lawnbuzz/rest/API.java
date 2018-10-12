@@ -44,6 +44,7 @@ import com.lawnbuzz.models.ServiceProvider;
 import com.lawnbuzz.util.APIUtils;
 import com.lawnbuzz.util.ApiScanner;
 import com.lawnbuzz.util.Util;
+import com.sun.org.apache.xml.internal.serializer.utils.Utils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -250,7 +251,7 @@ public class API {
     public Response getJobsBySearch(@Context HttpServletRequest request, @PathParam("query") String query) {
 	
 	List<JobRequest> jobs = LawnBuzzDao.jobSearch.search(query, 5);
-	GenericEntity<List<JobRequest>> entity  = new GenericEntity<List<JobRequest>>(jobs) {};
+	GenericEntity<List<JobRequest>> entity  = APIUtils.toGeneric(jobs);
 	if(jobs.size()>0) {
 	    return APIUtils.buildSuccess("Best jobs retrieved", entity);
 	}else {
@@ -273,7 +274,7 @@ public class API {
 	jobs.removeAll(toRemove);
 	
 	
-	GenericEntity<List<JobRequest>> entity  = new GenericEntity<List<JobRequest>>(jobs) {};
+	GenericEntity<List<JobRequest>> entity  = APIUtils.toGeneric(jobs);
 	if(jobs.size()>0) {
 	    return APIUtils.buildSuccess("Best jobs retrieved", entity);
 	}else {
@@ -281,13 +282,14 @@ public class API {
 	}
     }
     @GET
-    @Path("/job-search/{radius}")
+    @Path("/job-search/{sp_id}/{radius}")
     @Produces("application/json")
     public Response getJobsInRadius(@Context HttpServletRequest request,
-	    @DefaultValue("10") @PathParam("radius") int radius) {
+	    @PathParam("sp_id") int id, @PathParam("radius") int radius) {
 	ServiceProvider logged = LawnBuzzDao.serviceProviderService.getServiceProviderById(1);
 	List<JobRequest> jobs = LawnBuzzDao.jobService.getJobsInRadius(logged.getLoc(), radius);
-	return Response.ok(jobs).build();
+	GenericEntity<List<JobRequest>> entity  = APIUtils.toGeneric(jobs);
+	return APIUtils.buildSuccess("No search results", entity);
 
     }
     @POST

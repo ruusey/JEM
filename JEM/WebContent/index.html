@@ -195,9 +195,17 @@
 						<!--end of col-->
 						<div class="col-auto">
 							<button id="fetch-search" class="btn btn-lg btn-success">Search</button>
+							<hr>
 							
+							<label for="radius-input">Search Radius</label>
+							 <i id="disable-radius-search" class="fa fa-times-circle fa-2x float-right" title="Disable radius search" aria-hidden="true"></i>
+							  <input type="text" id="radius-input" readonly style="border:0; color:#f6931f; font-weight:bold;">
+							  <div id="radius-slider">
+								 
+							  </div>
 						</div>
-						S
+						
+						
 						
 						
 						<!--end of col-->
@@ -242,7 +250,59 @@
 					<input id="new-rating" type="text" name="rating" value="{{rating}}">
 				</div>
 				<div class="col col-lg h5">
-					<input type="text" name="lname" value="{{loc.lat}} {{loc.lng}}">
+					<input type="text" name="lname" value="{{friendlyLocation}}">
+				</div>
+				<div class='col col-lg-2'></div>
+			</div>
+		</div>
+		<hr>
+		<div class='p-2 ml-2 bg-light text-white text-center row justify-content-md-center col col-4'>
+			<div>
+				<h3 class='p-2 mb-2 text-white bg-info'>Your Services</h3>
+
+				<ul class='row justify-content-md-center list-group'>
+					{{#each services}}
+					<li class='list-group-item text-center d-flex justify-content-between align-items-center text-info'>
+						{{.}}
+					</li>
+					{{~/each}}
+				</ul>
+			</div>
+		</div>
+
+	</script>
+	<script id="sp-register-template" type="text/x-handlebars-template">
+
+		<div class='bg-info p-3 text-white row justify-content-md-center'>
+			<div class='col col-lg-1'>
+				<i id="edit-sp-cancel" class="fa fa-times-circle fa-2x" style="vertical-align: middle; color:white; float:right;">&nbsp;</i>
+			</div>
+			<div class='col col-lg-1'>
+				<i id="edit-sp-save" class="fa fa-check-square fa-2x" style="vertical-align: middle; color:white; float:right;">&nbsp;</i>
+			</div>
+
+			<div class="col col-lg-1 h5">
+				<i class="fa fa-user-circle fa-2x" style="vertical-align: middle;">&nbsp;</i>
+				<input type="text" id="new-username" name="username" value="{{userName}}">
+			</div>
+			<div class="col col-lg-1 h5">
+				<i class="fa fa-id-badge fa-2x" style=" vertical-align: middle;" aria-hidden="true">&nbsp;</i>
+				<input id="new-name" type="text" name="name" value="{{firstName}}, {{lastName}}">
+			</div>
+			<div class="col col-lg-1 h5">
+				<i class="fa fa-envelope fa-2x" style=" vertical-align: middle;" aria-hidden="true">&nbsp;</i>
+				<input id="new-email" type="text" name="email" value="{{email}}">
+			</div>
+			<div class='col col-lg-4'></div>
+			<div class='bg-success p-3 text-white row justify-content-md-center'>
+				<div class='col col-lg-2'></div>
+				<div class="col col-lg h5">
+					<i class="fa fa-star" style=" vertical-align: middle;" aria-hidden="true">&nbsp;</i>Rating
+					<br>
+					<input id="new-rating" type="text" name="rating" value="{{rating}}">
+				</div>
+				<div class="col col-lg h5">
+					<input type="text" name="lname" value="{{friendlyLocation}}">
 				</div>
 				<div class='col col-lg-2'></div>
 			</div>

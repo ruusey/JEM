@@ -3,6 +3,7 @@ package com.lawnbuzz.util;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.StatusType;
@@ -11,6 +12,7 @@ import org.glassfish.jersey.server.ContainerRequest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lawnbuzz.models.APIStatus;
+import com.lawnbuzz.models.JobRequest;
 import com.lawnbuzz.models.Response;
 
 public abstract class APIUtils {
@@ -68,7 +70,9 @@ public abstract class APIUtils {
     else return value;
   }
 
- 
+  public static GenericEntity<List<JobRequest>> toGeneric(List<JobRequest> jobs){
+     return new GenericEntity<List<JobRequest>>(jobs) {};
+  }
 
   public static String getPath(HttpServletRequest request) {
     String url = "";

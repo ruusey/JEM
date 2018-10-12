@@ -55,11 +55,20 @@ gm-style-iw {
 #search-clear-icon {
     position: absolute;
     right: 5px;
+    bottom: 5px;
     top: 0;
     bottom: 0;
     height: 14px;
     margin: auto;
-    font-size: 14px;
+    font-size: 18px;
+    cursor: pointer;
+    color: #ccc;
+}
+#disable-radius-search {
+   
+    height: 14px;
+    margin: auto;
+    font-size: 18px;
     cursor: pointer;
     color: #ccc;
 }

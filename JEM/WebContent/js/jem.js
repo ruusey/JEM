@@ -31,6 +31,9 @@ var JobQueryModel = Backbone.Model.extend({
     idAttribute: "id",
     urlRoot: "v1/job-search"
 });
+var JobQueryRadiusModel = Backbone.Model.extend({
+    idAttribute: "id"
+});
 var JobModel = Backbone.Model.extend({
     idAttribute: "id"
 });
@@ -54,6 +57,7 @@ var ServiceProviderView = Backbone.View.extend({
 
     },
     initialize: function () {
+        
         this.attributes = {};
         this.attributes.addingService = false;
         this.listenTo(this.model, "add", this.render);
@@ -133,14 +137,7 @@ var ServiceProviderView = Backbone.View.extend({
                     currServices.push(text);
                     write(currServices);
                     self.model.set("services", currServices);
-                    self.model.save({wait: true,
-                            succes:function(model,response,options){
-                                
-                            },
-                            error: function(model,response,options){
-                                
-                            }
-                     });
+                    self.model.save({wait: true});
                     
                 });
             });
@@ -175,7 +172,10 @@ var ServiceProviderView = Backbone.View.extend({
         $("#client-data").html(this.template(this.model.toJSON()));
     },
     render: function () {
+        
         $("#client-data").html(this.template(this.model.toJSON()));
+        
+            showRadiusSlider();
         
         // getAddress(this.model).done(function (value) {
         //     $("#sp-location").text(value);
