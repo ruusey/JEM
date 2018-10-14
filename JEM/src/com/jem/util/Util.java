@@ -1,4 +1,4 @@
-package com.ljem.util;
+package com.jem.util;
 
 import java.text.DateFormat;
 import java.text.ParseException;

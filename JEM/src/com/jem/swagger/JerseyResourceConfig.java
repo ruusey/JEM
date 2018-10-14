@@ -41,7 +41,7 @@ public class JerseyResourceConfig extends ResourceConfig {
 		beanConfig.setDescription("JEM - Java Event Management <br>API Designed to streamline Student's access to part time work.");
 		beanConfig.getSwagger().addConsumes(MediaType.APPLICATION_JSON);
 		beanConfig.getSwagger().addProduces(MediaType.APPLICATION_JSON);
-    	beanConfig.setResourcePackage("com.lawnbuzz.rest");
+    	beanConfig.setResourcePackage("com.jem.rest");
     	beanConfig.setPrettyPrint(true);
     	beanConfig.setScan(true);
     }

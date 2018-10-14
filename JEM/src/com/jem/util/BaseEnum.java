@@ -1,4 +1,4 @@
-package com.ljem.util;
+package com.jem.util;
  
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;

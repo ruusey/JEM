@@ -41,9 +41,9 @@ import com.jem.models.GeoLocation;
 import com.jem.models.JobRequest;
 import com.jem.models.Pong;
 import com.jem.models.ServiceProvider;
-import com.ljem.util.APIUtils;
-import com.ljem.util.ApiScanner;
-import com.ljem.util.Util;
+import com.jem.util.APIUtils;
+import com.jem.util.ApiScanner;
+import com.jem.util.Util;
 import com.sun.org.apache.xml.internal.serializer.utils.Utils;
 
 import io.swagger.annotations.Api;
@@ -428,7 +428,7 @@ public class API {
 		          "ServiceProvider not found",
 		          "The ServiceProvider ID supplied does not match any existing Clients.");  
 	}
-	
+    
 
     }
     @GET

@@ -1,4 +1,4 @@
-package com.ljem.util;
+package com.jem.util;
 
 import java.util.ArrayList;
 import java.util.List;

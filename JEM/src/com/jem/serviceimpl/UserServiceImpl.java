@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.jem.mappers.UserMapper;
 import com.jem.models.User;
 import com.jem.service.UserService;
-import com.ljem.util.Util;
+import com.jem.util.Util;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {

@@ -23,7 +23,7 @@ import com.jem.models.Service;
 import com.jem.models.ServiceProvider;
 import com.jem.serviceimpl.ClientServiceImpl;
 import com.jem.serviceimpl.ServiceProviderServiceImpl;
-import com.ljem.util.Util;
+import com.jem.util.Util;
 import com.owlike.genson.Genson;
 
 public class Test {
@@ -138,7 +138,7 @@ public class Test {
 		sList.add(com.jem.models.Service.BABYSITTING);
 		sList.add(com.jem.models.Service.CLEANING);
 		GeoLocation geo = new GeoLocation(35.2271, 80.8431,
-				com.ljem.util.Util.getCurrentDateTime());
+				com.jem.util.Util.getCurrentDateTime());
 
 		sp.setLoc(geo);
 		sp.setRating(0);
@@ -197,7 +197,7 @@ public class Test {
 			    randLng= atlLng + r.nextDouble();
 			}
 			GeoLocation geo = new GeoLocation(randLat, randLng,
-					com.ljem.util.Util.getCurrentDateTime());
+					com.jem.util.Util.getCurrentDateTime());
 			Service sr = Service.values()[r.nextInt(Service.values().length)];
 			JobRequest jr = new JobRequest();
 			jr.setJobId(ownerId);
@@ -214,7 +214,7 @@ public class Test {
 
 	public static void addRandomJobs() {
 		GeoLocation geo = new GeoLocation(34.00, 84.3880,
-				com.ljem.util.Util.getCurrentDateTime());
+				com.jem.util.Util.getCurrentDateTime());
 		JobRequest jr = new JobRequest();
 		jr.setComplete(false);
 		jr.setLoc(geo);

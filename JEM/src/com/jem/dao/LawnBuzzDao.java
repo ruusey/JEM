@@ -9,8 +9,8 @@ import com.jem.serviceimpl.ClientServiceImpl;
 import com.jem.serviceimpl.JobServiceImpl;
 import com.jem.serviceimpl.ServiceProviderServiceImpl;
 import com.jem.serviceimpl.UserServiceImpl;
-import com.ljem.util.GeoLocServices;
-import com.ljem.util.Util;
+import com.jem.util.GeoLocServices;
+import com.jem.util.Util;
 
 @Component
 public class LawnBuzzDao {
