@@ -31,8 +31,9 @@ var JobQueryModel = Backbone.Model.extend({
     idAttribute: "id",
     urlRoot: "v1/job-search"
 });
-var JobQueryRadiusModel = Backbone.Model.extend({
-    idAttribute: "id"
+var JobSearchServiceModel = Backbone.Model.extend({
+    idAttribute: "id",
+    urlRoot: "v1/job-search/service"
 });
 var JobModel = Backbone.Model.extend({
     idAttribute: "id"
@@ -106,7 +107,6 @@ var ServiceProviderView = Backbone.View.extend({
 
         var toRemove = span.text();
         toRemove = $.trim(toRemove.replace(/[\t\n]+/g, ''));
-        toRemove=toRemove.toUpperCase();
         write(toRemove);
         $("#job-search-input").val(toRemove);
         $("#fetch-search").trigger("click");

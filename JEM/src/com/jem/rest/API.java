@@ -256,23 +256,23 @@ public class API {
 	List<JobRequest> jobs = LawnBuzzDao.jobService.getAllIncompleteJobs();
 	return Response.ok(jobs).build();
     }
-    @ApiOperation("Get jobs by Service")
-    @ApiResponses({@ApiResponse(code = 200, message = "Jobs retrieved by Service", response = List.class)})
-    @GET
-    @Path("/job-search/{service}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response getJobsByService(@Context HttpServletRequest request, @PathParam("service") com.jem.models.Service s) {
-	
-	List<JobRequest> jobs = LawnBuzzDao.jobService.getJobsByService(s.toString());
-	GenericEntity<List<JobRequest>> entity  = APIUtils.toGeneric(jobs);
-	if(jobs.size()>0) {
-	    return APIUtils.buildSuccess("Best jobs retrieved", entity);
-	}else {
-	    return APIUtils.buildSuccess("No search results", entity);
-	}
-
-    }
+//    @ApiOperation("Get jobs by Service")
+//    @ApiResponses({@ApiResponse(code = 200, message = "Jobs retrieved by Service", response = List.class)})
+//    @GET
+//    @Path("/job-search/service/{service}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public Response getJobsByService(@Context HttpServletRequest request, @PathParam("service") com.jem.models.Service s) {
+//	
+//	List<JobRequest> jobs = LawnBuzzDao.jobService.getJobsByService(s);
+//	GenericEntity<List<JobRequest>> entity  = APIUtils.toGeneric(jobs);
+//	if(jobs.size()>0) {
+//	    return APIUtils.buildSuccess("Best jobs retrieved", entity);
+//	}else {
+//	    return APIUtils.buildSuccess("No search results", entity);
+//	}
+//
+//    }
     @ApiOperation("Get jobs by query")
     @ApiResponses({@ApiResponse(code = 200, message = "Jobs retrieved by Service", response = List.class)})
     @GET
@@ -280,7 +280,7 @@ public class API {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.TEXT_PLAIN)
     public Response getJobsBySearch(@Context HttpServletRequest request, @PathParam("query") String query) {
-	query = query.toLowerCase();
+	query = query.toLowerCase().replace("_", "").trim();
 	List<JobRequest> jobs = LawnBuzzDao.jobSearch.search(query, 5);
 	GenericEntity<List<JobRequest>> entity  = APIUtils.toGeneric(jobs);
 	if(jobs.size()>0) {

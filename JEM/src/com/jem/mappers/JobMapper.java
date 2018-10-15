@@ -48,7 +48,7 @@ public interface JobMapper {
 			@Result(property = "pay", column = "pay"),
 			@Result(property = "complete", column = "complete"),
 			@Result(property = "loc", javaType = GeoLocation.class, column = "geoloc_id", many = @Many(select = "getGeoLocJob")) })
-	public List<JobRequest> getJobsByService(@Param("service") String service);
+	public List<JobRequest> getJobsByService(@Param("service") Service service);
 	
 	@Update("UPDATE lb.job SET complete=1 WHERE id=#{id}")
 	public void completeJob(@Param("id") int id);
