@@ -1,5 +1,5 @@
 
-var sessionToken;
+var sessionToken=null;
 var serviceList = [];
 function write(data) {
     console.log(JSON.stringify(data, null, 4));
@@ -107,7 +107,9 @@ function setLoggedIn() {
     $("#login-link").hide();
     
 }
-
+function topInViewport(element) {
+    return $(element).offset().top >= $(window).scrollTop() && $(element).offset().top <= $(window).scrollTop() + $(window).height();
+ }
 function initialize() {
     $(document).on('click', function (e) {
         $('[data-toggle="popover"],[data-original-title]').each(function () {
@@ -122,6 +124,14 @@ function initialize() {
     toastr.options = {
         "positionClass": "toast-top-center"
     };
+    $("#map-container").on( "resizestop", function( event, ui ) {
+        $('html, body').animate({
+                    scrollTop: $(document).height()
+        }, 200);
+    } );
+   
+    
+
    
 
 }

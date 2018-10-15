@@ -1,6 +1,7 @@
  "use-strict";
  initialize();
-
+var isMobile=false;
+var myIp=null;
  var pingModel = new PingModel();
  var pingView = new PingView({
      model: pingModel
@@ -12,8 +13,32 @@
  var jobCollection = new JobCollection();
 
  setInterval(function () {
-     pingModel.fetch();
+     pingModel.fetch({success:determineIsMobile});
+
  }, 1000);
+ function determineIsMobile(model,xhr,response){
+     if(sessionToken==null)return;
+        var mobile = response.xhr.getResponseHeader('response-text');
+        if(myIp==null){
+            myIp=pingModel.get("sourceIp");
+        }else{
+            return;
+        }
+        if(mobile==="true"){
+            var height = $( window ).height();
+            $("#map-container").resizable().resizable( "option", "grid", [ 0, 10 ] );
+            $("#map-container").css("height",(height/2)+"px").css("margin-bottom",(height/6)+"px");
+            isMobile=true;
+            initMap();
+        }else{
+            var height = $( window ).height();
+            $("#map-container").resizable().resizable( "option", "grid", [ 0, 10 ] );
+            $("#map-container").css("height",(height/3)+"px",).css("margin-bottom",(height/6)+"px");
+            isMobile=false;
+            initMap();
+        }
+        showSuccess("Is Mobile: "+isMobile);
+ }
  $("#log-out-sp").on("click", function () {
      if (spModel) {
          spModel.clear();
@@ -48,7 +73,7 @@
              if (!$.cookie("sp")) {
                  $.cookie("sp", this.id);
              }
-             initMap();
+             
              setLoggedIn();
          }
      });
@@ -190,7 +215,7 @@ $           ('#loc-modal-confirm').off();
      $("#fetch-search").on("click",function (e) {
          e.preventDefault();
          e.stopPropagation();
-         var query = $("#job-search-input").val().toLowerCase();
+         var query = $("#job-search-input").val();
         //&& $("#radius-slider").slider("option", "disabled")
          if (query.length > 1 ) {
              $("#fetch-search").text("Search jobs");

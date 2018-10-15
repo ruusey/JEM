@@ -13,6 +13,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -43,6 +44,7 @@ import com.jem.models.Pong;
 import com.jem.models.ServiceProvider;
 import com.jem.util.APIUtils;
 import com.jem.util.ApiScanner;
+import com.jem.util.UAgentInfo;
 import com.jem.util.Util;
 import com.sun.org.apache.xml.internal.serializer.utils.Utils;
 
@@ -117,11 +119,19 @@ public class API {
     @ApiOperation("Handle ping request from client")
     @ApiResponses({@ApiResponse(code = 200, message = "OK: pong", response = Pong.class)})
     
-    public Response ping(@Context HttpServletRequest request) {
+    public Response ping(@HeaderParam("user-agent") String userAgent,@HeaderParam("accept") String accept,@Context HttpServletRequest request) {
 	String timeStamp =
 	        new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss").format(Calendar.getInstance().getTime());
+	UAgentInfo mobile = new UAgentInfo(userAgent,accept);
+	if(mobile.detectMobileLong()) {
 	    Pong p = new Pong(request.getRemoteAddr(), timeStamp, "pong");
-	    return Response.ok(p).build();
+	    return APIUtils.buildSuccess("true", p);
+	}else{
+	    Pong p = new Pong(request.getRemoteAddr(), timeStamp, "pong");
+	    return APIUtils.buildSuccess("false", p);
+	}
+	    
+	   
     }
     @GET
     @Path("/methods")
@@ -249,12 +259,18 @@ public class API {
     @ApiOperation("Get jobs by Service")
     @ApiResponses({@ApiResponse(code = 200, message = "Jobs retrieved by Service", response = List.class)})
     @GET
-    @Path("/job-service/{service}")
-    @Produces("application/json")
+    @Path("/job-search/{service}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response getJobsByService(@Context HttpServletRequest request, @PathParam("service") com.jem.models.Service s) {
 	
-	List<JobRequest> jobs = LawnBuzzDao.jobService.getJobsByService(s);
-	return Response.ok(jobs).build();
+	List<JobRequest> jobs = LawnBuzzDao.jobService.getJobsByService(s.toString());
+	GenericEntity<List<JobRequest>> entity  = APIUtils.toGeneric(jobs);
+	if(jobs.size()>0) {
+	    return APIUtils.buildSuccess("Best jobs retrieved", entity);
+	}else {
+	    return APIUtils.buildSuccess("No search results", entity);
+	}
 
     }
     @ApiOperation("Get jobs by query")
@@ -262,9 +278,9 @@ public class API {
     @GET
     @Path("/job-search/{query}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.TEXT_PLAIN)
     public Response getJobsBySearch(@Context HttpServletRequest request, @PathParam("query") String query) {
-	
+	query = query.toLowerCase();
 	List<JobRequest> jobs = LawnBuzzDao.jobSearch.search(query, 5);
 	GenericEntity<List<JobRequest>> entity  = APIUtils.toGeneric(jobs);
 	if(jobs.size()>0) {

@@ -12,7 +12,7 @@ import com.jem.models.Service;
 public interface JobService {
 	public List<JobRequest> getAllJobs();
 	public List<JobRequest> getAllIncompleteJobs();
-	public List<JobRequest> getJobsByService(Service s);
+	public List<JobRequest> getJobsByService(String s);
  	public void addJob(JobRequest jr);
 	public ArrayList<JobRequest> getJobsInRadius(GeoLocation center, int radius);
 	

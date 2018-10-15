@@ -41,7 +41,7 @@ public class JobServiceImpl implements JobService{
 		return LawnBuzzDao.geoService.getJobsInRadius(center, radius);
 	}
 	@Override
-	public List<JobRequest> getJobsByService(com.jem.models.Service s) {
+	public List<JobRequest> getJobsByService(String s) {
 		return mapper.getJobsByService(s);
 	}
 	@Override

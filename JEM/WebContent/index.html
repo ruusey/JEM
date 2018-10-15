@@ -27,7 +27,7 @@
 	<script src="js/handlebars-latest.js"></script>
 	<script src="js/popper.js"></script>
 	<script src="js/bootstrap.min.js"></script>
-	<script src="js/jquery.geolocation.js"></script>
+	<!-- <script src="js/jquery.geolocation.js"></script> -->
 	<script src="js/jquery.rest.js"></script>
 	<script src="js/underscore.js"></script>
 	<script src="js/backbone.js"></script>
@@ -172,7 +172,13 @@
 			
 			<ul class='row justify-content-md-center list-group'>
 				{{#each services}}
-					<li class='list-group-item text-center d-flex justify-content-between align-items-center text-info'>{{.}}<i class="fa fa-times float-right remove-service" aria-hidden="true"></i>
+					<li class='list-group-item'>
+						<div class="container">
+							<span class="text-dark float-left">{{.}}</span>
+							<i class="fa fa-times float-right text-danger remove-service" aria-hidden="true"></i>
+						<i class="fa fa-search float-right text-info pr-1 search-service" aria-hidden="true"></i>
+						</div>
+						
 					</li>
 				{{~/each}}
 				</ul>
@@ -188,7 +194,7 @@
 							<i class="fa fa-search h4 text-dark"></i>
 						</div>
 						<!--end of col-->
-						<div class="col-auto">
+						<div class="col-auto text-dark">
 							<input id="job-search-input" class="form-control form-control-lg form-control-borderless"  placeholder="Search jobs">
 							<i id="search-clear-icon" class="fa fa-times-circle fa-2x" aria-hidden="true"></i>
 						</div>
@@ -324,7 +330,7 @@
 
 	</script>
 
-	<div class="fixed-bottom bg-gray text-gray text-center justify-content-md-center">
+	<div class="fixed-bottom bg-white text-gray text-center justify-content-md-center">
 		<h5 class="text-muted">
 			This website uses cookies, deal with it.
 			<br>
@@ -334,52 +340,16 @@
 
 	</div>
 	
-
+<div class="container-fluid">
+	<div id="map-container">
 		<div id="map">
 
 		</div>
-		<hr>
-	<script>
+	</div>
 	
-		function initMap2() {
-			write(spCollection);
-			var sp = spCollection.at(0);
-			var loc = new SPGeoLocModel();
-			var locString;
-			loc.set("id", sp.get("id"));
-
-			var map = new google.maps.Map(document.getElementById('map'), {
-				center: { lat: sp.get("loc").lat, lng: sp.get("loc").lng },
-				zoom: 10
-			});
-			var marker = new google.maps.Marker({
-							position: map.center,
-							map: map,
-							draggable:true
-						});
-			google.maps.event.addListener(myMarker, 'dragend', function(evt){
-				var newLat = evt.latLng.lat().toFixed(3);
-				var newLat = evt.latLng.lng().toFixed(3);
-
-				
-			});
-			var geocoder = new google.maps.Geocoder;
-			var infoWindow = new google.maps.InfoWindow;
-			loc.fetch({
-						dataType:"text",
-						success: function (res, xhr, response) {
-
-							locString = response.xhr.responseText;
-							infoWindow.setContent(locString);
-						}
-					});
-			write(locString)
-			infoWindow.setPosition(map.center);
-			infoWindow.open(map,marker);
-			// Try HTML5 geolocation.
-			
-		}
-	</script>
+</div>
+		
+		
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPPbs2Yz_oie_ldvKjEyG86ZUmh_PAdiY"></script>
 	<script src="js/maplabel.js"></script>
 	<script src="js/jemutil.js"></script>

@@ -52,6 +52,7 @@ var ServiceProviderView = Backbone.View.extend({
         "click #edit-sp-cancel": "cancel",
         "click #edit-sp-save": "save",
         "click .remove-service": "removeService",
+        "click .search-service": "searchService",
         "click #sp-add-service": "addService"
 
 
@@ -78,8 +79,6 @@ var ServiceProviderView = Backbone.View.extend({
             for (var i = 0, l = msg.length; i < l; i++) {
                 var li = $("<li>").attr("class", "list-group-item service").text(msg[i])
                 ul.append(li);
-
-
             }
             self.attributes.popoverContent = ul.html();
         });
@@ -101,6 +100,17 @@ var ServiceProviderView = Backbone.View.extend({
         spModel.save({
             wait: true
         });
+    },
+     searchService: function (e) {
+        var span = $(e.target).parent();
+
+        var toRemove = span.text();
+        toRemove = $.trim(toRemove.replace(/[\t\n]+/g, ''));
+        toRemove=toRemove.toUpperCase();
+        write(toRemove);
+        $("#job-search-input").val(toRemove);
+        $("#fetch-search").trigger("click");
+       
     },
     addService: function (e) {
 
