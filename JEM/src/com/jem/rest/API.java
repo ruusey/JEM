@@ -33,8 +33,6 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.jem.dao.JEMDao;
-import com.jem.dao.SHAHash;
-import com.jem.dao.SHAValidate;
 import com.jem.models.APIStatus;
 import com.jem.models.Client;
 import com.jem.models.Credentials;
@@ -44,6 +42,8 @@ import com.jem.models.Pong;
 import com.jem.models.ServiceProvider;
 import com.jem.util.APIUtils;
 import com.jem.util.ApiScanner;
+import com.jem.util.SHAHash;
+import com.jem.util.SHAValidate;
 import com.jem.util.UAgentInfo;
 import com.jem.util.Util;
 import com.sun.org.apache.xml.internal.serializer.utils.Utils;

@@ -62,21 +62,26 @@ var myIp=null;
          //(token);
          sessionToken = token;
      });
+     if (sessionToken != null) {
+         spModel.fetch({
+             beforeSend: sendAuthentication,
+             success: function () {
 
-     spModel.fetch({
-         beforeSend: sendAuthentication,
-         success: function () {
+                 spView.render;
+                 $("#login-dropdown").removeClass("show");
+                 if (!$.cookie("sp")) {
+                     $.cookie("sp", this.id);
+                 }
 
-
-             spView.render;
-             $("#login-dropdown").removeClass("show");
-             if (!$.cookie("sp")) {
-                 $.cookie("sp", this.id);
+                 setLoggedIn();
+             },
+             error: function (model, response, options) {
+                 showError(response.xhr.responseText);
              }
-             
-             setLoggedIn();
-         }
-     });
+
+         });
+     }
+
 
      //});
  } else {
@@ -88,6 +93,7 @@ var myIp=null;
          authenticate().done(function (token) {
              sessionToken = token;
          });
+         if(sessionToken==null) return;
 
          //(sessionToken);
          spModel.set("id", id);
@@ -102,7 +108,10 @@ var myIp=null;
                      $.cookie("sp", spModel.get("id"));
                  }
 
-             }
+             },
+             error: function(model, response, options){
+                showError(response.xhr.responseText);
+            }
          }).done(function () {
              initMap();
              setLoggedIn();

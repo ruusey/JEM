@@ -44,7 +44,7 @@ function authenticate() {
 
         },
          error: function(err,response){
-            showError(response.responeText);
+            showError(err.responseText);
         }
     });
     return deffered.promise();

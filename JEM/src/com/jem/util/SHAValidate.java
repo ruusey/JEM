@@ -1,4 +1,4 @@
-package com.jem.dao;
+package com.jem.util;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;

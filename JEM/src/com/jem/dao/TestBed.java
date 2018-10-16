@@ -23,11 +23,13 @@ import com.jem.models.Service;
 import com.jem.models.ServiceProvider;
 import com.jem.serviceimpl.ClientServiceImpl;
 import com.jem.serviceimpl.ServiceProviderServiceImpl;
+import com.jem.util.SHAHash;
+import com.jem.util.SHAValidate;
 import com.jem.util.Util;
 import com.owlike.genson.Genson;
 
-public class Test {
-	static Logger LOGGER = Logger.getLogger(Test.class.getName());
+public class TestBed {
+	static Logger LOGGER = Logger.getLogger(TestBed.class.getName());
 	public static Hashtable<Service,String> labels = new Hashtable<Service,String>();
 	public static void main(String[] args) {
 	    labels.put(Service.BABYSITTING, "Child needs babysitting");
