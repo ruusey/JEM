@@ -1,7 +1,7 @@
 package com.jem.models;
 
 import com.google.maps.model.GeocodingResult;
-import com.jem.dao.LawnBuzzDao;
+import com.jem.dao.JEMDao;
 
 public class GeoLocation {
 	private double lat;
@@ -36,7 +36,7 @@ public class GeoLocation {
 		this.dateTime = dateTime;
 	}
 	public String reverseGeocode() {
-	    GeocodingResult res = LawnBuzzDao.geoService.reverseGeocode(this);
+	    GeocodingResult res = JEMDao.geoService.reverseGeocode(this);
 	    return res.formattedAddress;
 	}
 	

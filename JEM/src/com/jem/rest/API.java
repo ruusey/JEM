@@ -32,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
-import com.jem.dao.LawnBuzzDao;
+import com.jem.dao.JEMDao;
 import com.jem.dao.SHAHash;
 import com.jem.dao.SHAValidate;
 import com.jem.models.APIStatus;
@@ -70,11 +70,11 @@ public class API {
 	
         String username = credentials.getUsername();
         String password = credentials.getPassword();
-        ServiceProvider sp = LawnBuzzDao.serviceProviderService.getServiceProviderByUsername(username);
+        ServiceProvider sp = JEMDao.serviceProviderService.getServiceProviderByUsername(username);
         if(sp==null) {
             try {
         	int id = Integer.parseInt(username);
-        	sp = LawnBuzzDao.serviceProviderService.getServiceProviderById(id);
+        	sp = JEMDao.serviceProviderService.getServiceProviderById(id);
             }catch(Exception e) {
         	throw APIUtils.buildWebApplicationException(
 		          Status.NOT_FOUND,
@@ -85,19 +85,19 @@ public class API {
         }
             
         if(password.length()==0) {
-            password  = LawnBuzzDao.userService.getUserPass(sp.getId());
+            password  = JEMDao.userService.getUserPass(sp.getId());
         }
        
         try {
-            if(LawnBuzzDao.userService.isRegistered(sp.getId())) {
-        	String token =	LawnBuzzDao.userService.getUserToken(sp.getId());
+            if(JEMDao.userService.isRegistered(sp.getId())) {
+        	String token =	JEMDao.userService.getUserToken(sp.getId());
         	if(SHAValidate.validatePassword(password, token)) {
         	    return APIUtils.buildSuccess("Token succesfully created", token);
         	}
             }else {
         	String token = SHAHash.generateStorngPasswordHash(password);
-        	LawnBuzzDao.userService.createUserAuth(sp.getId(), username,password);
-        	LawnBuzzDao.userService.registerUserAuth(sp.getId(), token, Util.getCurrentDateTime2());
+        	JEMDao.userService.createUserAuth(sp.getId(), username,password);
+        	JEMDao.userService.registerUserAuth(sp.getId(), token, Util.getCurrentDateTime2());
         	return APIUtils.buildSuccess("Token succesfully created", token);
             }
 	    
@@ -134,6 +134,7 @@ public class API {
 	   
     }
     @GET
+    @Secured
     @Path("/methods")
     @Produces("application/json")
     
@@ -162,7 +163,7 @@ public class API {
     @Path("/client-all")
     @Produces("application/json")
     public Response getClient(@Context HttpServletRequest request) throws WebApplicationException{
-	List<Client> clients = LawnBuzzDao.clientService.getClients();
+	List<Client> clients = JEMDao.clientService.getClients();
 	 return APIUtils.buildSuccess("Succesfully retrieved all Clients", clients);
     }
     @ApiOperation(
@@ -177,12 +178,13 @@ public class API {
 	        response = WebApplicationException.class)
 	  })
     @GET
+    @Secured
     @Path("/client/{client_id}")
     @Produces("application/json")
     public Response getClientById(@Context HttpServletRequest request,
 	    			@PathParam("client_id") int clientId) 
 	    			throws WebApplicationException {
-	Client c = LawnBuzzDao.clientService.getClientById(clientId);
+	Client c = JEMDao.clientService.getClientById(clientId);
 	if(c!=null) {
 	    return APIUtils.buildSuccess("Succesfully retrieved Client", c);
 	}else {
@@ -210,7 +212,7 @@ public class API {
     @Produces("application/json")
     public Response getClientJobsById(@Context HttpServletRequest request,
 	    @PathParam("client_id") int clientId) throws WebApplicationException {
-	List<JobRequest> jobs = LawnBuzzDao.clientService.getClientJobsById(clientId);
+	List<JobRequest> jobs = JEMDao.clientService.getClientJobsById(clientId);
 	if(jobs!=null) {
 	    return APIUtils.buildSuccess("Succesfully retrieved Client", jobs);
 	}else {
@@ -228,7 +230,7 @@ public class API {
     @Produces("application/json")
     @Consumes("application/json")
     public Response registerClient(@Context HttpServletRequest request, Client c) {
-	LawnBuzzDao.clientService.registerClient(c);
+	JEMDao.clientService.registerClient(c);
 	return APIUtils.buildSuccess("Succesfully registered client", c);
     }
     
@@ -241,7 +243,7 @@ public class API {
     @Path("/job-all")
     public Response getJobs(@Context HttpServletRequest request) {
 	
-	List<JobRequest> jobs = LawnBuzzDao.jobService.getAllJobs();
+	List<JobRequest> jobs = JEMDao.jobService.getAllJobs();
 	GenericEntity<List<JobRequest>> entity  = new GenericEntity<List<JobRequest>>(jobs) {};
 	return APIUtils.buildSuccess("Succesfully retrieved Client", entity);
 
@@ -253,7 +255,7 @@ public class API {
     @Produces("application/json")
     public Response getIncompleteJobs(@Context HttpServletRequest request) {
 	
-	List<JobRequest> jobs = LawnBuzzDao.jobService.getAllIncompleteJobs();
+	List<JobRequest> jobs = JEMDao.jobService.getAllIncompleteJobs();
 	return Response.ok(jobs).build();
     }
 //    @ApiOperation("Get jobs by Service")
@@ -281,7 +283,7 @@ public class API {
     @Consumes(MediaType.TEXT_PLAIN)
     public Response getJobsBySearch(@Context HttpServletRequest request, @PathParam("query") String query) {
 	query = query.toLowerCase().replace("_", "").trim();
-	List<JobRequest> jobs = LawnBuzzDao.jobSearch.search(query, 5);
+	List<JobRequest> jobs = JEMDao.jobSearch.search(query, 5);
 	GenericEntity<List<JobRequest>> entity  = APIUtils.toGeneric(jobs);
 	if(jobs.size()>0) {
 	    return APIUtils.buildSuccess("Best jobs retrieved", entity);
@@ -294,11 +296,11 @@ public class API {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getJobsByQueryRadius(@Context HttpServletRequest request,@PathParam("sp_id") int spId, @PathParam("query") String query, @PathParam("radius") int radius) {
-	ServiceProvider sp = LawnBuzzDao.serviceProviderService.getServiceProviderById(spId);
-	List<JobRequest> jobs = LawnBuzzDao.jobSearch.search(query, 5);
+	ServiceProvider sp = JEMDao.serviceProviderService.getServiceProviderById(spId);
+	List<JobRequest> jobs = JEMDao.jobSearch.search(query, 5);
 	ArrayList<JobRequest> toRemove = new ArrayList<JobRequest>();
 	for(JobRequest job : jobs) {
-	    if(!LawnBuzzDao.geoService.isInRadius(sp.getLoc(), job.getLoc(), (int) LawnBuzzDao.geoService.metersToMiles((double)radius))) {
+	    if(!JEMDao.geoService.isInRadius(sp.getLoc(), job.getLoc(), (int) JEMDao.geoService.metersToMiles((double)radius))) {
 		toRemove.add(job);
 	    }
 	}
@@ -317,8 +319,8 @@ public class API {
     @Produces("application/json")
     public Response getJobsInRadius(@Context HttpServletRequest request,
 	    @PathParam("sp_id") int id, @PathParam("radius") int radius) {
-	ServiceProvider logged = LawnBuzzDao.serviceProviderService.getServiceProviderById(1);
-	List<JobRequest> jobs = LawnBuzzDao.jobService.getJobsInRadius(logged.getLoc(), radius);
+	ServiceProvider logged = JEMDao.serviceProviderService.getServiceProviderById(1);
+	List<JobRequest> jobs = JEMDao.jobService.getJobsInRadius(logged.getLoc(), radius);
 	GenericEntity<List<JobRequest>> entity  = APIUtils.toGeneric(jobs);
 	return APIUtils.buildSuccess("No search results", entity);
 
@@ -328,7 +330,7 @@ public class API {
     @Produces("application/json")
     @Consumes("application/json")
     public Response addJob(@Context HttpServletRequest request, JobRequest job) {
-	LawnBuzzDao.jobService.addJob(job);
+	JEMDao.jobService.addJob(job);
 	return Response.ok(job).build();
     }
     @GET
@@ -337,7 +339,7 @@ public class API {
     public Response getJobGeoloc(@Context HttpServletRequest request, @PathParam("job_id") int jobId) {
 	GeoLocation loc= null;
 	
-	    loc = LawnBuzzDao.jobService.getGeoLocJob(jobId);
+	    loc = JEMDao.jobService.getGeoLocJob(jobId);
 	
 	if(loc!=null) {
 	    return APIUtils.buildSuccess("Succesfully retrieved Job Geolocation", loc.reverseGeocode());
@@ -372,7 +374,7 @@ public class API {
     @Produces("application/json")
     public Response getServiceProviders(@Context HttpServletRequest request) {
 	
-	List<ServiceProvider> sPs = LawnBuzzDao.serviceProviderService.getServiceProviders();
+	List<ServiceProvider> sPs = JEMDao.serviceProviderService.getServiceProviders();
 	return Response.ok(sPs).build();
 
     }
@@ -406,11 +408,11 @@ public class API {
 	ServiceProvider sp= null;
 	spId.trim();
 	if(StringUtils.isNumeric(spId)) {
-	    sp = LawnBuzzDao.serviceProviderService.getServiceProviderById(Integer.parseInt(spId));
+	    sp = JEMDao.serviceProviderService.getServiceProviderById(Integer.parseInt(spId));
 	}else if(spId.contains("@")) {
-	    sp = LawnBuzzDao.serviceProviderService.getServiceProviderByEmail(spId);
+	    sp = JEMDao.serviceProviderService.getServiceProviderByEmail(spId);
 	}else if(StringUtils.isAlpha(spId)){
-	    sp = LawnBuzzDao.serviceProviderService.getServiceProviderByUsername(spId);
+	    sp = JEMDao.serviceProviderService.getServiceProviderByUsername(spId);
 	}
 	if(sp!=null) {
 	    return APIUtils.buildSuccess("Succesfully retrieved ServiceProvider", sp);
@@ -430,9 +432,9 @@ public class API {
     public Response getServiceProviderGeoloc(@Context HttpServletRequest request, @PathParam("sp_id") String spId) {
 	ServiceProvider sp= null;
 	try {
-	    sp = LawnBuzzDao.serviceProviderService.getServiceProviderById(Integer.parseInt(spId)); 
+	    sp = JEMDao.serviceProviderService.getServiceProviderById(Integer.parseInt(spId)); 
 	}catch(Exception e) {
-	    sp = LawnBuzzDao.serviceProviderService.getServiceProviderByUsername(spId); 
+	    sp = JEMDao.serviceProviderService.getServiceProviderByUsername(spId); 
 	}
 	   
 	if(sp!=null) {
@@ -453,7 +455,7 @@ public class API {
     public Response getServiceProviderGeolocUser(@Context HttpServletRequest request, @PathParam("username") String username) {
 	ServiceProvider sp= null;
 	
-	    sp = LawnBuzzDao.serviceProviderService.getServiceProviderByUsername(username);
+	    sp = JEMDao.serviceProviderService.getServiceProviderByUsername(username);
 	
 	if(sp!=null) {
 	    return APIUtils.buildSuccess("Succesfully retrieved ServiceProvider Geolocation", sp.getLoc().reverseGeocode());
@@ -473,7 +475,7 @@ public class API {
     @Produces("application/json")
     @Consumes("application/json")
     public Response registerServiceProvider(@Context HttpServletRequest request, ServiceProvider sp) {
-	LawnBuzzDao.serviceProviderService.registerServiceProvider(sp);
+	JEMDao.serviceProviderService.registerServiceProvider(sp);
 	return Response.ok(sp).build();
     }
     @POST
@@ -481,7 +483,7 @@ public class API {
     @Produces("application/json")
     @Consumes("application/json")
     public Response registerServiceProviderService(@Context HttpServletRequest request,  @PathParam("sp_id") int spId, @PathParam("service") com.jem.models.Service service) {
-	LawnBuzzDao.serviceProviderService.registerServiceProviderService(spId, service);
+	JEMDao.serviceProviderService.registerServiceProviderService(spId, service);
 	return Response.ok(service).build();
     }
     @POST
@@ -489,7 +491,7 @@ public class API {
     @Produces("application/json")
     @Consumes("application/json")
     public Response registerServiceProviderGeoLoc(@Context HttpServletRequest request,  @PathParam("sp_id") int spId,  GeoLocation loc) {
-	LawnBuzzDao.serviceProviderService.registerServiceProviderGeoLoc(spId, loc);
+	JEMDao.serviceProviderService.registerServiceProviderGeoLoc(spId, loc);
 	return Response.ok(loc).build();
     }
     @POST
@@ -498,7 +500,7 @@ public class API {
     @Consumes("application/json")
     public Response updateServiceProvider(@Context HttpServletRequest request,  @PathParam("sp_id") int spId,  ServiceProvider sp) {
 	
-	LawnBuzzDao.serviceProviderService.updateServiceProvider(sp);
+	JEMDao.serviceProviderService.updateServiceProvider(sp);
 	return Response.ok(sp).build();
     }
     @PUT
@@ -506,7 +508,7 @@ public class API {
     @Produces("application/json")
     @Consumes("application/json")
     public Response updateServiceProvider2(@Context HttpServletRequest request,  @PathParam("sp_id") int spId,  ServiceProvider sp) {
-	LawnBuzzDao.serviceProviderService.updateServiceProvider(sp);
+	JEMDao.serviceProviderService.updateServiceProvider(sp);
 	return Response.ok(sp).build();
     }
 

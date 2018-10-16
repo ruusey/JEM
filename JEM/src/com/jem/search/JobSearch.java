@@ -5,7 +5,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-import com.jem.dao.LawnBuzzDao;
+import com.jem.dao.JEMDao;
 import com.jem.models.JobRequest;
 
 public class JobSearch extends Thread {
@@ -25,7 +25,7 @@ public class JobSearch extends Thread {
 
 	try {
 
-	    systems = LawnBuzzDao.jobService.getAllIncompleteJobs();
+	    systems = JEMDao.jobService.getAllIncompleteJobs();
 	    // configurationList=configuration.get();
 
 	    // BUILD THE INDEX

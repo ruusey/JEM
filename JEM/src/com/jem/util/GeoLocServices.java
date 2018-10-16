@@ -11,7 +11,7 @@ import com.google.maps.model.Distance;
 import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
-import com.jem.dao.LawnBuzzDao;
+import com.jem.dao.JEMDao;
 import com.jem.models.GeoLocation;
 import com.jem.models.JobRequest;
 
@@ -89,7 +89,7 @@ public class GeoLocServices {
 	}
 	public ArrayList<JobRequest> getJobsInRadius(GeoLocation center, int radius){
 		
-		ArrayList<JobRequest> availableJobs = new ArrayList<JobRequest>(LawnBuzzDao.jobService.getAllIncompleteJobs());
+		ArrayList<JobRequest> availableJobs = new ArrayList<JobRequest>(JEMDao.jobService.getAllIncompleteJobs());
 		ArrayList<JobRequest> matchingJobs = new ArrayList<JobRequest>();
 		for(JobRequest job : availableJobs){
 			if(isInRadius2(center,job.getLoc(),radius)){

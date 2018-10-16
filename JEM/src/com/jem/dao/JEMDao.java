@@ -13,8 +13,8 @@ import com.jem.util.GeoLocServices;
 import com.jem.util.Util;
 
 @Component
-public class LawnBuzzDao {
-	static Logger LOGGER = Logger.getLogger(LawnBuzzDao.class.getName());
+public class JEMDao {
+	static Logger LOGGER = Logger.getLogger(JEMDao.class.getName());
 	public static ServiceProviderServiceImpl serviceProviderService; 
 	public static JobServiceImpl jobService;
 	public static GeoLocServices geoService;
@@ -25,8 +25,8 @@ public class LawnBuzzDao {
 	    //org.apache.ibatis.logging.LogFactory.useStdOutLogging();
 		long startTime = System.currentTimeMillis();
 		ClassPathXmlApplicationContext cxt = new ClassPathXmlApplicationContext("classpath:springConfig.xml");
-		LOGGER.info("Initialized LawnBuzzDao class "+cxt.getApplicationName()+" in "+Util.getTimeSince(startTime));
-		LOGGER.info("Registering LawnBuzz services...");
+		LOGGER.info("Initialized JEMDao class "+cxt.getApplicationName()+" in "+Util.getTimeSince(startTime));
+		LOGGER.info("Registering JEMDao services...");
 		
 		//*********************************
 		//REGISTER SERVICEPROVIDER SERVICES
@@ -66,7 +66,7 @@ public class LawnBuzzDao {
 		jobSearch=new JobSearch();
 		jobSearch.start();
 		LOGGER.info("Successfully registered jobSearch ");
-		LOGGER.info("Successfully Created LawnBuzz DAO");
+		LOGGER.info("Successfully Created JEMDao");
 		cxt.close();
 		
 	}

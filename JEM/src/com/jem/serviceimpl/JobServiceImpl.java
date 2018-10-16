@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jem.dao.LawnBuzzDao;
+import com.jem.dao.JEMDao;
 import com.jem.mappers.JobMapper;
 import com.jem.models.GeoLocation;
 import com.jem.models.JobRequest;
@@ -38,7 +38,7 @@ public class JobServiceImpl implements JobService{
 	}
 	@Override
 	public ArrayList<JobRequest> getJobsInRadius(GeoLocation center, int radius) {
-		return LawnBuzzDao.geoService.getJobsInRadius(center, radius);
+		return JEMDao.geoService.getJobsInRadius(center, radius);
 	}
 	@Override
 	public void completeJob(int id) {

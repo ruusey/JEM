@@ -147,15 +147,15 @@ public class Test {
 
 	}
 	public static void testAuth(String password) {
-	    ServiceProvider s = LawnBuzzDao.serviceProviderService.getServiceProviderById(1);
-	    if(LawnBuzzDao.userService.isRegistered(s.getId())) {
-		System.out.println(LawnBuzzDao.userService.getUserToken(s.getId()));
+	    ServiceProvider s = JEMDao.serviceProviderService.getServiceProviderById(1);
+	    if(JEMDao.userService.isRegistered(s.getId())) {
+		System.out.println(JEMDao.userService.getUserToken(s.getId()));
 	    }else {
 		//LawnBuzzDao.userService.createUserAuth(s.getId(), s.getUserName());
 		try {
 		    String token = SHAHash.generateStorngPasswordHash(password);
 		    System.out.println(token.length());
-		    LawnBuzzDao.userService.registerUserAuth(s.getId(), token, Util.getCurrentDateTime2());
+		    JEMDao.userService.registerUserAuth(s.getId(), token, Util.getCurrentDateTime2());
 		} catch (NoSuchAlgorithmException e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
@@ -166,8 +166,8 @@ public class Test {
 	    }
 	}
 	public static void testLogin(String password) {
-	    ServiceProvider sp = LawnBuzzDao.serviceProviderService.getServiceProviderById(1);
-	    String token =	LawnBuzzDao.userService.getUserToken(sp.getId());
+	    ServiceProvider sp = JEMDao.serviceProviderService.getServiceProviderById(1);
+	    String token =	JEMDao.userService.getUserToken(sp.getId());
     	try {
 	    if(SHAValidate.validatePassword(password, token)) {
 	        System.out.println("valid "+token);
@@ -182,7 +182,7 @@ public class Test {
 	}
 	public static void testJobAdd(int numberOfJobs,int ownerId) {
 	   
-	    ServiceProvider s = LawnBuzzDao.serviceProviderService.getServiceProviderById(1);
+	    ServiceProvider s = JEMDao.serviceProviderService.getServiceProviderById(1);
 		double atlLat = s.getLoc().getLat();
 		double atlLng = s.getLoc().getLng();
 		Random r = new Random();
@@ -207,7 +207,7 @@ public class Test {
 			jr.setLongDescrption(labels.get(sr));
 			jr.setShortDescription(labels.get(sr));
 			jr.setPay(r.nextInt(100));
-			LawnBuzzDao.jobService.addJob(jr);
+			JEMDao.jobService.addJob(jr);
 		}
 
 	}
@@ -222,6 +222,6 @@ public class Test {
 		jr.setLongDescrption("We need someone to edge and mow our lawn");
 		jr.setShortDescription("Mow my fucking lawn");
 		jr.setPay(40.00);
-		LawnBuzzDao.jobService.addJob(jr);
+		JEMDao.jobService.addJob(jr);
 	}
 }
