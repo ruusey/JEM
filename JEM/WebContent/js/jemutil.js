@@ -112,16 +112,17 @@ function topInViewport(element) {
     return $(element).offset().top >= $(window).scrollTop() && $(element).offset().top <= $(window).scrollTop() + $(window).height();
  }
 function initialize() {
-    $(document).on('click', function (e) {
-        $('[data-toggle="popover"],[data-original-title]').each(function () {
-            //the 'is' for buttons that trigger popups
-            //the 'has' for icons within a button that triggers a popup
-            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-                (($(this).popover('hide').data('bs.popover') || {}).inState || {}).click = false // fix for BS 3.3.6
-            }
-
-        });
-    });
+	setLoggedOut();
+//    $(document).on('click', function (e) {
+//        $('[data-toggle="popover"],[data-original-title]').each(function () {
+//            //the 'is' for buttons that trigger popups
+//            //the 'has' for icons within a button that triggers a popup
+//            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+//                (($(this).popover('hide').data('bs.popover') || {}).inState || {}).click = false // fix for BS 3.3.6
+//            }
+//
+//        });
+//    });
     toastr.options = {
         "positionClass": "toast-top-center"
     };
@@ -132,7 +133,13 @@ function initialize() {
     } );
    
     
+$(window).bind('beforeunload',function(){
 
+     //save info somewhere
+
+    this.alert("leve");
+
+});
    
 
 }

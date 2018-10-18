@@ -29,24 +29,26 @@ function determineIsMobile(model, xhr, response) {
     }
     if (mobile === "true") {
         var height = $(window).height();
-        $("#map-container").resizable().resizable("option", "grid", [0, 10]);
+        $("#map-container").resizable({
+      	  handles: "s"
+        }).resizable("option", "grid", [0, 10]);
         $("#map-container").css("height", (height / 2) + "px").css("margin-bottom", (height / 6) + "px");
         isMobile = true;
         initMap();
     } else {
         var height = $(window).height();
-        $("#map-container").resizable().resizable("option", "grid", [0, 10]);
-        $("#map-container").css("height", (height / 1.5) + "px", ).css("margin-bottom", (height / 6) + "px");
+        $("#map-container").resizable({
+      	  handles: "s"
+        }).resizable("option", "grid", [0, 10]);
+        $("#map-container").css("height", (height / 1.5) + "px").css("margin-bottom", (height / 6) + "px");
         isMobile = false;
         initMap();
     }
     showSuccess("Is Mobile: " + isMobile);
 }
-$("#log-out-sp").on("click", function () {
-    if (spModel) {
-        spModel.clear();
-
-        $.removeCookie("sp");
+$("#log-out-sp").on("click", function (e) {
+    if (spView.spModel) {
+    	spView.spModel.clear();
         showSuccess("Logout successful");
         setLoggedOut();
         _.delay(function () {
@@ -55,62 +57,24 @@ $("#log-out-sp").on("click", function () {
     }
 
 });
-//($.cookie("sp"));
-if ($.cookie("sp")) {
 
-    var id = $.cookie("sp");
-    spModel.set("id", id);
-
-    authenticateSp(id).done(function (token) {
-        //(token);
-        sessionToken = token;
-    });
-    if (sessionToken != null) {
-        spModel.fetch({
-            beforeSend: sendAuthentication,
-            success: function () {
-
-                spView.render;
-                $("#login-dropdown").removeClass("show");
-                if (!$.cookie("sp")) {
-                    $.cookie("sp", this.id);
-                }
-
-                setLoggedIn();
-            },
-            error: function (model, response, options) {
-                showError(response.xhr.responseText);
-            }
-
-        });
-    }
-
-
-    //});
-} else {
-    setLoggedOut();
-    $("#fetch-data-submit").on("click", function () {
-
+    
+$("#fetch-data-submit").on("click", function (e) {
+		e.preventDefault();
         var id = $("#exampleDropdownFormEmail1").val();
         var pass = $("#exampleDropdownFormPassword1").val();
         authenticate().done(function (token) {
             sessionToken = token;
         });
-        if (sessionToken == null) return;
+        if (sessionToken == null) return null;
 
-        //(sessionToken);
+        // (sessionToken);
         spModel.set("id", id);
         // spModel.set("username", id);
         spModel.fetch({
             beforeSend: sendAuthentication,
             success: function () {
-
-                $("#login-dropdown").removeClass("show");
-                if (!$.cookie("sp")) {
-                    //(spModel);
-                    $.cookie("sp", spModel.get("id"));
-                }
-
+                $("#login-dropdown").removeClass("show"); 
             },
             error: function (model, response, options) {
                 showError(response.xhr.responseText);
@@ -119,15 +83,15 @@ if ($.cookie("sp")) {
             initMap();
             setLoggedIn();
         });
-    });
-}
+});
+
 
 
 $("#geoloc").on("click", function (e) {
+	e.preventDefault();
     navigator.geolocation.getCurrentPosition(geoFetchSuccess);
 
     function geoFetchSuccess(pos) {
-
         var crd = pos.coords;
 
         var sp = spView.model;
@@ -138,15 +102,12 @@ $("#geoloc").on("click", function (e) {
         currLoc.lat = crd.latitude;
         currLoc.lng = crd.longitude;
         currLoc.dateTime = lastPing.get("timestamp");
-        //(currLoc);
+
         sp.set("loc", currLoc)
         sp.save().done(function () {
             initMap();
         });
-
     };
-
-
 });
 
 function initMap() {
@@ -175,8 +136,6 @@ function initMap() {
         $('#loc-modal-confirm').one('click', function (e) {
             $('#loc-modal').modal('hide');
 
-
-
             var newLat = evt.latLng.lat();
             var newLng = evt.latLng.lng();
 
@@ -188,17 +147,13 @@ function initMap() {
             spView.model.set({
                 loc: currLoc
             });
-            spView.model.save({
-                wait: true
-            }).done(function () {
+            spView.model.save().done(function () {
                 getAddress(spView.model).done(function (value) {
                     write(value);
                     spView.model.set({
                         friendlyLocation: value
                     });
-                    spView.model.save({
-                        wait: true
-                    });
+                    spView.model.save();
 
                     myLocationInfo.setPosition(constructLatLng(spView.model));
                     myPos.setPosition(constructLatLng(spView.model));
@@ -208,20 +163,14 @@ function initMap() {
                     myLocationInfo.open(map, myPos);
                 });
 
-
-
             });
-            $('#loc-modal-confirm').off();
         });
 
-
-
-
-        //  (sessionToken);
-        //   getAddress(sp).done(function (value) {
-        //      mi.label=(value);
-        //       //infoWindow.setContent(value);
-        //   });
+        // (sessionToken);
+        // getAddress(sp).done(function (value) {
+        // mi.label=(value);
+        // //infoWindow.setContent(value);
+        // });
 
     });
 
@@ -233,17 +182,19 @@ function initMap() {
 
     });
     $("#fetch-search").on("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
+        spView.render;
+       e.preventDefault();
+       e.stopPropagation();
         var query = $("#job-search-input").val();
-        //&& $("#radius-slider").slider("option", "disabled")
+        // && $("#radius-slider").slider("option", "disabled")
         if (query.length > 1) {
             $("#fetch-search").text("Search jobs");
             jobMarkers = deleteMarkers(jobMarkers);
             jobInfoWindows = deleteWindows(jobInfoWindows);
             var jobSearch = new JobQueryModel({
                 id: query
-                //urlRoot: "v1/job-search/"+sp.get("id")+"/"+query+"/"+$("#radius-slider").slider("value")
+                // urlRoot:
+				// "v1/job-search/"+sp.get("id")+"/"+query+"/"+$("#radius-slider").slider("value")
             });
             jobSearch.fetch({
                 success: function (jobs, response, options) {
@@ -265,7 +216,7 @@ function initMap() {
                         mi.bindTo('map', miLabel);
                         mi.bindTo('position', miLabel);
 
-                        //jobInfoWindow.setPosition(jobPos);
+                        // jobInfoWindow.setPosition(jobPos);
                         var content;
                         fetchJobGeoloc(job).done(function (value) {
                             content = '<div id="iw-container">' +
@@ -311,7 +262,7 @@ function initMap() {
                     mi.bindTo('map', miLabel);
                     mi.bindTo('position', miLabel);
 
-                    //jobInfoWindow.setPosition(jobPos);
+                    // jobInfoWindow.setPosition(jobPos);
                     var content;
                     fetchJobGeoloc(job).done(function (value) {
                         content = '<div id="iw-container">' +
@@ -355,7 +306,7 @@ function initMap() {
             fetchJobs().done(function (jobs) {
 
                 jobCollection.each(function (job) {
-                    //(job);
+                    // (job);
                     var jobPos = constructGLatLng(job);
                     var jobInfoWindow = new google.maps.InfoWindow;
                     var miLabel = newMarkerLabelJob(job)
@@ -364,7 +315,7 @@ function initMap() {
                     mi.bindTo('map', miLabel);
                     mi.bindTo('position', miLabel);
 
-                    //jobInfoWindow.setPosition(jobPos);
+                    // jobInfoWindow.setPosition(jobPos);
                     var content;
                     fetchJobGeoloc(job).done(function (value) {
                         content = '<div id="iw-container">' +
@@ -405,9 +356,7 @@ function initMap() {
         spView.model.set({
             friendlyLocation: value
         });
-        spView.model.save({
-            wait: true
-        });
+        spView.model.save();
 
         myLocationInfo.setPosition(constructLatLng(spView.model));
         myPos.setPosition(constructLatLng(spView.model));
@@ -441,7 +390,7 @@ function newMarkerLabel() {
 }
 
 function deleteMarkers(markers) {
-    //Loop through all the markers and remove
+    // Loop through all the markers and remove
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(null);
     }
@@ -450,7 +399,7 @@ function deleteMarkers(markers) {
 };
 
 function deleteWindows(infoWindows) {
-    //Loop through all the markers and remove
+    // Loop through all the markers and remove
     for (var i = 0; i < infoWindows.length; i++) {
         infoWindows[i].close
     }

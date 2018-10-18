@@ -91,67 +91,68 @@ var ServiceProviderView = Backbone.View.extend({
         var toRemove = span.text();
         toRemove = $.trim(toRemove.replace(/[\t\n]+/g, ''));
         write(toRemove);
-        var currServices = _.clone(this.model.get("services"));
+        var currServices = (this.model.clone().get("services"));
         write(currServices);
         currServices = jQuery.grep(currServices, function (value) {
             return value != toRemove;
         });
         write(currServices);
         this.model.set("services", currServices);
-        spModel.save({
-            wait: true
-        });
+        spModel.save();
     },
      searchService: function (e) {
+       
         var span = $(e.target).parent();
 
         var toRemove = span.text();
         toRemove = $.trim(toRemove.replace(/[\t\n]+/g, ''));
         write(toRemove);
         $("#job-search-input").val(toRemove);
-        $("#fetch-search").trigger("click");
+        _.delay(function(){
+            $("#fetch-search").trigger("click")}
+        ,100);
        
     },
-    addService: function (e) {
+	    addService : function(e) {
 
-        var loc = $(e.target);
-         
-        var self = this;
-       
-        $(e.target).popover({
-            placement: 'left',
-            container: '#sp-add-service',
-            title: "Available Services",
-            html: true,
-            content: this.attributes.popoverContent,
-            selector: '#sp-add-service',
-            trigger: 'manual'
-        });
-       
-            $(e.target).popover("toggle");
-            write("togggle");
- 
-            $.each($(".list-group-item.service"), function (idx, value) {
-                
-                $(value).one("click", function (e1) {
-                    //e1.stopPropagation();
-                    $(this).addClass("active");
-                    var text = $.trim($(this).text().replace(/[\t\n]+/g, ''));
-                    var currServices = _.clone(self.model.get("services"));
+		var loc = $(e.target);
 
-                    
-                    currServices = jQuery.grep(currServices, function (value) {
-                        
-                        return value != text;
-                    });
-                    currServices.push(text);
-                    write(currServices);
-                    self.model.set("services", currServices);
-                    self.model.save({wait: true});
-                    
-                });
-            });
-    },
+		var self = this;
+
+		$(e.target).popover({
+			placement : 'left',
+			container : '#sp-add-service',
+			title : "Available Services",
+			html : true,
+			content : this.attributes.popoverContent,
+			selector : '#sp-add-service',
+			trigger : 'manual'
+		});
+
+		$(e.target).popover("toggle");
+		write("togggle");
+
+		$.each($(".list-group-item.service"), function(idx, value) {
+
+			$(value).one("click", function(e1) {
+                 e1.preventDefault();
+                 e1.stopPropagation();
+				$(this).addClass("active");
+				var text = $.trim($(this).text().replace(/[\t\n]+/g, ''));
+				var currServices = _.clone(self.model.get("services"));
+				
+				currServices = jQuery.grep(currServices, function(value) {
+					return value != text;
+				});
+				
+				currServices.push(text);
+				write(currServices);
+				self.model.set("services", currServices);
+				self.model.save();
+
+			});
+		});
+	},
     closePopover: function (e) {
         $(e.target).popover("dispose");
        
