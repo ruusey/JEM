@@ -81,6 +81,7 @@ $(function () {
             if ($.cookie("id") == undefined) {
                 $.cookie("id", spView.model.get("id"));
             }
+            showSuccess("Welcome back "+spView.model.get("userName"))
             initMap();
             setLoggedIn();
         });
@@ -233,8 +234,7 @@ function initMap() {
     });
 
     $("#search-clear-icon").on("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
+       
         jobMarkers = deleteMarkers(jobMarkers);
         jobInfoWindows = deleteWindows(jobInfoWindows);
         $("#job-search-input").val("");
@@ -420,8 +420,7 @@ function initMap() {
             });
 
     $('#job-search-input').on('input', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
+       
         var input = $(this).val();
 
         if (input.length == 0) {
@@ -475,7 +474,6 @@ function initMap() {
         } else {
             $("#fetch-search").text("Search");
         }
-        return false;
     });
 
     getAddress(spView.model).done(function (value) {
