@@ -44,21 +44,80 @@ function determineIsMobile(model, xhr, response) {
         isMobile = false;
         initMap();
     }
-    showSuccess("Is Mobile: " + isMobile);
+    
 }
 $("#log-out-sp").on("click", function (e) {
+    e.preventDefault();
     if (spView.spModel) {
     	spView.spModel.clear();
         showSuccess("Logout successful");
         setLoggedOut();
+        $.removeCookie("id");
         _.delay(function () {
-            location.reload()
+            location.reload();
         }, 1000);
     }
 
 });
+$(function () {
+    if ($.cookie("id") != undefined) {
+        var id = $.cookie("id");
+        authenticateSp(id).done(function (token) {
+            sessionToken = token;
+        });
+        if (sessionToken == null) return;
+        spView.model.set("id", id);
 
-    
+        spView.model.fetch({
+            beforeSend: sendAuthentication,
+            success: function () {
+
+                $("#login-dropdown").removeClass("show");
+            },
+            error: function (model, response, options) {
+                showError(response.xhr.responseText);
+            }
+        }).done(function () {
+            if ($.cookie("id") == undefined) {
+                $.cookie("id", spView.model.get("id"));
+            }
+            initMap();
+            setLoggedIn();
+        });
+    }
+});
+ $("#exampleDropdownFormPassword1").on("keypress", function (e) {
+        //e.preventDefault();
+        if (e.which == 13) {
+            var id = $("#exampleDropdownFormEmail1").val();
+
+            authenticate().done(function (token) {
+                sessionToken = token;
+            });
+            if (sessionToken == null) return false;
+
+            // (sessionToken);
+            spView.model.set("id", id);
+
+            spView.model.fetch({
+                beforeSend: sendAuthentication,
+                success: function () {
+
+                    $("#login-dropdown").removeClass("show");
+                },
+                error: function (model, response, options) {
+                    showError(response.xhr.responseText);
+                }
+            }).done(function () {
+                if ($.cookie("id") == undefined) {
+                    $.cookie("id", spView.model.get("id"));
+                }
+                initMap();
+                setLoggedIn();
+            });
+        }
+        
+});   
 $("#fetch-data-submit").on("click", function (e) {
 		e.preventDefault();
         var id = $("#exampleDropdownFormEmail1").val();
@@ -69,9 +128,9 @@ $("#fetch-data-submit").on("click", function (e) {
         if (sessionToken == null) return null;
 
         // (sessionToken);
-        spModel.set("id", id);
+        spView.model.set("id", id);
         // spModel.set("username", id);
-        spModel.fetch({
+        spView.model.fetch({
             beforeSend: sendAuthentication,
             success: function () {
                 $("#login-dropdown").removeClass("show"); 
@@ -93,9 +152,6 @@ $("#geoloc").on("click", function (e) {
 
     function geoFetchSuccess(pos) {
         var crd = pos.coords;
-
-        var sp = spView.model;
-
         var lastPing = pingView.model;
         var currLoc = {};
 
@@ -103,8 +159,8 @@ $("#geoloc").on("click", function (e) {
         currLoc.lng = crd.longitude;
         currLoc.dateTime = lastPing.get("timestamp");
 
-        sp.set("loc", currLoc)
-        sp.save().done(function () {
+        spView.model.set("loc", currLoc)
+        spView.model.save().done(function () {
             initMap();
         });
     };
@@ -134,6 +190,8 @@ function initMap() {
 
         $('#loc-modal').modal('show');
         $('#loc-modal-confirm').one('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
             $('#loc-modal').modal('hide');
 
             var newLat = evt.latLng.lat();
@@ -174,7 +232,9 @@ function initMap() {
 
     });
 
-    $("#search-clear-icon").on("click", function () {
+    $("#search-clear-icon").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
         jobMarkers = deleteMarkers(jobMarkers);
         jobInfoWindows = deleteWindows(jobInfoWindows);
         $("#job-search-input").val("");
@@ -182,11 +242,10 @@ function initMap() {
 
     });
     $("#fetch-search").on("click", function (e) {
-        spView.render;
-       e.preventDefault();
-       e.stopPropagation();
+        
         var query = $("#job-search-input").val();
-        // && $("#radius-slider").slider("option", "disabled")
+       
+        write(query);
         if (query.length > 1) {
             $("#fetch-search").text("Search jobs");
             jobMarkers = deleteMarkers(jobMarkers);
@@ -246,7 +305,7 @@ function initMap() {
                     });
                 }
             });
-
+            
         } else {
             jobMarkers = deleteMarkers(jobMarkers);
             jobInfoWindows = deleteWindows(jobInfoWindows);
@@ -292,10 +351,77 @@ function initMap() {
 
             });
         }
-
+        
     });
-    $('#job-search-input').on('input', function (e) {
+    $("#map").on("search", function (e,str) {
+                
+                var query = str;
 
+                write(query);
+        
+            $("#fetch-search").text("Search jobs");
+            jobMarkers = deleteMarkers(jobMarkers);
+            jobInfoWindows = deleteWindows(jobInfoWindows);
+            var jobSearch = new JobQueryModel({
+                id: query
+                // urlRoot:
+				// "v1/job-search/"+sp.get("id")+"/"+query+"/"+$("#radius-slider").slider("value")
+            });
+            jobSearch.fetch({
+                success: function (jobs, response, options) {
+                    jobCollection.reset(null);
+                    jobCollection.set(jobCollection.parse(response));
+
+                    if (jobCollection.length > 0) {
+                        showSuccess(options.xhr.getResponseHeader('response-text'));
+                    } else {
+                        showError(options.xhr.getResponseHeader('response-text'));
+                    }
+                    jobCollection.each(function (job) {
+
+                        var jobPos = constructGLatLng(job);
+                        var jobInfoWindow = new google.maps.InfoWindow;
+                        var miLabel = newMarkerLabelJob(job)
+                        miLabel.set('position', jobPos);
+                        var mi = new google.maps.Marker();
+                        mi.bindTo('map', miLabel);
+                        mi.bindTo('position', miLabel);
+
+                        // jobInfoWindow.setPosition(jobPos);
+                        var content;
+                        fetchJobGeoloc(job).done(function (value) {
+                            content = '<div id="iw-container">' +
+                                '<div class="iw-title">' + miLabel.text + '</div>' +
+                                '<div class="iw-content">' +
+                                '<div class="iw-subTitle">Location</div>' +
+                                '<span>' + value + '</span>' +
+                                '<div class="iw-subTitle">Description</div>' +
+                                '<span>' + job.get("shortDescription") + '</span>' +
+                                '<div class="iw-subTitle">Info</div>' +
+                                '<i class="fa fa-money">pay: ' + '&#36;' + job.get("pay") + '</i>' +
+                                '</div>' +
+                                '<div class="iw-bottom-gradient"></div>' +
+                                '</div>';
+                            jobInfoWindow.setContent(content);
+                            mi.setMap(map);
+                            mi.addListener('mouseover', function () {
+                                jobInfoWindow.open(map, mi);
+                            });
+                            mi.addListener('mouseout', function () {
+                                jobInfoWindow.close();
+                            });
+                            jobInfoWindows.push(jobInfoWindow);
+                            jobMarkers.push(mi);
+
+                        });
+                    });
+                }
+             });
+            });
+
+    $('#job-search-input').on('input', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
         var input = $(this).val();
 
         if (input.length == 0) {
@@ -349,10 +475,11 @@ function initMap() {
         } else {
             $("#fetch-search").text("Search");
         }
+        return false;
     });
 
     getAddress(spView.model).done(function (value) {
-        write(value);
+        //write(value);
         spView.model.set({
             friendlyLocation: value
         });

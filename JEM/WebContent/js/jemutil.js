@@ -39,7 +39,7 @@ function authenticate() {
         dataType: 'text',
         async: false,
         success: function (msg) {
-            
+            showSuccess("Welcome Back: " + isMobile);
             deffered.resolve(msg);
 
         },
@@ -106,6 +106,7 @@ function setLoggedOut() {
 function setLoggedIn() {
     $("#logout-list-item").show();
     $("#login-link").hide();
+    $("#fetch-search").text("Get All");
     
 }
 function topInViewport(element) {
@@ -133,13 +134,7 @@ function initialize() {
     } );
    
     
-$(window).bind('beforeunload',function(){
 
-     //save info somewhere
-
-    this.alert("leve");
-
-});
    
 
 }
