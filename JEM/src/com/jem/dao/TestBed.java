@@ -44,7 +44,7 @@ public class TestBed {
 	    labels.put(Service.DOG_SITTING, "Feed and walk our dog while we are on vacation");
 	    labels.put(Service.PROJECT_ASSISTANCE, "Tutor me in CSCE146");
 	    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-	    testSPRegister();
+	    createJobFriendlyGeoloc();
 	    
 	    //LawnBuzzDao dao = new LawnBuzzDao();
 //		
@@ -65,7 +65,19 @@ public class TestBed {
 //		}
 
 	}
-
+	public static void createJobFriendlyGeoloc() {
+	    List<JobRequest> jobs = JEMDao.jobService.getAllIncompleteJobs();
+	    for(JobRequest job: jobs) {
+		if(job.getFriendlyLocation()==null) {
+		    String friendlyLoc = job.getLoc().reverseGeocode();
+		    job.setFriendlyLocation(friendlyLoc);
+		    JEMDao.jobService.updateFriendlyGeoLocJob(friendlyLoc, job.getId());
+		    System.out.println("updated job friendlyLocation to "+job.getFriendlyLocation());
+		}else {
+		    System.out.println("Already has friendlyLocation! "+job.getFriendlyLocation());
+		}
+	    }
+	}
 	public static void testSPRegister() {
 		ApplicationContext cxt = new ClassPathXmlApplicationContext(
 				"classpath:springConfig.xml");

@@ -7,24 +7,25 @@ import java.util.concurrent.Semaphore;
 
 import com.jem.dao.JEMDao;
 import com.jem.models.JobRequest;
+import com.jem.util.Util;
 
 public class JobSearch extends Thread {
     Semaphore sem = new Semaphore(1);
     JobIndex systemsIndex = null;
     private static Hashtable<Integer, JobRequest> systemsHash = null;
     private static List<JobRequest> systems = null;
-
+    public String indexTime = null;
     private void initialLoad() {
 	// LOGGER.info(loggerLabel+"Loading Systems Search Index");
 
-	long time = 0;
+	
 	// Hashtable<Integer, com.n2.maestro.common.model.System> systemsHash=null;
 	// List<com.n2.maestro.common.model.System> systems=null;
 
 	// List<Configuration> configurationList =configuration.get();
-
+	long start = 0;
 	try {
-
+	    start=System.currentTimeMillis();
 	    systems = JEMDao.jobService.getAllIncompleteJobs();
 	    // configurationList=configuration.get();
 
@@ -32,15 +33,16 @@ public class JobSearch extends Thread {
 	    sem.acquire();
 	    // BUILD THE INDEX
 
-	    time = System.currentTimeMillis();
+	    
 	    systemsIndex = new JobIndex();
 
 	    systemsIndex.buildJobIndex(systems);
-
+	    
 	} catch (Exception e) {
 
 	} finally {
 	    sem.release();
+	    indexTime=Util.getTimeSince(start);
 	}
 	// LOGGER.info(loggerLabel+"Systems search Index of ("+systems.size()+") Systems
 	// built in "+(System.currentTimeMillis()-time)+" ms");

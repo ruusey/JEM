@@ -10,11 +10,11 @@
 	<!-- Le styles -->
 	<link href="css/jquery.contextMenu.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-	    crossorigin="anonymous">
+	 crossorigin="anonymous">
 	<link href="css/n2styles.css" rel="stylesheet">
 	<link href="css/jquery-ui.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
-	    crossorigin="anonymous">
+	 crossorigin="anonymous">
 	<link href="css/bootstrap-responsive.css" rel="stylesheet">
 	<link href="css/uploadfile.css" rel="stylesheet">
 	<link href="css/toastr.css" rel="stylesheet">
@@ -40,8 +40,8 @@
 
 	<script src="js/owl.carousel.js"></script>
 
-	
-	
+
+
 	<style>
 		/* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
@@ -67,7 +67,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalLongTitle">Confirm Location Update</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<button type="button" id="loc-modal-deny" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
@@ -78,15 +78,15 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="container-fluid">
 
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<i class="fas fa-gem fa-2x float-left"></i>
 			<a class="navbar-brand" href="#">&nbsp;GEM</a>
 
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-			    aria-expanded="false" aria-label="Toggle navigation">
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+			 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 
@@ -100,65 +100,70 @@
 					<li class="nav-item">
 						<a class="nav-link" href="docs">Docs</a>
 					</li>
-					<li id ="logout-list-item" class="nav-item"><button id="log-out-sp" type="button" class="btn btn-danger">Log out</button></li>
+					<li id="logout-list-item" class="nav-item"><button id="log-out-sp" type="button" class="btn btn-danger">Log out</button></li>
 					<li id="login-link" class="nav-item dropdown">
-						<a  class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
-						    aria-expanded="false">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+						 aria-haspopup="true" aria-expanded="false">
 							Login
 						</a>
 						<ul id="login-dropdown" class="dropdown-menu" role="menu">
 							<li class="dropdown-submenu">
 								<h6 class="dropdown-header">Service Provider Login</h6>
-								<li class="p-4">
-									<form>
-										<div class="form-group col-med">
-											<label for="exampleDropdownFormEmail1">Email Or Username</label>
-											<input type="email" class="form-control" id="exampleDropdownFormEmail1" placeholder="email/username">
-										</div>
-										<div class="form-group col-med">
-											<label for="exampleDropdownFormPassword1">Password</label>
-											<input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Password">
-										</div>
+							<li class="p-4">
+								<form>
+									<div class="form-group col-med">
+										<label for="exampleDropdownFormEmail1">Email Or Username</label>
+										<input type="email" class="form-control" id="exampleDropdownFormEmail1" placeholder="email/username">
+									</div>
+									<div class="form-group col-med">
+										<label for="exampleDropdownFormPassword1">Password</label>
+										<input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Password">
+									</div>
 
-										<button id="fetch-data-submit" type="button" class="btn btn-primary">Sign in</button>
-										
-									</form>
-								</li>
+									<button id="fetch-data-submit" type="button" class="btn btn-primary">Sign in</button>
+
+								</form>
 							</li>
-                         
-						</ul>
-					 </li>
-					<li class="nav-item">
-						<a id="geoloc" class="nav-link" href="#">Get Location</a>
 					</li>
+
+				</ul>
+				</li>
+				<li class="nav-item">
+					<a id="geoloc" class="nav-link" href="#">Get Location</a>
+				</li>
 				</ul>
 			</div>
 			<div id="server-time-container" class="col-sm">
 			</div>
 		</nav>
 	</div>
-	<div id="client-data" class="container-fluid">
+	<div class="container=fluid">
+		<div id="client-data">
 
 
+		</div>
 	</div>
+
 	<script type="text/x-handlebars-template" id="server-time-template">
+		<div class="container-fluid">
 		{{#if timestamp}}
-		<span id="server-time" class="badge badge-secondary float-right">
+		<span id="server-time" class="badge badge-secondary">
 			{{timestamp}}
 		</span>
 		{{/if}}
-		<i id=server-status" class="fa fa-circle float-right" style="color:green"></i>
+		<i id=server-status" class="fa fa-circle" style="color:green"></i>
+		</div>
 	</script>
 	<hr>
 	<script id="entry-template" type="text/x-handlebars-template">
-
+		<div class="container-fluid">
 	  <div class='bg-info p-3 text-white row justify-content-md-center row row-12'>
-		  <div class='col col-lg-4'><i id="edit-sp" class="fa fa-cog fa-2x" style="vertical-align: middle; color:white; float:right;">&nbsp;</i></div>
+		  <div class='col col-lg-4'><i id="edit-sp" class="fa fa-cog fa-2x" style="vertical-align: middle; color:white; float:left;">&nbsp;</i></div>
 	  		<div class="col col-lg-1 h5"><i class="fa fa-user-circle fa-2x" style=" vertical-align: middle;">&nbsp;</i>{{userName}}</div>
 			<div class="col col-lg-1 h5"><i class="fa fa-id-badge fa-2x" style=" vertical-align: middle;" aria-hidden="true">&nbsp;</i>{{firstName}}, {{lastName}}</div>
 			<div class="col col-lg-1 h5"><i class="fa fa-envelope fa-2x" style=" vertical-align: middle;" aria-hidden="true">&nbsp;</i>{{email}}</div>
 			<div class='col col-lg-4'></div>
-				<div class='bg-success p-3 text-white row justify-content-md-center'>
+				<div class='bg-success p-3 text-white justify-content-md-center'>
 					<div class='col col-lg-2'></div>
 					<div class="col col-lg h5"><i class="fa fa-star" style=" vertical-align: middle;" aria-hidden="true">&nbsp;</i>Rating<br>{{rating}}</div>
 					<div id="sp-location" class="col col-lg h5">{{friendlyLocation}}</div>
@@ -187,11 +192,11 @@
 			</div>	
 		
 		
-		
+		<div class="container-fluid">
 		<div class="p-2 bg-light text-white text-center justify-content-md-center col col-12">
 			
 				<form class="card card-sm">
-					<div class="card-body row no-gutters align-items-center ml-1">
+					<div class="card-body row no-gutters align-items-center">
 						<div class="col-auto">
 							<i class="fa fa-search h4 text-dark"></i>
 						</div>
@@ -200,10 +205,15 @@
 							<input id="job-search-input" class="form-control form-control-lg form-control-borderless"  placeholder="Search jobs">
 							<i id="search-clear-icon" class="fa fa-times-circle fa-2x" aria-hidden="true"></i>
 						</div>
-						<!--end of col-->
-						<div class="col-auto">
+						<div class="col-12">
 							<button id="fetch-search" type="button" class="btn btn-lg btn-success">Search</button>
-							<hr>
+						</div>
+						
+						
+						
+					</div>
+					<div class="card-body row no-gutters align-items-center">
+						<div class="col col-12">
 							
 							<label for="radius-input">Search Radius</label>
 							 <i id="disable-radius-search" class="fa fa-times-circle fa-2x float-right" title="Disable radius search" aria-hidden="true"></i>
@@ -215,20 +225,20 @@
 						
 						
 						
-						
-						<!--end of col-->
 					</div>
+					
 				</form>
 			
 			<!--end of col-->
 		</div>
+		</div>
 </div>
 		
-	
+	</div>
 	</script>
 
 	<script id="sp-edit-template" type="text/x-handlebars-template">
-
+		<div class="container-fluid">
 		<div class='bg-info p-3 text-white row justify-content-md-center'>
 			<div class='col col-lg-1'>
 				<i id="edit-sp-cancel" class="fa fa-times-circle fa-2x" style="vertical-align: middle; color:white; float:right;">&nbsp;</i>
@@ -277,10 +287,10 @@
 				</ul>
 			</div>
 		</div>
-
+		</div>
 	</script>
 	<script id="sp-register-template" type="text/x-handlebars-template">
-
+		<div class="container-fluid">
 		<div class='bg-info p-3 text-white row justify-content-md-center'>
 			<div class='col col-lg-1'>
 				<i id="edit-sp-cancel" class="fa fa-times-circle fa-2x" style="vertical-align: middle; color:white; float:right;">&nbsp;</i>
@@ -329,7 +339,7 @@
 				</ul>
 			</div>
 		</div>
-
+		</div>
 	</script>
 
 	<div class="fixed-bottom bg-white text-gray text-center justify-content-md-center">
@@ -341,23 +351,23 @@
 		</h5>
 
 	</div>
-	
-<div class="container-fluid">
-	<div id="map-container">
-		<div id="map">
 
+	<div class="container-fluid">
+		<div id="map-container">
+			<div id="map" style="margin-left:1.5em;">
+
+			</div>
 		</div>
+
 	</div>
-	
-</div>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPPbs2Yz_oie_ldvKjEyG86ZUmh_PAdiY"></script>
 	<script src="js/maplabel.js"></script>
 	<script src="js/jemutil.js"></script>
 	<script src="js/jem.js"></script>
-	<script src="js/jemimpl.js"></script>	
-		
-	
-	
+	<script src="js/jemimpl.js"></script>
+
+
+
 </body>
 
 </html>

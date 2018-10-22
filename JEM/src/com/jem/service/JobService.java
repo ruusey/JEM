@@ -18,6 +18,8 @@ public interface JobService {
 	
 	public void completeJob(int id);
 	public GeoLocation getGeoLocJob(int geoLocId);
+	public String getFriendlyGeoLocJob(int jobId);
+	public void updateFriendlyGeoLocJob(String friendlyLocation,int jobId);
 	public void finalizeJobRegistration(int id);
 	public void registerJobGeoLocation(@Param("id") int id, @Param("loc") GeoLocation loc);
 }

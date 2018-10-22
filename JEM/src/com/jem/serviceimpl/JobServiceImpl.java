@@ -63,5 +63,14 @@ public class JobServiceImpl implements JobService{
 	public List<JobRequest> getJobsByService(com.jem.models.Service service) {
 	    return mapper.getJobsByService(service);
 	}
+	@Override
+	public String getFriendlyGeoLocJob(int jobId) {
+	   return mapper.getFriendlyGeoLocJob(jobId);
+	}
+	@Override
+	public void updateFriendlyGeoLocJob(String friendlyLocation, int jobId) {
+	   mapper.updateJobFriendlyGeoloc(friendlyLocation, jobId);
+	    
+	}
 
 }

@@ -25,6 +25,7 @@ public interface JobMapper {
 			@Result(property = "longDescription", column = "longdescription"),
 			@Result(property = "pay", column = "pay"),
 			@Result(property = "complete", column = "complete"),
+			@Result(property = "friendlyLocation", column = "friendly_geoloc"),
 			@Result(property = "loc", javaType = GeoLocation.class, column = "geoloc_id", many = @Many(select = "getGeoLocJob")) })
 	public List<JobRequest> getAllJobs();
 	
@@ -36,6 +37,7 @@ public interface JobMapper {
 			@Result(property = "longDescription", column = "longdescription"),
 			@Result(property = "pay", column = "pay"),
 			@Result(property = "complete", column = "complete"),
+			@Result(property = "friendlyLocation", column = "friendly_geoloc"),
 			@Result(property = "loc", javaType = GeoLocation.class, column = "geoloc_id", many = @Many(select = "getGeoLocJob")) })
 	public List<JobRequest> getAlIncompleteJobs();
 	
@@ -47,6 +49,7 @@ public interface JobMapper {
 			@Result(property = "longDescription", column = "longdescription"),
 			@Result(property = "pay", column = "pay"),
 			@Result(property = "complete", column = "complete"),
+			@Result(property = "friendlyLocation", column = "friendly_geoloc"),
 			@Result(property = "loc", javaType = GeoLocation.class, column = "geoloc_id", many = @Many(select = "getGeoLocJob")) })
 	public List<JobRequest> getJobsByService(@Param("service") Service service);
 	
@@ -58,6 +61,10 @@ public interface JobMapper {
 			+ " FROM lb.job_geoloc WHERE geoloc_id = #{geoloc_id}")
 	public GeoLocation getGeoLocJob(int geoLocId);
 	
+	@Select("SELECT friendly_geoloc"
+		+ " FROM lb.job WHERE id = #{jobId}")
+	public String getFriendlyGeoLocJob(@Param("jobId") int jobId);
+	
 	@Insert("INSERT INTO lb.job(service, shortdescription, longdescription, geoloc_id, pay,complete,job_id) VALUES"
 			+ "(#{service},#{shortDescription}, #{longDescription}, 0, #{pay},0,#{jobId});")
 	@Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
@@ -65,6 +72,8 @@ public interface JobMapper {
 	
 	@Update("UPDATE lb.job SET geoloc_id=#{id} WHERE id=#{id}")
 	public void finalizeJobRegistration(@Param("id") int id);
+	@Update("UPDATE lb.job SET friendly_geoloc=#{friendlyLocation} WHERE id=#{id}")
+	public void updateJobFriendlyGeoloc(@Param("friendlyLocation") String friendlyLocation, @Param("id") int id);
 	
 	@Insert("INSERT INTO  lb.job_geoloc (geoloc_id,lat,lng,datetime) VALUES "
 			+ "(#{id},#{loc.lat},#{loc.lng},#{loc.dateTime})")
