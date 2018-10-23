@@ -5,27 +5,35 @@ import java.util.concurrent.Semaphore;
 
 public class ConnectionManager extends Thread{
     private static final int MAX_TIMEOUT = 10000;
-   private static Hashtable<String, Boolean> users = new Hashtable<String, Boolean>();
+   
    private static Hashtable<String, String> lastPing = new Hashtable<String, String>();
    private Semaphore sem = new Semaphore(1);
-   public void addUser(String ip, String timestamp, boolean isMobile) {
+   public boolean addNewUser(String ip, String timestamp) {
        try {
 	   sem.acquire();
-	   if(users.keySet().contains(ip)) return;
-	   else {
-	       
+	   if(lastPing.keySet().contains(ip)) return false;
+	   else {  
+	       return true;
 	   }
        }catch(Exception e) {
-	   
+	   return false;
        }finally {
 	   sem.release();
        }
    }
    public void pingAccept(String ip, String timestamp) {
+       if(addNewUser(ip,timestamp)) {
+	   lastPing.put(ip, timestamp);
+       }else {
+	   lastPing.remove(ip);
+	   lastPing.put(ip, timestamp);  
+       }
        
    }
    @Override public void run() {
-       
+       while(true) {
+	   
+       }
    }
 
 }

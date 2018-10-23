@@ -292,12 +292,111 @@ function initMap() {
 
                         // jobInfoWindow.setPosition(jobPos);
                         var content;
-                        fetchJobGeoloc(job).done(function (value) {
+                        if (job.has("friendlyLocation")) {
                             content = '<div id="iw-container">' +
                                 '<div class="iw-title">' + miLabel.text + '</div>' +
                                 '<div class="iw-content">' +
                                 '<div class="iw-subTitle">Location</div>' +
-                                '<span>' + value + '</span>' +
+                                '<span>' + job.get("friendlyLocation") + '</span>' +
+                                '<div class="iw-subTitle">Description</div>' +
+                                '<span>' + job.get("shortDescription") + '</span>' +
+                                '<div class="iw-subTitle">Info</div>' +
+                                '<i class="fa fa-money">pay: ' + '&#36;' + job.get("pay") + '</i>' +
+                                '</div>' +
+                                '<div class="iw-bottom-gradient"></div>' +
+                                '</div>';
+                            jobInfoWindow.setContent(content);
+                            mi.setMap(map);
+                            mi.addListener('mouseover', function () {
+                                jobInfoWindow.open(map, mi);
+                            });
+                            mi.addListener('mouseout', function () {
+                                jobInfoWindow.close();
+                            });
+                            jobInfoWindows.push(jobInfoWindow);
+                            jobMarkers.push(mi);
+                        } else {
+                            fetchJobGeoloc(job).done(function (value) {
+                                job.set("friendlyLocation", value);
+                                job.save();
+                                content = '<div id="iw-container">' +
+                                    '<div class="iw-title">' + miLabel.text + '</div>' +
+                                    '<div class="iw-content">' +
+                                    '<div class="iw-subTitle">Location</div>' +
+                                    '<span>' + job.get("friendlyLocation") + '</span>' +
+                                    '<div class="iw-subTitle">Description</div>' +
+                                    '<span>' + job.get("shortDescription") + '</span>' +
+                                    '<div class="iw-subTitle">Info</div>' +
+                                    '<i class="fa fa-money">pay: ' + '&#36;' + job.get("pay") + '</i>' +
+                                    '</div>' +
+                                    '<div class="iw-bottom-gradient"></div>' +
+                                    '</div>';
+                                jobInfoWindow.setContent(content);
+                                mi.setMap(map);
+                                mi.addListener('mouseover', function () {
+                                    jobInfoWindow.open(map, mi);
+                                });
+                                mi.addListener('mouseout', function () {
+                                    jobInfoWindow.close();
+                                });
+                                jobInfoWindows.push(jobInfoWindow);
+                                jobMarkers.push(mi);
+
+                            });
+                        }
+                    });
+                }
+            });
+
+        } else {
+            jobMarkers = deleteMarkers(jobMarkers);
+            jobInfoWindows = deleteWindows(jobInfoWindows);
+            fetchJobs().done(function (jobs) {
+
+                jobs.each(function (job) {
+                    (job);
+                    var jobPos = constructGLatLng(job);
+                    var jobInfoWindow = new google.maps.InfoWindow;
+                    var miLabel = newMarkerLabelJob(job)
+                    miLabel.set('position', jobPos);
+                    var mi = new google.maps.Marker();
+                    mi.bindTo('map', miLabel);
+                    mi.bindTo('position', miLabel);
+
+                    // jobInfoWindow.setPosition(jobPos);
+                    var content;
+                    if (job.has("friendlyLocation")) {
+                        content = '<div id="iw-container">' +
+                            '<div class="iw-title">' + miLabel.text + '</div>' +
+                            '<div class="iw-content">' +
+                            '<div class="iw-subTitle">Location</div>' +
+                            '<span>' + job.get("friendlyLocation") + '</span>' +
+                            '<div class="iw-subTitle">Description</div>' +
+                            '<span>' + job.get("shortDescription") + '</span>' +
+                            '<div class="iw-subTitle">Info</div>' +
+                            '<i class="fa fa-money">pay: ' + '&#36;' + job.get("pay") + '</i>' +
+                            '</div>' +
+                            '<div class="iw-bottom-gradient"></div>' +
+                            '</div>';
+                        jobInfoWindow.setContent(content);
+                        mi.setMap(map);
+                        mi.addListener('mouseover', function () {
+                            jobInfoWindow.open(map, mi);
+                        });
+                        mi.addListener('mouseout', function () {
+                            jobInfoWindow.close();
+                        });
+                        jobInfoWindows.push(jobInfoWindow);
+                        jobMarkers.push(mi);
+                    } else {
+                        fetchJobGeoloc(job).done(function (value) {
+                            job.set("friendlyLocation", value);
+                            job.save();
+                            content = '<div id="iw-container">' +
+                                '<div class="iw-title">' + miLabel.text + '</div>' +
+                                '<div class="iw-content">' +
+                                '<div class="iw-subTitle">Location</div>' +
+                                '<span>' + job.get("friendlyLocation") + '</span>' +
                                 '<div class="iw-subTitle">Description</div>' +
                                 '<span>' + job.get("shortDescription") + '</span>' +
                                 '<div class="iw-subTitle">Info</div>' +
@@ -317,17 +416,39 @@ function initMap() {
                             jobMarkers.push(mi);
 
                         });
-                    });
-                }
+                    }
+                });
+
             });
+        }
 
-        } else {
-            jobMarkers = deleteMarkers(jobMarkers);
-            jobInfoWindows = deleteWindows(jobInfoWindows);
-            fetchJobs().done(function (jobs) {
+    });
+    $("#map").on("search", function (e, str) {
 
-                jobs.each(function (job) {
-                    (job);
+        var query = str;
+
+        write(query);
+
+
+        jobMarkers = deleteMarkers(jobMarkers);
+        jobInfoWindows = deleteWindows(jobInfoWindows);
+        var jobSearch = new JobQueryModel({
+            id: query
+            // urlRoot:
+            // "v1/job-search/"+sp.get("id")+"/"+query+"/"+$("#radius-slider").slider("value")
+        });
+        jobSearch.fetch({
+            success: function (jobs, response, options) {
+                jobCollection.reset(null);
+                jobCollection.set(jobCollection.parse(response));
+
+                if (jobCollection.length > 0) {
+                    showSuccess(options.xhr.getResponseHeader('response-text'));
+                } else {
+                    showError(options.xhr.getResponseHeader('response-text'));
+                }
+                jobCollection.each(function (job) {
+
                     var jobPos = constructGLatLng(job);
                     var jobInfoWindow = new google.maps.InfoWindow;
                     var miLabel = newMarkerLabelJob(job)
@@ -383,100 +504,6 @@ function initMap() {
                                 jobInfoWindow.open(map, mi);
                             });
                             mi.addListener('mouseout', function () {
-                                jobInfoWindow.close();
-                            });
-                            jobInfoWindows.push(jobInfoWindow);
-                            jobMarkers.push(mi);
-
-                        });
-                    }
-                });
-
-            });
-        }
-
-    });
-    $("#map").on("search", function (e, str) {
-
-        var query = str;
-
-        write(query);
-
-
-        jobMarkers = deleteMarkers(jobMarkers);
-        jobInfoWindows = deleteWindows(jobInfoWindows);
-        var jobSearch = new JobQueryModel({
-            id: query
-            // urlRoot:
-            // "v1/job-search/"+sp.get("id")+"/"+query+"/"+$("#radius-slider").slider("value")
-        });
-        jobSearch.fetch({
-            success: function (jobs, response, options) {
-                jobCollection.reset(null);
-                jobCollection.set(jobCollection.parse(response));
-
-                if (jobCollection.length > 0) {
-                    showSuccess(options.xhr.getResponseHeader('response-text'));
-                } else {
-                    showError(options.xhr.getResponseHeader('response-text'));
-                }
-                jobCollection.each(function (job) {
-
-                    var jobPos = constructGLatLng(job);
-                    var jobInfoWindow = new google.maps.InfoWindow;
-                    var miLabel = newMarkerLabelJob(job)
-                    miLabel.set('position', jobPos);
-                    var mi = new google.maps.Marker();
-                    mi.bindTo('map', miLabel);
-                    mi.bindTo('position', miLabel);
-
-                    // jobInfoWindow.setPosition(jobPos);
-                     var content;
-                    if (job.has("friendlyLocation")) {
-                        content = '<div id="iw-container">' +
-                            '<div class="iw-title">' + miLabel.text + '</div>' +
-                            '<div class="iw-content">' +
-                            '<div class="iw-subTitle">Location</div>' +
-                            '<span>' + job.get("friendlyLocation") + '</span>' +
-                            '<div class="iw-subTitle">Description</div>' +
-                            '<span>' + job.get("shortDescription") + '</span>' +
-                            '<div class="iw-subTitle">Info</div>' +
-                            '<i class="fa fa-money">pay: ' + '&#36;' + job.get("pay") + '</i>' +
-                            '</div>' +
-                            '<div class="iw-bottom-gradient"></div>' +
-                            '</div>';
-                        jobInfoWindow.setContent(content);
-                        mi.setMap(map);
-                        mi.addListener.on('mouseover', function () {
-                            jobInfoWindow.open(map, mi);
-                        });
-                        mi.addListener.on('mouseout', function () {
-                            jobInfoWindow.close();
-                        });
-                        jobInfoWindows.push(jobInfoWindow);
-                        jobMarkers.push(mi);
-                    } else {
-                        fetchJobGeoloc(job).done(function (value) {
-                            job.set("friendlyLocation", value);
-                            job.save();
-                            content = '<div id="iw-container">' +
-                                '<div class="iw-title">' + miLabel.text + '</div>' +
-                                '<div class="iw-content">' +
-                                '<div class="iw-subTitle">Location</div>' +
-                                '<span>' + job.get("friendlyLocation") + '</span>' +
-                                '<div class="iw-subTitle">Description</div>' +
-                                '<span>' + job.get("shortDescription") + '</span>' +
-                                '<div class="iw-subTitle">Info</div>' +
-                                '<i class="fa fa-money">pay: ' + '&#36;' + job.get("pay") + '</i>' +
-                                '</div>' +
-                                '<div class="iw-bottom-gradient"></div>' +
-                                '</div>';
-                            jobInfoWindow.setContent(content);
-                            mi.setMap(map);
-                            mi.addListener.on('mouseover', function () {
-                                jobInfoWindow.open(map, mi);
-                            });
-                            mi.addListener.on('mouseout', function () {
                                 jobInfoWindow.close();
                             });
                             jobInfoWindows.push(jobInfoWindow);

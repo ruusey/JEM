@@ -61,11 +61,20 @@ var ServiceProviderView = Backbone.View.extend({
     initialize: function () {
         
         this.attributes = {};
-        this.attributes.addingService = false;
-        this.listenTo(this.model, "add", this.render);
+        this.attributes.initialized = false;
+        this.listenTo(this.model, "change", this.init);
         this.listenTo(this.model, "change", this.render);
+        
+        
+        
+
+    },
+    init: function(){
         var self = this;
-        $.ajax({
+        
+        if(this.model!=null && sessionToken!=null && !this.attributes.initialized){
+            $.ajax({
+                beforeSend: sendAuthentication,
             url: 'v1/services',
             type: 'GET',
             contentType: 'application/json; charset=UTF-8',
@@ -79,8 +88,10 @@ var ServiceProviderView = Backbone.View.extend({
                 ul.append(li);
             }
             self.attributes.popoverContent = ul.html();
+            self.render();
         });
-
+        self.attributes.initialized=true;
+        }
     },
     removeService: function (e) {
         var span = $(e.target).parent();
@@ -111,22 +122,22 @@ var ServiceProviderView = Backbone.View.extend({
        
     },
 	    addService : function(e) {
-            
-		var loc = $(e.target);
+         
+		var loc = $("#sp-add-service");
         
 		var self = this;
-
-		$(e.target).popover({
+           
+		loc.popover({
 			placement : 'left',
 			container : '#sp-add-service',
 			title : "Available Services",
 			html : true,
-			content : this.attributes.popoverContent,
+			content : self.attributes.popoverContent,
 			selector : '#sp-add-service',
 			trigger : 'manual'
 		});
 
-		$(e.target).popover("show");
+		$("#sp-add-service").popover("toggle");
 		write("togggle");
 
 		$.each($(".list-group-item.service"), function(idx, value) {
@@ -145,14 +156,15 @@ var ServiceProviderView = Backbone.View.extend({
 				write(currServices);
 				self.model.set("services", currServices);
 				self.model.save();
-                self.closePopover(e);
+                
                 
 			});
         });
         
+        
 	},
     closePopover: function (e) {
-        $(e.target).popover("hide");
+        e.popover("hide");
        
     },
     edit: function () {

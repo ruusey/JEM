@@ -1,11 +1,15 @@
 package com.jem.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
+
 import org.apache.log4j.Logger;
 import com.google.maps.DistanceMatrixApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
+import com.google.maps.PlacesApi;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.Distance;
 import com.google.maps.model.DistanceMatrix;
@@ -18,11 +22,14 @@ import com.jem.models.JobRequest;
 public class GeoLocServices {
 	static Logger LOGGER = Logger.getLogger(GeoLocServices.class.getName());
 	public GeoApiContext api;
-
 	public GeoLocServices() {
+	   
 		try {
+		    Scanner s = new Scanner(new File("C://temp//google_key.txt"));
+		    String key = s.nextLine();
 			api = new GeoApiContext()
-					.setApiKey("AIzaSyAPPbs2Yz_oie_ldvKjEyG86ZUmh_PAdiY");
+					.setApiKey(key);
+ 			
 			LOGGER.info("Successfully created GeoApiContext");
 		} catch (Exception e) {
 			LOGGER.error("Unable to create GeoApiContext",e.getCause());

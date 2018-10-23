@@ -60,10 +60,9 @@ public class API {
     
     @POST
     @Path("/auth")
-
-    
     @ApiOperation("Authorize user endpoint")
-    @ApiResponses({@ApiResponse(code = 200, message = "User succesfully authenticated", response = String.class)})
+    @ApiResponses({@ApiResponse(code = 200, message = "User succesfully authenticated", response = String.class),@ApiResponse(code = 404, message = "User succesfully authenticated", response = WebApplicationException.class)})
+
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response authenticateUser(Credentials credentials) throws WebApplicationException{
@@ -76,26 +75,30 @@ public class API {
         	int id = Integer.parseInt(username);
         	sp = JEMDao.serviceProviderService.getServiceProviderById(id);
             }catch(Exception e) {
-        	throw APIUtils.buildWebApplicationException(
-		          Status.NOT_FOUND,
-		          APIStatus.ERROR,
-		          "Client not found",
-		          "The Client ID supplied does not match any existing Clients."); 
+        	sp = JEMDao.serviceProviderService.getServiceProviderByEmail(username);
+        	if(sp==null) {
+        	    throw APIUtils.buildWebApplicationException(
+  		          Status.BAD_REQUEST,
+  		          APIStatus.ERROR,
+  		          "ServiceProvider not found.",
+  		          "Login Invalid. Please try again."); 
+        	}
+        	
             }
         }
             
         if(password.length()==0) {
             password  = JEMDao.userService.getUserPass(sp.getId());
         }
-       
+        String token = null;
         try {
             if(JEMDao.userService.isRegistered(sp.getId())) {
-        	String token =	JEMDao.userService.getUserToken(sp.getId());
+        	token =	JEMDao.userService.getUserToken(sp.getId());
         	if(SHAValidate.validatePassword(password, token)) {
         	    return APIUtils.buildSuccess("Token succesfully created", token);
         	}
             }else {
-        	String token = SHAHash.generateStorngPasswordHash(password);
+        	token = SHAHash.generateStorngPasswordHash(password);
         	JEMDao.userService.createUserAuth(sp.getId(), username,password);
         	JEMDao.userService.registerUserAuth(sp.getId(), token, Util.getCurrentDateTime2());
         	return APIUtils.buildSuccess("Token succesfully created", token);
@@ -108,7 +111,11 @@ public class API {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
-        return APIUtils.buildSuccess("Token unable to be created", null);
+        throw APIUtils.buildWebApplicationException(
+        	Status.BAD_REQUEST,
+	          APIStatus.ERROR,
+	          "ServiceProvider not found.",
+	          "Login Invalid. Please try again."); 
          
         // Authenticate the user, issue a token and return a response
     }
@@ -240,6 +247,7 @@ public class API {
     @ApiOperation("Get all jobs, complete or not")
     @ApiResponses({@ApiResponse(code = 200, message = "All jobs retrieved", response = List.class)})
     @GET
+    @Secured
     @Path("/job-all")
     public Response getJobs(@Context HttpServletRequest request) {
 	
@@ -251,12 +259,14 @@ public class API {
     @ApiOperation("Get all incomplete jobs")
     @ApiResponses({@ApiResponse(code = 200, message = "All incomplete jobs retrieved", response = List.class)})
     @GET
+    @Secured
     @Path("/job-incomplete")
     @Produces("application/json")
     public Response getIncompleteJobs(@Context HttpServletRequest request) {
 	
 	List<JobRequest> jobs = JEMDao.jobService.getAllIncompleteJobs();
-	return Response.ok(jobs).build();
+	GenericEntity<List<JobRequest>> entity  = new GenericEntity<List<JobRequest>>(jobs) {};
+	return APIUtils.buildSuccess("Incomplete jobs retrieved", entity);
     }
 //    @ApiOperation("Get jobs by Service")
 //    @ApiResponses({@ApiResponse(code = 200, message = "Jobs retrieved by Service", response = List.class)})
@@ -278,6 +288,7 @@ public class API {
     @ApiOperation("Get jobs by query")
     @ApiResponses({@ApiResponse(code = 200, message = "Jobs retrieved by Service", response = List.class)})
     @GET
+    @Secured
     @Path("/job-search/{query}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.TEXT_PLAIN)
@@ -380,6 +391,7 @@ public class API {
     }
     @GET
     @Path("/services")
+    @Secured
     @Produces("application/json")
     public Response getServices(@Context HttpServletRequest request) {
 	
@@ -427,6 +439,7 @@ public class API {
 
     }
     @GET
+    @Secured
     @Path("/sp/geoloc/{sp_id}")
     @Produces("application/json")
     public Response getServiceProviderGeoloc(@Context HttpServletRequest request, @PathParam("sp_id") String spId) {
@@ -452,6 +465,7 @@ public class API {
     @GET
     @Path("/sp/geoloc/user/{username}")
     @Produces("application/json")
+    @Secured
     public Response getServiceProviderGeolocUser(@Context HttpServletRequest request, @PathParam("username") String username) {
 	ServiceProvider sp= null;
 	
@@ -482,6 +496,7 @@ public class API {
     @Path("/sp-register-service/{sp_id}/{service}")
     @Produces("application/json")
     @Consumes("application/json")
+    @Secured
     public Response registerServiceProviderService(@Context HttpServletRequest request,  @PathParam("sp_id") int spId, @PathParam("service") com.jem.models.Service service) {
 	JEMDao.serviceProviderService.registerServiceProviderService(spId, service);
 	return Response.ok(service).build();
@@ -490,6 +505,7 @@ public class API {
     @Path("/sp-register-geoloc/{sp_id}")
     @Produces("application/json")
     @Consumes("application/json")
+    @Secured
     public Response registerServiceProviderGeoLoc(@Context HttpServletRequest request,  @PathParam("sp_id") int spId,  GeoLocation loc) {
 	JEMDao.serviceProviderService.registerServiceProviderGeoLoc(spId, loc);
 	return Response.ok(loc).build();
@@ -498,6 +514,7 @@ public class API {
     @Path("/sp/{sp_id}")
     @Produces("application/json")
     @Consumes("application/json")
+    @Secured
     public Response updateServiceProvider(@Context HttpServletRequest request,  @PathParam("sp_id") int spId,  ServiceProvider sp) {
 	
 	JEMDao.serviceProviderService.updateServiceProvider(sp);
@@ -507,6 +524,7 @@ public class API {
     @Path("/sp/{sp_id}")
     @Produces("application/json")
     @Consumes("application/json")
+    @Secured
     public Response updateServiceProvider2(@Context HttpServletRequest request,  @PathParam("sp_id") int spId,  ServiceProvider sp) {
 	JEMDao.serviceProviderService.updateServiceProvider(sp);
 	return Response.ok(sp).build();
