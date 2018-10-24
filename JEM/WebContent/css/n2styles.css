@@ -14,7 +14,7 @@ gm-style-iw {
 }
 #iw-container .iw-title {
     font-family: 'Open Sans Condensed', sans-serif;
-    font-size: 22px;
+    font-size: 1.5em;
     font-weight: 400;
     padding: 10px;
     background-color: #48b5e9;
@@ -23,12 +23,12 @@ gm-style-iw {
     border-radius: 2px 2px 0 0;
 }
 #iw-container .iw-content {
-    font-size: 13px;
-    line-height: 18px;
+    font-size: 1em;
+    line-height: 0.9em;
     font-weight: 400;
     margin-right: 1px;
     padding: 2px 5px 5px 2px;
-    max-height: 150px;
+    max-height: 10em;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -37,21 +37,11 @@ gm-style-iw {
     margin: 0 5px 5px 10px; 
 }
 .iw-subTitle {
-    font-size: 16px;
+    font-size: 1em;
     font-weight: 700;
     padding: 0;
 }
-.iw-bottom-gradient {
-    position: absolute;
-    width: 326px;
-    height: 25px;
-    bottom: 10px;
-    right: 18px;
-    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
-    background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
-    background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
-    background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
-}
+
 #search-clear-icon {
     position: absolute;
     right: 5px;
@@ -60,7 +50,7 @@ gm-style-iw {
     bottom: 0;
     height: 14px;
     margin: auto;
-    font-size: 18px;
+    font-size: 1em;
     cursor: pointer;
     color: #ccc;
 }

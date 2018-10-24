@@ -1,4 +1,3 @@
-
 $(window).on("load", function () {
     initialize();
     var isMobile = false;
@@ -16,7 +15,7 @@ $(window).on("load", function () {
     setInterval(function () {
         pingModel.fetch({
             success: determineIsMobile
-            
+
         });
 
     }, 1000);
@@ -52,16 +51,16 @@ $(window).on("load", function () {
         }
 
     }
-    $("#log-out-sp").on("click",function(){
-        $(document).trigger("logout",spView);
+    $("#log-out-sp").on("click", function () {
+        $(document).trigger("logout", spView);
     })
 
     function attemptLogin() {
-       
+
         if ($.cookie("id") != undefined) {
 
             var id = $.cookie("id");
-           
+
             authenticateSp(id).done(function (token) {
                 sessionToken = token;
             }).then(function () {
@@ -89,10 +88,10 @@ $(window).on("load", function () {
                 }
             });
         } else {
-            _.once(function(){
+            _.once(function () {
                 showWarning("No ServiceProvider cookie present!");
             });
-            
+
         }
     }
     $("#exampleDropdownFormPassword1").on("keypress", function (e) {
@@ -145,8 +144,8 @@ $(window).on("load", function () {
             beforeSend: sendAuthentication,
             success: function () {
                 if ($.cookie("id") == undefined) {
-                        $.cookie("id", spView.model.get("id"));
-                    }
+                    $.cookie("id", spView.model.get("id"));
+                }
                 $("#login-dropdown").removeClass("show");
                 initMap();
                 setLoggedIn();
@@ -178,7 +177,10 @@ $(window).on("load", function () {
             });
         };
     });
-
+    function isInfoWindowOpen(infoWindow){
+    var map = infoWindow.getMap();
+    return (map !== null && typeof map !== "undefined");
+}
     function initMap() {
         var jobInfoWindows = [];
         var jobMarkers = [];
@@ -192,13 +194,13 @@ $(window).on("load", function () {
             map: map,
             position: myLocation,
             draggable: true,
-            label: "My Position",
+            label: {text: "Me", color: "white"},
             gestureHandling: 'cooperative',
             zIndex: 99999
         });
         myLocationInfo.setPosition(myLocation);
         map.dragInProgress = false;
-
+       
         google.maps.event.addListener(myPos, 'dragend', function (evt) {
 
             $('#loc-modal').modal('show');
@@ -218,20 +220,21 @@ $(window).on("load", function () {
                     loc: currLoc
                 });
                 spView.model.save()
-                    getAddress(spView.model).done(function (value) {
-                        write(value);
-                        spView.model.set({
-                            friendlyLocation: value
-                        });
-                        spView.model.save();
-
-                        myLocationInfo.setPosition(constructLatLng(spView.model));
-                        myPos.setPosition(constructLatLng(spView.model));
-                        myPos.setMap(map);
-                        myLocationInfo.setContent($("<span>").text(value).append($("<br>")).append($("<h5>").text("My Location")).html());
-
-                        myLocationInfo.open(map, myPos);
+                getAddress(spView.model).done(function (value) {
+                    write(value);
+                    spView.model.set({
+                        friendlyLocation: value
                     });
+                    spView.model.save();
+
+                    myLocationInfo.setPosition(constructLatLng(spView.model));
+                    myPos.setPosition(constructLatLng(spView.model));
+                    myPos.setMap(map);
+                    myLocationInfo.setContent($("<span>").text(value).append($("<br>")).append($("<h5>").text("My Location")).html());
+
+                    myLocationInfo.open(map, myPos);
+                });
+                
 
             });
             $("#loc-modal-deny").on("click", function () {
@@ -619,6 +622,10 @@ $(window).on("load", function () {
             myLocationInfo.setContent($("<span>").text(spView.model.get("friendlyLocation")).append($("<br>")).append($("<h5>").text("My Location")).html());
 
             myLocationInfo.open(map, myPos);
+            myPos.addListener('click', function() {
+            if(isInfoWindowOpen(myLocationInfo)) return false;
+                    myLocationInfo.open(map, myPos);
+            });
         } else {
             getAddress(spView.model).done(function (value) {
                 //write(value);
@@ -633,6 +640,10 @@ $(window).on("load", function () {
                 myLocationInfo.setContent($("<span>").text(value).append($("<br>")).append($("<h5>").text("My Location")).html());
 
                 myLocationInfo.open(map, myPos);
+                 myPos.addListener('click', function() {
+            if(isInfoWindowOpen(myLocationInfo)) return false;
+                    myLocationInfo.open(map, myPos);
+            });
             });
         }
 
@@ -641,11 +652,14 @@ $(window).on("load", function () {
     }
 
     function newMarkerLabelJob(obj) {
+       
+
         var service = obj.get("service");
+        service = service.replace("_", "\r\n");
         var mapLabel = new MapLabel({
-            text: service.replace("_", "\n"),
+            text: service,
             position: constructLatLng(obj),
-            fontSize: 20,
+            fontSize: '1em',
             align: 'center'
         });
         return mapLabel;
@@ -734,7 +748,7 @@ $(window).on("load", function () {
         return deferred.promise();
     }
 
-    
+
 
     function fetchJobGeoloc(job) {
         var deferred = $.Deferred();

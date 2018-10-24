@@ -11,14 +11,19 @@ var sendAuthentication = function (xhr) {
 }
 
 function showSuccess(info) {
+    if(info==null || info==undefined) return;
+    write(showSuccess.caller);
     toastr.success(info);
 }
 
 function showWarning(info) {
+    if(info==null || info==undefined) return;
     toastr.warning(info);
 }
 
 function showError(info) {
+    if(info==null || info==undefined) return;
+    write(showError.caller);
     toastr.error(info);
 }
 

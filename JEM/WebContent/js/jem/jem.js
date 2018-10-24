@@ -59,38 +59,38 @@ var ServiceProviderView = Backbone.View.extend({
 
     },
     initialize: function () {
-        
+
         this.attributes = {};
         this.attributes.initialized = false;
         this.listenTo(this.model, "change", this.init);
         this.listenTo(this.model, "change", this.render);
-        
-        
-        
+
+
+
 
     },
-    init: function(){
+    init: function () {
         var self = this;
-        
-        if(this.model!=null && sessionToken!=null && !this.attributes.initialized){
+
+        if (this.model != null && sessionToken != null && !this.attributes.initialized) {
             $.ajax({
                 beforeSend: sendAuthentication,
-            url: 'v1/services',
-            type: 'GET',
-            contentType: 'application/json; charset=UTF-8',
-            dataType: 'json'
+                url: 'v1/services',
+                type: 'GET',
+                contentType: 'application/json; charset=UTF-8',
+                dataType: 'json'
 
-        }).done(function (msg) {
+            }).done(function (msg) {
 
-            var ul = $("<ul>").attr("class", "list-group").attr("id", "sp-service-list");
-            for (var i = 0, l = msg.length; i < l; i++) {
-                var li = $("<li>").attr("class", "list-group-item service").text(msg[i])
-                ul.append(li);
-            }
-            self.attributes.popoverContent = ul.html();
-            self.render();
-        });
-        self.attributes.initialized=true;
+                var ul = $("<ul>").attr("class", "list-group").attr("id", "sp-service-list");
+                for (var i = 0, l = msg.length; i < l; i++) {
+                    var li = $("<li>").attr("class", "list-group-item service").text(msg[i])
+                    ul.append(li);
+                }
+                self.attributes.popoverContent = ul.html();
+                self.render();
+            });
+            self.attributes.initialized = true;
         }
     },
     removeService: function (e) {
@@ -108,64 +108,64 @@ var ServiceProviderView = Backbone.View.extend({
         this.model.set("services", currServices);
         this.model.save();
     },
-     searchService: function (e) {
-      //e.preventDefault();
+    searchService: function (e) {
+        //e.preventDefault();
         var span = $(e.target).parent();
 
         var toRemove = span.text();
-        
+
         toRemove = $.trim(toRemove.replace(/[\t\n]+/g, ''));
-       write(toRemove);
-        
-            $("#map").trigger("search",[toRemove]);
-        
-       
+        write(toRemove);
+
+        $("#map").trigger("search", [toRemove]);
+
+
     },
-	    addService : function(e) {
-         
-		var loc = $("#sp-add-service");
-        
-		var self = this;
-           
-		loc.popover({
-			placement : 'left',
-			container : '#sp-add-service',
-			title : "Available Services",
-			html : true,
-			content : self.attributes.popoverContent,
-			selector : '#sp-add-service',
-			trigger : 'manual'
-		});
+    addService: function (e) {
 
-		$("#sp-add-service").popover("toggle");
-		write("togggle");
+        var loc = $("#sp-add-service");
 
-		$.each($(".list-group-item.service"), function(idx, value) {
+        var self = this;
 
-			$(value).on("click", function(e1) {
-                 
-				//$(this).addClass("active");
-				var text = $.trim($(this).text().replace(/[\t\n]+/g, ''));
-				var currServices = (self.model.clone().get("services"));
-				
-				currServices = jQuery.grep(currServices, function(value) {
-					return value != text;
-				});
-				
-				currServices.push(text);
-				write(currServices);
-				self.model.set("services", currServices);
-				self.model.save();
-                
-                
-			});
+        loc.popover({
+            placement: 'left',
+            container: '#sp-add-service',
+            title: "Available Services",
+            html: true,
+            content: self.attributes.popoverContent,
+            selector: '#sp-add-service',
+            trigger: 'manual'
         });
-        
-        
-	},
+
+        $("#sp-add-service").popover("toggle");
+        write("togggle");
+
+        $.each($(".list-group-item.service"), function (idx, value) {
+
+            $(value).on("click", function (e1) {
+
+                //$(this).addClass("active");
+                var text = $.trim($(this).text().replace(/[\t\n]+/g, ''));
+                var currServices = (self.model.clone().get("services"));
+
+                currServices = jQuery.grep(currServices, function (value) {
+                    return value != text;
+                });
+
+                currServices.push(text);
+                write(currServices);
+                self.model.set("services", currServices);
+                self.model.save();
+
+
+            });
+        });
+
+
+    },
     closePopover: function (e) {
         e.popover("hide");
-       
+
     },
     edit: function () {
         $("#client-data").html(this.editTemplate(this.model.toJSON()));
@@ -194,11 +194,11 @@ var ServiceProviderView = Backbone.View.extend({
         $("#client-data").html(this.template(this.model.toJSON()));
     },
     render: function () {
-        
+
         $("#client-data").html(this.template(this.model.toJSON()));
-        
-            showRadiusSlider();
-        
+
+        showRadiusSlider();
+
         // getAddress(this.model).done(function (value) {
         //     $("#sp-location").text(value);
         //     this.model.set()
