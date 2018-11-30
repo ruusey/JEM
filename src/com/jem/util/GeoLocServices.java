@@ -25,7 +25,7 @@ public class GeoLocServices {
 	public GeoLocServices() {
 	   
 		try {
-		    Scanner s = new Scanner(new File("C://temp//google_key.txt"));
+		    Scanner s = new Scanner(new File("D:\\downloads\\temp\\google_key.txt"));
 		    String key = s.nextLine();
 			api = new GeoApiContext()
 					.setApiKey(key);
