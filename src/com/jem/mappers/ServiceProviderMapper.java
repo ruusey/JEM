@@ -76,7 +76,7 @@ public interface ServiceProviderMapper {
 	public String getGeoLocPretty(@Param("sp_id") int spId);
 
 	@Insert("INSERT INTO lb.service_provider (email, username, firstname, lastname,service_id, geoloc_id, rating) VALUES"
-			+ "(#{email},#{userName}, #{firstName}, #{lastName}, #{id}, #{id}, #{rating);")
+			+ "(#{email},#{userName}, #{firstName}, #{lastName}, #{id}, #{id}, #{rating});")
 	@Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
 	public void registerServiceProvider(ServiceProvider sp);
 	
