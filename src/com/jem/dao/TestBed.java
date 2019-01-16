@@ -44,7 +44,7 @@ public class TestBed {
 	    labels.put(Service.DOG_SITTING, "Feed and walk our dog while we are on vacation");
 	    labels.put(Service.PROJECT_ASSISTANCE, "Tutor me in CSCE146");
 	    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-	    createJobFriendlyGeoloc();
+	    testAuth("ruboy123");
 	    
 	    //LawnBuzzDao dao = new LawnBuzzDao();
 //		
@@ -139,14 +139,13 @@ public class TestBed {
 		// UserServiceImpl service =
 		// (UserServiceImpl)cxt.getBean("userService");
 
-		ClientServiceImpl service = (ClientServiceImpl) cxt
-				.getBean("clientService");
-
-		Client sp = new Client();
-		sp.setEmail("nmello7337@gmail.com");
-		sp.setUserName("nmello");
-		sp.setFirstName("Natalie");
-		sp.setLastName("Mello");
+		ServiceProviderServiceImpl service = (ServiceProviderServiceImpl) cxt
+				.getBean("serviceProviderService");
+		ServiceProvider sp = new ServiceProvider();
+		sp.setEmail("ruusey@gmail.com");
+		sp.setUserName("ruusey");
+		sp.setFirstName("Robert");
+		sp.setLastName("Usey");
 		
 		List<com.jem.models.Service> sList = new ArrayList<com.jem.models.Service>();
 		sList.add(com.jem.models.Service.BABYSITTING);
@@ -157,7 +156,7 @@ public class TestBed {
 		sp.setLoc(geo);
 		sp.setRating(0);
 
-		service.registerClient(sp);
+		service.registerServiceProvider(sp);
 
 	}
 	public static void testAuth(String password) {
@@ -165,7 +164,7 @@ public class TestBed {
 	    if(JEMDao.userService.isRegistered(s.getId())) {
 		System.out.println(JEMDao.userService.getUserToken(s.getId()));
 	    }else {
-		//LawnBuzzDao.userService.createUserAuth(s.getId(), s.getUserName());
+	    	//JEMDao.userService.createUserAuth(s.getId(), s.getUserName(), password);
 		try {
 		    String token = SHAHash.generateStorngPasswordHash(password);
 		    System.out.println(token.length());
