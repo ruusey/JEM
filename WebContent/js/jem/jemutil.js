@@ -4,6 +4,9 @@ var serviceList = [];
 function write(data) {
     console.log(JSON.stringify(data, null, 4));
 }
+function print(str){
+	console.log(str);
+}
 var sendAuthentication = function (xhr) {
 
     var token = sessionToken;
@@ -59,9 +62,9 @@ function showRadiusSlider() {
     }
     $("#radius-slider").slider({
         range: "max",
-        min: 1,
-        max: 10,
-        value: 5,
+        min: 10,
+        max: 100,
+        value: 20,
         slide: function (event, ui) {
             $("#radius-input").val("Search radius: " + ui.value + "mi");
         }

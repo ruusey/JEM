@@ -44,8 +44,8 @@ public class TestBed {
 	    labels.put(Service.DOG_SITTING, "Feed and walk our dog while we are on vacation");
 	    labels.put(Service.PROJECT_ASSISTANCE, "Tutor me in CSCE146");
 	    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-	    testAuth("ruboy123");
-	    
+	    //testAuth("ruboy123");
+	    testSPRegister();
 	    //LawnBuzzDao dao = new LawnBuzzDao();
 //		
 //		ServiceProvider me = LawnBuzzDao.serviceProviderService
@@ -91,10 +91,10 @@ public class TestBed {
 		GeoLocation loc = service.getServiceProviderById(1).getLoc();
 		
 		ServiceProvider sp = new ServiceProvider();
-		sp.setEmail("guest@gmail.com");
-		sp.setUserName("guest");
-		sp.setFirstName("Guest");
-		sp.setLastName("Visitor");
+		sp.setEmail("test@gmail.com");
+		sp.setUserName("test");
+		sp.setFirstName("test");
+		sp.setLastName("test");
 		List<com.jem.models.Service> sList = new ArrayList<com.jem.models.Service>();
 		sList.add(com.jem.models.Service.BABYSITTING);
 		sList.add(com.jem.models.Service.CLEANING);
@@ -107,7 +107,10 @@ public class TestBed {
 		service.registerServiceProvider(sp);
 
 		List<ServiceProvider> test = service.getServiceProviders();
-		System.out.println(test.hashCode());
+		for(ServiceProvider s: test) {
+			System.out.println(s.toString());
+		}
+		testAuth("test");
 	}
 	public static void testCliRegister() {
 		ApplicationContext cxt = new ClassPathXmlApplicationContext(
@@ -157,14 +160,15 @@ public class TestBed {
 		sp.setRating(0);
 
 		service.registerServiceProvider(sp);
-
+		
 	}
 	public static void testAuth(String password) {
-	    ServiceProvider s = JEMDao.serviceProviderService.getServiceProviderById(1);
+		List<ServiceProvider> sps = JEMDao.serviceProviderService.getServiceProviders();
+	    ServiceProvider s = sps.get(sps.size()-1);
 	    if(JEMDao.userService.isRegistered(s.getId())) {
 		System.out.println(JEMDao.userService.getUserToken(s.getId()));
 	    }else {
-	    	//JEMDao.userService.createUserAuth(s.getId(), s.getUserName(), password);
+	    	JEMDao.userService.createUserAuth(s.getId(), s.getUserName(), password);
 		try {
 		    String token = SHAHash.generateStorngPasswordHash(password);
 		    System.out.println(token.length());

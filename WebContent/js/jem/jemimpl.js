@@ -219,9 +219,9 @@ $(window).on("load", function () {
                 spView.model.set({
                     loc: currLoc
                 });
-                spView.model.save()
+               
                 getAddress(spView.model).done(function (value) {
-                    write(value);
+                    //write(value);
                     spView.model.set({
                         friendlyLocation: value
                     });
@@ -274,17 +274,21 @@ $(window).on("load", function () {
 
             var query = $("#job-search-input").val();
 
-            write(query);
             if (query.length > 1) {
                 $("#fetch-search").text("Search jobs");
+                var idx =  (spView.model.get("id"))+decodeURIComponent('/'+query+'/'+$("#radius-slider").slider("value"));
+                
+                print(idx);
                 jobMarkers = deleteMarkers(jobMarkers);
                 jobInfoWindows = deleteWindows(jobInfoWindows);
                 var jobSearch = new JobQueryModel({
-                    id: query
-                    // urlRoot:
-                    // "v1/job-search/"+sp.get("id")+"/"+query+"/"+$("#radius-slider").slider("value")
+               	 id: idx
+                    
                 });
-                jobSearch.fetch({
+                var rus = 'v1/job-radius-query-search' + '/' + idx;
+                jobSearch.url=rus;
+             jobSearch.fetch({
+             	url: rus,
                     success: function (jobs, response, options) {
                         jobCollection.reset(null);
                         jobCollection.set(jobCollection.parse(response));
@@ -323,10 +327,10 @@ $(window).on("load", function () {
                                 mi.setMap(map);
                                 mi.addListener('mouseover', function () {
                                     jobInfoWindow.open(map, mi);
-                                });
+                                },{passive: true});
                                 mi.addListener('mouseout', function () {
                                     jobInfoWindow.close();
-                                });
+                                },{passive: true});
                                 jobInfoWindows.push(jobInfoWindow);
                                 jobMarkers.push(mi);
                             } else {
@@ -349,10 +353,10 @@ $(window).on("load", function () {
                                     mi.setMap(map);
                                     mi.addListener('mouseover', function () {
                                         jobInfoWindow.open(map, mi);
-                                    });
+                                    },{passive: true});
                                     mi.addListener('mouseout', function () {
                                         jobInfoWindow.close();
-                                    });
+                                    },{passive: true});
                                     jobInfoWindows.push(jobInfoWindow);
                                     jobMarkers.push(mi);
 
@@ -396,10 +400,10 @@ $(window).on("load", function () {
                             mi.setMap(map);
                             mi.addListener('mouseover', function () {
                                 jobInfoWindow.open(map, mi);
-                            });
+                            },{passive: true});
                             mi.addListener('mouseout', function () {
                                 jobInfoWindow.close();
-                            });
+                            },{passive: true});
                             jobInfoWindows.push(jobInfoWindow);
                             jobMarkers.push(mi);
                         } else {
@@ -422,10 +426,10 @@ $(window).on("load", function () {
                                 mi.setMap(map);
                                 mi.addListener('mouseover', function () {
                                     jobInfoWindow.open(map, mi);
-                                });
+                                },{passive: true});
                                 mi.addListener('mouseout', function () {
                                     jobInfoWindow.close();
-                                });
+                                },{passive: true});
                                 jobInfoWindows.push(jobInfoWindow);
                                 jobMarkers.push(mi);
 
@@ -441,17 +445,21 @@ $(window).on("load", function () {
 
             var query = str;
 
-            write(query);
-
-
+            
+           
+            var idx =  (spView.model.get("id"))+decodeURIComponent('/'+query+'/'+$("#radius-slider").slider("value"));
+           
+            print(idx);
             jobMarkers = deleteMarkers(jobMarkers);
             jobInfoWindows = deleteWindows(jobInfoWindows);
             var jobSearch = new JobQueryModel({
-                id: query
-                // urlRoot:
-                // "v1/job-search/"+sp.get("id")+"/"+query+"/"+$("#radius-slider").slider("value")
-            });
+              	 id: idx
+                   
+               });
+               var rus = 'v1/job-radius-query-search' + '/' + idx;
+               jobSearch.url=rus;
             jobSearch.fetch({
+            	url: rus,
                 success: function (jobs, response, options) {
                     jobCollection.reset(null);
                     jobCollection.set(jobCollection.parse(response));
@@ -490,10 +498,10 @@ $(window).on("load", function () {
                             mi.setMap(map);
                             mi.addListener('mouseover', function () {
                                 jobInfoWindow.open(map, mi);
-                            });
+                            },{passive: true});
                             mi.addListener('mouseout', function () {
                                 jobInfoWindow.close();
-                            });
+                            },{passive: true});
                             jobInfoWindows.push(jobInfoWindow);
                             jobMarkers.push(mi);
                         } else {
@@ -516,10 +524,10 @@ $(window).on("load", function () {
                                 mi.setMap(map);
                                 mi.addListener('mouseover', function () {
                                     jobInfoWindow.open(map, mi);
-                                });
+                                },{passive: true});
                                 mi.addListener('mouseout', function () {
                                     jobInfoWindow.close();
-                                });
+                                },{passive: true});
                                 jobInfoWindows.push(jobInfoWindow);
                                 jobMarkers.push(mi);
 
@@ -613,7 +621,7 @@ $(window).on("load", function () {
             } else {
                 $("#fetch-search").text("Search");
             }
-        });
+        },{passive: true});
         if (spView.model.has("friendlyLocation")) {
 
             myLocationInfo.setPosition(constructLatLng(spView.model));
@@ -625,7 +633,7 @@ $(window).on("load", function () {
             myPos.addListener('click', function() {
             if(isInfoWindowOpen(myLocationInfo)) return false;
                     myLocationInfo.open(map, myPos);
-            });
+            },{passive: true});
         } else {
             getAddress(spView.model).done(function (value) {
                 //write(value);
@@ -643,7 +651,7 @@ $(window).on("load", function () {
                  myPos.addListener('click', function() {
             if(isInfoWindowOpen(myLocationInfo)) return false;
                     myLocationInfo.open(map, myPos);
-            });
+            },{passive: true});
             });
         }
 

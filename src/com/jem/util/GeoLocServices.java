@@ -94,6 +94,10 @@ public class GeoLocServices {
 		double d = (double) meters;
 		return 0.000621371 * d;
 	}
+	public double milesToMeter(double miles) {
+		double d = (double) miles;
+		return 1609.34 * d;
+	}
 	public ArrayList<JobRequest> getJobsInRadius(GeoLocation center, int radius){
 		
 		ArrayList<JobRequest> availableJobs = new ArrayList<JobRequest>(JEMDao.jobService.getAllIncompleteJobs());
@@ -123,6 +127,8 @@ public class GeoLocServices {
 	    double distance = R * c * 1000; // convert to meters
 
 	    double miles = metersToMiles(distance);
+	   LOGGER.info(miles);
+	   LOGGER.info(radius);
 	    return miles<=radius;
 	}
 }

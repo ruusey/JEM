@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.Encoded;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -24,6 +25,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+
 import com.jem.dao.JEMDao;
 import com.jem.models.APIStatus;
 import com.jem.models.Client;
@@ -47,7 +50,7 @@ import io.swagger.annotations.ApiResponses;
 @Api(value = "/v1")
 @Path("/")
 public class API {
-    
+	static Logger LOGGER = Logger.getLogger(API.class.getName());
     @POST
     @Path("/auth")
     @ApiOperation("Authorize user endpoint")
@@ -293,17 +296,18 @@ public class API {
 	}
     }
     @GET
-    @Path("/job-search/{sp_id}/{query}/{radius}")
+    
+    @Path("/job-radius-query-search/{sp_id}/{query}/{radius}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.TEXT_PLAIN)
     public Response getJobsByQueryRadius(@Context HttpServletRequest request,@PathParam("sp_id") int spId, @PathParam("query") String query, @PathParam("radius") int radius) {
 	ServiceProvider sp = JEMDao.serviceProviderService.getServiceProviderById(spId);
-	List<JobRequest> jobs = JEMDao.jobSearch.search(query, 5);
+	List<JobRequest> jobs = JEMDao.jobSearch.search(query, 30);
 	ArrayList<JobRequest> toRemove = new ArrayList<JobRequest>();
-	for(JobRequest job : jobs) {
-	    if(!JEMDao.geoService.isInRadius(sp.getLoc(), job.getLoc(), (int) JEMDao.geoService.metersToMiles((double)radius))) {
-		toRemove.add(job);
-	    }
+	for(JobRequest job : jobs){
+		if(!JEMDao.geoService.isInRadius2(sp.getLoc(),job.getLoc(),radius)){
+			toRemove.add(job);
+		}
 	}
 	jobs.removeAll(toRemove);
 	
@@ -316,7 +320,7 @@ public class API {
 	}
     }
     @GET
-    @Path("/job-search/{sp_id}/{radius}")
+    @Path("/job-radius-search/{sp_id}/{radius}")
     @Produces("application/json")
     public Response getJobsInRadius(@Context HttpServletRequest request,
 	    @PathParam("sp_id") int id, @PathParam("radius") int radius) {

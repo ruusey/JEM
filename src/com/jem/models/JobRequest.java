@@ -1,6 +1,7 @@
 package com.jem.models;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 public class JobRequest implements Serializable {
 
@@ -110,5 +111,7 @@ public class JobRequest implements Serializable {
 	return (this.longDescription.toLowerCase() + this.shortDescription.toLowerCase()
 		+ this.service.toString().toLowerCase());
     }
+    
+    
 
 }

@@ -27,6 +27,14 @@ var PingCollection = Backbone.Collection.extend({
     model: PingModel
 
 });
+//var JobQueryRadiusModel = Backbone.Model.extend({
+//    idAttribute: "id",
+//    urlRoot: "v1/job-search"
+//});
+//var JobQueryRadiusModel = Backbone.Model.extend({
+//    idAttribute: "id",
+//    urlRoot: "v1/job-search"
+//});
 var JobQueryModel = Backbone.Model.extend({
     idAttribute: "id",
     urlRoot: "v1/job-search"
