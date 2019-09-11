@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Vue Testbed</title>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+	<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+</head>
+<body>
+	<div class="container-fluid">
+		<div id="vue-app">
+			
+			<div class="container">
+				<hr>
+				<h5 class="text-muted" style="float:right;">Server Time {{timeStamp}}<i class="fa fa-circle"style="color:green"></i></h5>
+				<h3>{{ name }} <small class="text-muted">{{version}}</small></h3>
+				<small style="float:right;" class="text-muted"><a href="/docs">Documentation</a></small>
+				<br>
+				<small style="float:right;" class="text-muted">Logged in as {{serviceProvider.userName}}</small>
+				<br>
+				<hr>
+				<div class="input-group mb-3 login-form">
+  					<div class="input-group-prepend">
+    					<span class="input-group-text" id="basic-addon1">Username</span>
+  					</div>
+  					<input v-model="loginUsername" type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+				</div>
+				
+				<div class="input-group mb-3 login-form">
+  					<div class="input-group-prepend">
+    					<span class="input-group-text" id="basic-addon2">Password&nbsp;</span>
+  					</div>
+  					<input class="form-control" v-on:keyup.enter="attemptLogin" v-model="loginPassword" type="password" type="text" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon2">
+				</div>
+				<button class="login-form btn btn-info" v-on:click="attemptLogin">Login</button>
+			</div>
+				<hr>
+			<div v-if="serviceProvider.userName" class="container user-info">
+				<h3>My Information: </h3>
+				<ul class="list-group">
+					<li class="list-group-item list-group-item-secondary"
+						v-for="(spData, name) in serviceProvider">{{name}} : {{ spData }}</li>
+				</ul>
+				<i class="fa fa-plus-square fa-2x" style="float:right;"></i>
+				<h3>My Services: </h3>
+				<ul class="list-group">
+					<li class="list-group-item list-group-item-primary"
+						v-for="(service,index) in serviceProvider.services">{{ service }}<i @click="removeService(index)" class="fa fa-times" style="float:right;"></i></li>
+				</ul>		
+			</div>
+				<hr>
+			<div class="container">
+				<ol class="list-group">
+					<li class="list-group-item list-group-item-primary"
+						v-for="(service,index) in availableServices">{{ service }}<i @click="addService(service)" class="fa fa-plus" style="float:right;"></i></li>
+				</ol>
+				
+			</div>
+		</div>
+	</div>
+	<script>
+		var dataObj ={
+			name: 'Vue.js App',
+			version: ' v0.0.1',
+			todos: [
+			      { text: 'Learn JavaScript' },
+			      { text: 'Learn Vue' },
+			      { text: 'Build something awesome' }
+			    ],
+			status: null,
+			loginUsername: null,
+			loginPassword: null,
+			userToken: null,
+			serviceProvider: {},
+			timeStamp:'',
+			availableServices:[]
+		}
+		var vm = new Vue({
+			el: '#vue-app',
+			data: dataObj,
+			created: function () {
+				console.log(this.name)
+				setInterval(function () {
+				      this.ping();
+				}.bind(this), 1000); 
+			},
+			mounted: function () {
+			},
+			computed: {
+			    userLoginJSON: function () {
+			      return {username:this.loginUsername, password:this.loginPassword}
+			    }
+			},
+			methods: {
+				add: function (event) {
+				    alert('Added ' + this.status + '!')
+				    this.todos.push({text:this.status})
+				},
+				attemptLogin: async function (event) {
+					console.log('Attempting login with ' + JSON.stringify(this.userLoginJSON))
+					const response = await axios.post('/v1/auth',this.userLoginJSON)
+					console.log(response)
+					this.userToken=response.data
+					console.log(this.userToken)
+					this.fetchUser()
+				},
+				fetchUser: async function(){
+					const response = await axios.get('/v1/sp/'+this.loginUsername,{
+				        headers: { 'Authorization': `user ${this.userToken}` }
+				    })
+				    this.serviceProvider=response.data
+				    console.log(JSON.stringify(this.serviceProvider))
+				    $(".login-form").hide()
+					$(".user-info").show()
+					this.fetchServices()
+				},
+				saveUser: async function(){
+					const response = await axios.post('/v1/sp/'+this.serviceProvider.id, this.serviceProvider,{
+				        headers: { 'Authorization': `user ${this.userToken}`}
+				    })
+				    this.serviceProvider=response.data
+				    console.log(JSON.stringify(this.serviceProvider))
+				},
+				ping: async function(){
+					const response = await axios.get('/v1/ping')
+					this.timeStamp=response.data.timestamp
+				},
+				addService(service){
+					console.log(`adding ${service}`)
+					this.serviceProvider.services.push(service)
+					this.saveUser()
+				},
+				removeService(index){
+					console.log(`removing ${index}`)
+					this.serviceProvider.services.splice(index,index)
+					this.saveUser()
+				},
+				fetchServices: async function(){
+					const response = await axios.get('/v1/services',{
+				        headers: { 'Authorization': `user ${this.userToken}`}
+				    })
+					this.availableServices=response.data
+					console.log(this.availableServices)
+				}
+			}
+		})
+	</script>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+	
+</body>
+</html>

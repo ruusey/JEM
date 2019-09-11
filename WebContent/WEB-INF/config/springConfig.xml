@@ -24,7 +24,7 @@
 			value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://localhost:3306/lb" />
 		<property name="username" value="root" />
-		<property name="password" value="admin" />
+		<property name="password" value="" />
 	</bean>
 
 	<tx:annotation-driven

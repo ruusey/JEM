@@ -44,18 +44,18 @@ public class TestBed {
 	    labels.put(Service.DOG_SITTING, "Feed and walk our dog while we are on vacation");
 	    labels.put(Service.PROJECT_ASSISTANCE, "Tutor me in CSCE146");
 	    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-	    //testAuth("ruboy123");
-	    testSPRegister();
-	    //LawnBuzzDao dao = new LawnBuzzDao();
+	    testAuth("ruboy123");
+	  //testSPRegister();
+//	    JEMDao dao = new JEMDao();
 //		
-//		ServiceProvider me = LawnBuzzDao.serviceProviderService
+//		ServiceProvider me = JEMDao.serviceProviderService
 //				.getServiceProviderById(1);
 //		int radius = 50;
-//		GeocodingResult res = LawnBuzzDao.geoService
+//		GeocodingResult res = JEMDao.geoService
 //				.reverseGeocode(me.getLoc());
 //		long start = System.currentTimeMillis();
 //		ArrayList<JobRequest> myJobs = new ArrayList<JobRequest>(
-//				LawnBuzzDao.jobService.getJobsByService(Service.PRESSURE_WASHING));
+//				JEMDao.jobService.getJobsByService(Service.PRESSURE_WASHING));
 //
 //		LOGGER.info("Found " + myJobs.size() + " jobs within " + radius
 //				+ "miles of " + res.formattedAddress + " in "
@@ -237,7 +237,7 @@ public class TestBed {
 		jr.setLoc(geo);
 		jr.setService(Service.LAWN_CARE);
 		jr.setLongDescrption("We need someone to edge and mow our lawn");
-		jr.setShortDescription("Mow my fucking lawn");
+		jr.setShortDescription("Mow my lawn");
 		jr.setPay(40.00);
 		JEMDao.jobService.addJob(jr);
 	}

@@ -35,7 +35,7 @@ public class JerseyResourceConfig extends ResourceConfig {
     	
     	beanConfig.setVersion("1.0.0");
     	beanConfig.setSchemes(new String[]{"https","http"});
-    	beanConfig.setHost("https://uscworks.com");
+    	beanConfig.setHost("http://localhost:8080");
     	beanConfig.setBasePath("/v1");
     	beanConfig.setTitle("JEM Documentation & TestBed");
 		beanConfig.setDescription("JEM - Java Event Management <br>API Designed to streamline Student's access to part time work.");
