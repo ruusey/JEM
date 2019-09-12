@@ -12,6 +12,22 @@
 	crossorigin="anonymous">
 	<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 </head>
+<style>
+		/* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+
+		#map {
+			height: 100%;
+		}
+
+		html,
+		body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+
+	</style>
 <body>
 	<div class="container-fluid">
 		<div id="vue-app">
@@ -47,7 +63,7 @@
 					<li class="list-group-item list-group-item-secondary"
 						v-for="(spData, name) in serviceProvider">{{name}} : {{ spData }}</li>
 				</ul>
-				<i class="fa fa-plus-square fa-2x" style="float:right;"></i>
+				
 				<h3>My Services: </h3>
 				<ul class="list-group">
 					<li class="list-group-item list-group-item-primary"
@@ -55,6 +71,11 @@
 				</ul>		
 			</div>
 				<hr>
+			<div class="container-fluid">
+				<div style="height:600px;"id="map">
+	
+				</div>
+			</div>
 			<div class="container">
 				<ol class="list-group">
 					<li class="list-group-item list-group-item-primary"
@@ -98,6 +119,18 @@
 			    }
 			},
 			methods: {
+				updateGeoloc: async function () {
+					
+					//console.log('Attempting login with ' + JSON.stringify(this.userLoginJSON))
+					const response = await axios.get('/v1/sp/geoloc/user/'+this.serviceProvider.userName,{
+				        headers: { 'Authorization': `user ${this.userToken}` }
+				    })
+					console.log(response)
+					this.serviceProvider.friendlyLocation=response.data
+					console.log(this.serviceProvider.friendlyLocation)
+					
+					
+				},
 				add: function (event) {
 				    alert('Added ' + this.status + '!')
 				    this.todos.push({text:this.status})
@@ -109,6 +142,7 @@
 					this.userToken=response.data
 					console.log(this.userToken)
 					this.fetchUser()
+					
 				},
 				fetchUser: async function(){
 					const response = await axios.get('/v1/sp/'+this.loginUsername,{
@@ -119,6 +153,7 @@
 				    $(".login-form").hide()
 					$(".user-info").show()
 					this.fetchServices()
+					initMap()
 				},
 				saveUser: async function(){
 					const response = await axios.post('/v1/sp/'+this.serviceProvider.id, this.serviceProvider,{
@@ -150,19 +185,76 @@
 				}
 			}
 		})
+		function initMap(){
+			 var myLocation = constructLatLng(vm.serviceProvider);
+		        var myLocationInfo = new google.maps.InfoWindow;
+		        var map = new google.maps.Map(document.getElementById('map'), {
+		            center: myLocation,
+		            zoom: 10
+		        });
+		        var myPos = new google.maps.Marker({
+		            map: map,
+		            position: myLocation,
+		            draggable: true,
+		            label: {text: "Me", color: "white"},
+		            gestureHandling: 'cooperative',
+		            zIndex: 99999
+		        });
+		        myLocationInfo.setPosition(myLocation)
+		        myPos.setMap(map)
+	            myLocationInfo.setContent($("<span>").text(vm.serviceProvider.friendlyLocation).append($("<br>")).append($("<h5>").text("My Location")).html())
+
+	            myLocationInfo.open(map, myPos);
+	            myPos.addListener('click', function() {
+	            if(isInfoWindowOpen(myLocationInfo)) return false;
+	                myLocationInfo.open(map, myPos)
+	            },{passive: true});
+	            
+	            google.maps.event.addListener(myPos, 'dragend', function (evt) {
+                    vm.serviceProvider.loc.lat=evt.latLng.lat()
+                    vm.serviceProvider.loc.lng=evt.latLng.lng()
+                    vm.serviceProvider.loc.timeStamp=vm.timeStamp
+                    vm.saveUser().then(()=>{
+                    	vm.updateGeoloc().then(()=>{
+                    		myLocationInfo.setPosition(constructLatLng(vm.serviceProvider))
+	                        myPos.setPosition(constructLatLng(vm.serviceProvider))
+	                        myPos.setMap(map)
+	                        myLocationInfo.setContent($("<span>").text(vm.serviceProvider.friendlyLocation).append($("<br>")).append($("<h5>").text("My Location")).html());
+	                        myLocationInfo.open(map, myPos);
+	                    }).then(()=>{
+	                    	vm.saveUser()
+	                    })
+	                    
+                    })
+				})
+		}
+		function constructLatLng(obj) {
+	        return {
+	            lat: obj['loc'].lat,
+	            lng: obj['loc'].lng
+	        }
+	    }
+		function isInfoWindowOpen(infoWindow){
+		    var map = infoWindow.getMap();
+		    return (map !== null && typeof map !== "undefined");
+		}
 	</script>
+	<!-- JQuery -->
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
 		crossorigin="anonymous"></script>
+	<!-- Popper For Bootstrap -->
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
 		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
 		crossorigin="anonymous"></script>
+	<!-- Axios -->
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<!-- Bootstrap -->
 	<script
 		src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
 		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
 		crossorigin="anonymous"></script>
-	
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPPbs2Yz_oie_ldvKjEyG86ZUmh_PAdiY"></script>
 </body>
 </html>
