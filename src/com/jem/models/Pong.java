@@ -1,46 +1,43 @@
 package com.jem.models;
 
-
 public class Pong {
+	private String sourceIp;
+	private String timestamp;
+	private String msg;
+	
+	public Pong(String sourceIp, String timestamp, String msg) {
+		super();
+		this.sourceIp = sourceIp;
+		this.timestamp = timestamp;
+		this.msg = msg;
+	}
 
-  private String sourceIp;
+	public Pong() {
+		// TODO Auto-generated constructor stub
+	}
+	public String getSourceIp() {
+		return this.sourceIp;
+	}
 
-  private String timestamp;
+	public void setSourceIp(String sourceIp) {
+		this.sourceIp = sourceIp;
+	}
 
-  private String msg;
+	public String getTimestamp() {
+		return this.timestamp;
+	}
 
-  public String getSourceIp() {
-    return this.sourceIp;
-  }
+	public void setTimestamp(String timestamp) {
+		this.timestamp = timestamp;
+	}
 
-  public void setSourceIp(String sourceIp) {
-    this.sourceIp = sourceIp;
-  }
+	public String getMsg() {
+		return this.msg;
+	}
 
-  public String getTimestamp() {
-    return this.timestamp;
-  }
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
 
-  public void setTimestamp(String timestamp) {
-    this.timestamp = timestamp;
-  }
-
-  public String getMsg() {
-    return this.msg;
-  }
-
-  public void setMsg(String msg) {
-    this.msg = msg;
-  }
-
-  public Pong(String sourceIp, String timestamp, String msg) {
-    super();
-    this.sourceIp = sourceIp;
-    this.timestamp = timestamp;
-    this.msg = msg;
-  }
-
-  public Pong() {
-    // TODO Auto-generated constructor stub
-  }
+	
 }

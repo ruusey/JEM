@@ -15,7 +15,6 @@ public interface JobService {
 	public List<JobRequest> getJobsByService(Service service);
  	public void addJob(JobRequest jr);
 	public ArrayList<JobRequest> getJobsInRadius(GeoLocation center, int radius);
-	
 	public void completeJob(int id);
 	public GeoLocation getGeoLocJob(int geoLocId);
 	public String getFriendlyGeoLocJob(int jobId);

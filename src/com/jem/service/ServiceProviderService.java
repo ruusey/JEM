@@ -17,5 +17,4 @@ public interface ServiceProviderService {
 	public void updateServiceProvider(ServiceProvider sp);
 	public List<Service> getServices(int serviceId);
 	public String getGeoLocation(int id);
-	
 }

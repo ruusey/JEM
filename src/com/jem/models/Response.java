@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(Include.NON_EMPTY)
 public class Response {
-	
+
 	@JsonProperty("status-id")
 	protected Integer statusId = APIStatus.SUCCESS.id();
 	@JsonProperty("status")
@@ -17,7 +17,7 @@ public class Response {
 	protected String debugMessage;
 
 	protected Response() {}
-	
+
 	public Response(APIStatus status, String message, String debugMessage) {
 		setStatusEnum(status);
 		setMessage(message);
@@ -39,7 +39,7 @@ public class Response {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
 	public void setStatusEnum(APIStatus status) {
 		statusId = status.id();
 		this.status = status.name();
@@ -60,5 +60,5 @@ public class Response {
 	public void setDebugMessage(String debugMessage) {
 		this.debugMessage = debugMessage;
 	}
-	
+
 }
