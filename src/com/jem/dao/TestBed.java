@@ -170,7 +170,7 @@ public class TestBed {
 	    }else {
 	    	JEMDao.userService.createUserAuth(s.getId(), s.getUserName(), password);
 		try {
-		    String token = SHAHash.generateStorngPasswordHash(password);
+		    String token = SHAHash.generateStrongPasswordHash(password);
 		    System.out.println(token.length());
 		    JEMDao.userService.registerUserAuth(s.getId(), token, Util.getCurrentDateTime2());
 		} catch (NoSuchAlgorithmException e) {

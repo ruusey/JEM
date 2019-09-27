@@ -68,6 +68,5 @@ public class JEMDao {
 		LOGGER.info("Successfully registered jobSearch ");
 		LOGGER.info("Successfully Created JEMDao");
 		cxt.close();
-
 	}
 }

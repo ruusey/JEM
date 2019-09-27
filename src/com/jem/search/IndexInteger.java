@@ -27,21 +27,14 @@ import java.util.concurrent.Semaphore;
 
 import com.jem.models.JobRequest;
 
-
-
 public abstract class IndexInteger {
 	
-
 	HashMap<String,HashMap<Integer,Integer>> tokenMap= new HashMap<String,HashMap<Integer,Integer>>(20000);
 	HashMap<Integer,Object> objectMap= new HashMap<Integer,Object>(10000);
-	
 	static int findMatchLimit=100;
-	
 	static String REGEX="\t\n\r\f,. :<@!>()$+'-=/[]_\"\\/";
 	Semaphore sem = new Semaphore(1);
 	
-	
-
 	protected void index(int id,String expression){
 		
 		//System.out.println("TOKENMAP="+tokenMap.size());
@@ -54,7 +47,6 @@ public abstract class IndexInteger {
 			
 		    tokenCount=0;
 		    //System.out.println(expression.substring(0,20)+" "+expression.length()+" - "+st.countTokens());
-		    
 			while (st.hasMoreTokens()) {
 		    	tokenCount++;
 		    	String oToken =st.nextToken().toLowerCase();
@@ -74,7 +66,6 @@ public abstract class IndexInteger {
 	    				subString = new String(token.substring(0,l2));
 	    			}catch (Exception e){
 	    				e.printStackTrace();	
-	    			
 	    			}
 	    			//HashMap of matching Objects with this Substring
 	    			HashMap<Integer,Integer> matches = tokenMap.get(subString);
@@ -88,11 +79,10 @@ public abstract class IndexInteger {
 	 	    	if (l==tokenCount-1)break;
 		    }
 		} catch (Exception e){
-			
+			e.printStackTrace();
 		}finally {
 			//sem.release();
 		}
-		
 	}
 	
 	public Vector<Object> search(String expression,Integer maxResults){
@@ -118,7 +108,6 @@ public abstract class IndexInteger {
 					Integer testPrev =prevMatches.get(id);
 				    if (testPrev!=null)newMatches.put(id, id);
 				}
-
 				prevMatches=newMatches;
 		    }
 
@@ -138,18 +127,5 @@ public abstract class IndexInteger {
 	    }
 	    return results;
 	}
-	
-
-
 	abstract public void buildJobIndex(List<JobRequest> objectList);
-
-	
-
-
-	
-
-	
-	
-
-
 }

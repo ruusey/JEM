@@ -24,7 +24,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void createUserAuth(int uId, String username, String password) {
 		mapper.createUserAuth(uId, username, password);
-
 	}
 
 	@Override
@@ -84,5 +83,4 @@ public class UserServiceImpl implements UserService {
 	public String getUserPass(int uId) {
 		return mapper.getUserPasswordById(uId);
 	}
-
 }

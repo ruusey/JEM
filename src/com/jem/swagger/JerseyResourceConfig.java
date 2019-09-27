@@ -19,31 +19,28 @@ import io.swagger.models.Info;
 @Configuration
 @ApplicationPath("/api-docs")
 public class JerseyResourceConfig extends ResourceConfig {
+	public JerseyResourceConfig() {
+		/* Set package to scan for application Resources/Endpoints */
+		register(API.class);
+		configureSwagger();
+	}
 
-    public JerseyResourceConfig() {
-	/* Set package to scan for application Resources/Endpoints */
+	private void configureSwagger() {
+		register(SwaggerSerializers.class);
+		register(ApiListingResource.class);
+		BeanConfig beanConfig = new BeanConfig();
 
-	register(API.class);
-	configureSwagger();
-
-    }
-
-    private void configureSwagger() {
-    	register(SwaggerSerializers.class);
-    	register(ApiListingResource.class);
-    	BeanConfig beanConfig = new BeanConfig();
-    	
-    	beanConfig.setVersion("1.0.0");
-    	beanConfig.setSchemes(new String[]{"https","http"});
-    	beanConfig.setHost("http://localhost:8080");
-    	beanConfig.setBasePath("/v1");
-    	beanConfig.setTitle("JEM Documentation & TestBed");
-		beanConfig.setDescription("JEM - Java Event Management <br>API Designed to streamline Student's access to part time work.");
+		beanConfig.setVersion("1.0.0");
+		beanConfig.setSchemes(new String[] { "https", "http" });
+		beanConfig.setHost("http://localhost:8080");
+		beanConfig.setBasePath("/v1");
+		beanConfig.setTitle("JEM Documentation & TestBed");
+		beanConfig.setDescription(
+				"JEM - Java Event Management <br>API Designed to streamline Student's access to part time work.");
 		beanConfig.getSwagger().addConsumes(MediaType.APPLICATION_JSON);
 		beanConfig.getSwagger().addProduces(MediaType.APPLICATION_JSON);
-    	beanConfig.setResourcePackage("com.jem.rest");
-    	beanConfig.setPrettyPrint(true);
-    	beanConfig.setScan(true);
-    }
-    
+		beanConfig.setResourcePackage("com.jem.rest");
+		beanConfig.setPrettyPrint(true);
+		beanConfig.setScan(true);
+	}
 }

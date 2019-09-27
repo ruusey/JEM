@@ -37,13 +37,11 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 	@Override
 	public void registerServiceProviderService(int id, com.jem.models.Service service) {
 		mapper.registerServiceProviderService(id, service);
-
 	}
 
 	@Override
 	public void registerServiceProviderGeoLoc(int id, GeoLocation loc) {
 		mapper.registerServiceProviderGeoLoc(id, loc);
-
 	}
 
 	@Override
@@ -83,7 +81,6 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 
 			mapper.updateServiceProviderGeolocPretty(sp.getId(), sp.getFriendlyLocation());
 		}
-
 	}
 
 	@Override
@@ -105,7 +102,5 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 	public String getGeoLocation(int id) {
 		String loc = mapper.getGeoLocPretty(id);
 		return loc;
-
 	}
-
 }

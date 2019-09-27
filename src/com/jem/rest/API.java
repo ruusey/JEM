@@ -53,9 +53,9 @@ public class API {
 
 	@POST
 	@Path("/auth")
-	@ApiOperation("Authorize user endpoint")
-	@ApiResponses({ @ApiResponse(code = 200, message = "User succesfully authenticated", response = String.class),
-			@ApiResponse(code = 404, message = "User succesfully authenticated", response = WebApplicationException.class) })
+//	@ApiOperation("Authorize user endpoint")
+//	@ApiResponses({ @ApiResponse(code = 200, message = "User succesfully authenticated", response = String.class),
+//			@ApiResponse(code = 404, message = "User succesfully authenticated", response = WebApplicationException.class) })
 
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -74,7 +74,6 @@ public class API {
 					throw APIUtils.buildWebApplicationException(Status.BAD_REQUEST, APIStatus.ERROR,
 							"ServiceProvider not found.", "Login Invalid. Please try again.");
 				}
-
 			}
 		}
 
@@ -89,7 +88,7 @@ public class API {
 					return APIUtils.buildSuccess("Token succesfully created", token);
 				}
 			} else {
-				token = SHAHash.generateStorngPasswordHash(password);
+				token = SHAHash.generateStrongPasswordHash(password);
 				JEMDao.userService.createUserAuth(sp.getId(), username, password);
 				JEMDao.userService.registerUserAuth(sp.getId(), token, Util.getCurrentDateTime2());
 				return APIUtils.buildSuccess("Token succesfully created", token);

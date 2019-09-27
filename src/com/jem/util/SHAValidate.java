@@ -11,7 +11,7 @@ public class SHAValidate {
     public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeySpecException
     {
         String  originalPassword = "password";
-        String generatedSecuredPasswordHash = SHAHash.generateStorngPasswordHash(originalPassword);
+        String generatedSecuredPasswordHash = SHAHash.generateStrongPasswordHash(originalPassword);
         System.out.println(generatedSecuredPasswordHash);
          
         boolean matched = validatePassword("password", generatedSecuredPasswordHash);
